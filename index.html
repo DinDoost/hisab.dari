@@ -59,6 +59,9 @@ input:focus,select:focus{outline:2px solid #d9b99b;border-color:transparent}
 .sheet label{font-size:13px;color:var(--muted);margin-top:4px}
 .btn{padding:14px;border-radius:14px;border:0;font-weight:600;cursor:pointer;width:100%;font-size:15px}
 .pri-btn{background:var(--pri);color:#fff}
+.btn.busy{color:transparent!important;pointer-events:none;position:relative}
+.btn.busy::after{content:"";position:absolute;left:50%;top:50%;width:24px;height:24px;margin:-12px 0 0 -12px;border:3px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:btnspin .7s linear infinite}
+@keyframes btnspin{to{transform:rotate(360deg)}}
 .danger{background:#fdecea;color:var(--neg)}
 .hint{font-size:13px;color:var(--muted);line-height:1.8}
 .hidden{display:none!important}
@@ -2013,6 +2016,7 @@ document.addEventListener('click', async e => {
       if(!dt){ alert('تاریخ معتبر نیست. دوباره از تقویم انتخاب کنید.'); return; }
       const amount = amt * parseInt(val('f-type'), 10);
       const d = val('f-desc').trim();
+      el.classList.add('busy');
       const okTx = await commitWrite(() => {
         if(t){
           Object.assign(t, { a: amount, d, y: dt.y, m: dt.m, dd: dt.d });
@@ -2020,6 +2024,7 @@ document.addEventListener('click', async e => {
           c.tx.push({ id: uid(), a: amount, d, y: dt.y, m: dt.m, dd: dt.d, ts: Date.now() });
         }
       }, t ? 'تراکنش ویرایش و ثبت شد' : 'تراکنش ثبت شد');
+      el.classList.remove('busy');
       if(okTx) afterTx();
       break;
     }
