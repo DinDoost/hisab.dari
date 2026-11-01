@@ -59,8 +59,11 @@ input:focus,select:focus{outline:2px solid #d9b99b;border-color:transparent}
 .sheet label{font-size:13px;color:var(--muted);margin-top:4px}
 .btn{padding:14px;border-radius:14px;border:0;font-weight:600;cursor:pointer;width:100%;font-size:15px}
 .pri-btn{background:var(--pri);color:#fff}
-.btn.busy{color:transparent!important;pointer-events:none;position:relative}
-.btn.busy::after{content:"";position:absolute;left:50%;top:50%;width:24px;height:24px;margin:-12px 0 0 -12px;border:3px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:btnspin .7s linear infinite}
+.btn.busy,.bottom-btn.busy,.pbtn.busy{color:transparent!important;pointer-events:none;position:relative}
+.busy>*{visibility:hidden}
+.btn.busy::after,.bottom-btn.busy::after,.pbtn.busy::after{content:"";position:absolute;left:50%;top:50%;width:30px;height:30px;margin:-15px 0 0 -15px;border:4px solid rgba(61,43,31,.25);border-top-color:#3d2b1f;border-radius:50%;animation:btnspin .7s linear infinite;z-index:2}
+.pri-btn.busy::after,.bottom-btn.busy::after{border-color:rgba(255,255,255,.4);border-top-color:#fff}
+.danger.busy::after,.pbtn.del.busy::after{border-color:rgba(192,57,43,.3);border-top-color:#c0392b}
 @keyframes btnspin{to{transform:rotate(360deg)}}
 .danger{background:#fdecea;color:var(--neg)}
 .hint{font-size:13px;color:var(--muted);line-height:1.8}
@@ -458,10 +461,11 @@ async function cloudCommit(){
   try{ return (await withTimeout(cloudSyncNow(), 20000)) === true; }
   catch(e){ return false; }
 }
-async function commitWrite(mutate, okMsg){
+async function commitWrite(mutate, okMsg, btn){
   if(WRITING) return false;
   if(!navigator.onLine){ showToast('برای ثبت، اول به انترنت وصل شوید.'); return false; }
   WRITING = true;
+  if(btn) btn.classList.add('busy');
   const snap = JSON.stringify(S);
   try{
     mutate();
@@ -474,7 +478,7 @@ async function commitWrite(mutate, okMsg){
     try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
     if(okMsg) showToast(okMsg, true);
     return true;
-  } finally { WRITING = false; }
+  } finally { WRITING = false; if(btn) btn.classList.remove('busy'); }
 }
 let S = load();
 let V = { view:'list', openId:null, custId:null, search:false, q:'' };
@@ -512,6 +516,22 @@ function softTone(f1, f2, dur, wave){
     g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
     o.connect(g); g.connect(AC.destination);
     o.start(t); o.stop(t + dur + 0.02);
+  }catch(e){}
+}
+function playBell(){
+  try{
+    if(!AC) AC = new (window.AudioContext || window.webkitAudioContext)();
+    if(AC.state === 'suspended') AC.resume();
+    const t = AC.currentTime;
+    [[880,1],[1760,0.5],[2637,0.25],[3520,0.12]].forEach(([f,a]) => {
+      const o = AC.createOscillator(), g = AC.createGain();
+      o.type = 'sine'; o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.01*a, t + 0.006);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 1.2);
+      o.connect(g); g.connect(AC.destination);
+      o.start(t); o.stop(t + 1.25);
+    });
   }catch(e){}
 }
 function soundForward(){ softTone(480, 640, 0.22, 'sine'); }
@@ -1676,9 +1696,13 @@ const SHEETS = {
   confirmDel(act, name, p, c){
     const isParty = act === 'party' || act === 'editParty';
     const label = act === 'txs' ? 'حذف همه تراکنش‌ها' : act === 'party' ? 'حذف طرف حساب' : act === 'editParty' ? 'ادامه ویرایش' : 'حذف مشتری';
+    const want = act === 'editParty' ? name : 'حذف';
+    const hint = act === 'editParty'
+      ? `برای ادامه، ${isParty ? 'اسم طرف حساب' : 'اسم مشتری'} را دقیقاً بنویسید:<br><b>${esc(name)}</b>`
+      : `برای تأیید حذف، کلمه <b>حذف</b> را دقیقاً بنویسید.`;
     return sheetHead(act === 'editParty' ? 'تأیید ویرایش' : 'تأیید حذف') + `
-      <p class="hint">برای تأیید، ${isParty ? 'اسم طرف حساب' : 'اسم مشتری'} را دقیقاً بنویسید:<br><b>${esc(name)}</b></p>
-      <input id="del-name" data-exp="${esc(name)}" autocomplete="off">
+      <p class="hint">${hint}</p>
+      <input id="del-name" data-exp="${esc(want)}" autocomplete="off">
       <button class="btn danger" id="del-ok" disabled data-a="doDel" data-act="${act}" data-p="${p.id}" data-c="${c ? c.id : ''}">${label}</button>`;
   },
   partyAdd(){
@@ -1822,7 +1846,7 @@ document.addEventListener('click', async e => {
     }
     case 'lpDel':
       if(t && confirm('این تراکنش حذف شود؟')){
-        await commitWrite(() => { c.tx = c.tx.filter(x => x.id !== t.id); }, 'تراکنش حذف شد');
+        await commitWrite(() => { c.tx = c.tx.filter(x => x.id !== t.id); }, 'تراکنش حذف شد', el);
       }
       LPSEL = null; render(); break;
 
@@ -1887,14 +1911,14 @@ document.addEventListener('click', async e => {
     case 'saveParty': {
       const n = val('f-name').trim();
       if(!n){ document.getElementById('f-name').focus(); return; }
-      if(await commitWrite(() => { S.parties.push({ id: uid(), n, c: [], cur: 'toman' }); }, 'طرف حساب ثبت شد')){ closeSheet(); render(); }
+      if(await commitWrite(() => { S.parties.push({ id: uid(), n, c: [], cur: 'toman' }); }, 'طرف حساب ثبت شد', el)){ closeSheet(); render(); }
       break;
     }
     case 'partyEdit': openSheet(SHEETS.partyEdit(findParty(V.openId))); break;
     case 'savePartyName': {
       const n = val('f-name').trim();
       if(!n){ document.getElementById('f-name').focus(); return; }
-      if(await commitWrite(() => { p.n = n; }, 'تغییرات ذخیره شد')){ closeSheet(); render(); }
+      if(await commitWrite(() => { p.n = n; }, 'تغییرات ذخیره شد', el)){ closeSheet(); render(); }
       break;
     }
     case 'askDel': {
@@ -1908,16 +1932,17 @@ document.addEventListener('click', async e => {
     case 'doDel': {
       const act = el.dataset.act;
       const target = (act === 'party' || act === 'editParty') ? p : c;
-      if(!target || val('del-name').trim() !== target.n) return;
+      const want = act === 'editParty' ? target.n : 'حذف';
+      if(!target || val('del-name').trim() !== want) return;
       if(act === 'editParty'){ openSheet(SHEETS.partyEdit(p)); return; }
       if(act === 'party'){
-        if(!await commitWrite(() => { S.parties = S.parties.filter(x => x.id !== p.id); }, 'طرف حساب حذف شد')) return;
+        if(!await commitWrite(() => { S.parties = S.parties.filter(x => x.id !== p.id); }, 'طرف حساب حذف شد', el)) return;
         V = { view:'list', openId:null, custId:null, search:V.search, q:V.q }; history.replaceState({v:{view:'list'}}, '');
       } else if(act === 'cust'){
-        if(!await commitWrite(() => { p.c = p.c.filter(x => x.id !== c.id); }, 'مشتری حذف شد')) return;
+        if(!await commitWrite(() => { p.c = p.c.filter(x => x.id !== c.id); }, 'مشتری حذف شد', el)) return;
         V.view = 'detail'; V.custId = null; history.replaceState({v:{view:'detail', openId:p.id}}, '');
       } else if(act === 'txs'){
-        if(!await commitWrite(() => { c.tx = []; }, 'تراکنش‌ها حذف شد')) return;
+        if(!await commitWrite(() => { c.tx = []; }, 'تراکنش‌ها حذف شد', el)) return;
         if(V.view === 'custMenu'){ V = {view:'list', openId:p.id, custId:null, search:false, q:V.q}; history.replaceState({v:V}, ''); }
       }
       closeSheet(); render(); break;
@@ -1933,7 +1958,7 @@ document.addEventListener('click', async e => {
       if(ph.length < 7){ document.getElementById('f-phone').focus(); alert('شماره تلفن معتبر وارد کنید.'); return; }
       const dup = S.parties.some(pp => pp.c.some(cc => cc.ph === ph));
       if(dup){ alert('مشتری با این شماره قبلاً ثبت شده است.'); return; }
-      if(await commitWrite(() => { p.c.push({ id: uid(), n, ph, ds, tx: [] }); }, 'مشتری ثبت شد')) goTo({view:'detail', openId:p.id}, true);
+      if(await commitWrite(() => { p.c.push({ id: uid(), n, ph, ds, tx: [] }); }, 'مشتری ثبت شد', el)) goTo({view:'detail', openId:p.id}, true);
       break;
     }
     case 'custMore':
@@ -1948,7 +1973,7 @@ document.addEventListener('click', async e => {
       if(ph.length < 7){ document.getElementById('f-phone').focus(); alert('شماره تلفن معتبر وارد کنید.'); return; }
       const dup = S.parties.some(pp => pp.c.some(cc => cc.id !== c.id && cc.ph === ph));
       if(dup){ alert('مشتری با این شماره قبلاً ثبت شده است.'); return; }
-      if(await commitWrite(() => { c.n = n; c.ph = ph; c.ds = ds; }, 'تغییرات ذخیره شد')) goTo({view:'list', openId:p.id}, true);
+      if(await commitWrite(() => { c.n = n; c.ph = ph; c.ds = ds; }, 'تغییرات ذخیره شد', el)) goTo({view:'list', openId:p.id}, true);
       break;
     }
     case 'cDelTx':
@@ -1959,7 +1984,7 @@ document.addEventListener('click', async e => {
     case 'saveCustName': {
       const n = val('f-name').trim();
       if(!n){ document.getElementById('f-name').focus(); return; }
-      if(await commitWrite(() => { c.n = n; }, 'تغییرات ذخیره شد')){ closeSheet(); render(); }
+      if(await commitWrite(() => { c.n = n; }, 'تغییرات ذخیره شد', el)){ closeSheet(); render(); }
       break;
     }
 
@@ -2025,12 +2050,12 @@ document.addEventListener('click', async e => {
         }
       }, t ? 'تراکنش ویرایش و ثبت شد' : 'تراکنش ثبت شد');
       el.classList.remove('busy');
-      if(okTx) afterTx();
+      if(okTx){ playBell(); afterTx(); }
       break;
     }
     case 'delTx':
       if(confirm('این تراکنش حذف شود؟')){
-        const okDel = await commitWrite(() => { c.tx = c.tx.filter(x => x.id !== t.id); }, 'تراکنش حذف شد');
+        const okDel = await commitWrite(() => { c.tx = c.tx.filter(x => x.id !== t.id); }, 'تراکنش حذف شد', el);
         if(okDel) afterTx();
       }
       break;
