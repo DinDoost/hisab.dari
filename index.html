@@ -212,6 +212,7 @@ input:focus,select:focus{outline:2px solid #d9b99b;border-color:transparent}
 <script>
 const KEY = 'hesab-daftari-v1';
 const SUPABASE_URL = 'https://wvnggzpqtoubuqmowqvj.supabase.co';
+const AUTH_REDIRECT_URL = 'https://dindoost.github.io/hisab.dari/';
 const SUPABASE_ANON_KEY = 'sb_publishable_1KZebGzaz17vLkc5HldsRw_1Q5Ckbr_';
 const supabaseClient = window.supabase?.createClient
   ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
@@ -430,6 +431,18 @@ function load(){
   return d;
 }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} queueCloudSync(); }
+let toastTimer = null;
+function showToast(message){
+  let el = document.getElementById('app-toast');
+  if(!el){
+    el = document.createElement('div'); el.id = 'app-toast';
+    el.style.cssText = 'position:fixed;top:12px;left:16px;right:16px;z-index:1000;max-width:520px;margin:0 auto;padding:13px 16px;border-radius:14px;background:#c0392b;color:#fff;text-align:center;font-weight:700;box-shadow:0 6px 20px #0002';
+    document.body.appendChild(el);
+  }
+  el.textContent = message; el.style.display = 'block';
+  clearTimeout(toastTimer); toastTimer = setTimeout(()=>{el.style.display='none';},3500);
+}
+
 let S = load();
 let V = { view:'list', openId:null, custId:null, search:false, q:'' };
 let SUI = { curOpen:false };
@@ -1307,10 +1320,10 @@ function renderLock(){
       ${M !== 'login' ? `<div class="su-fld"><label for="au-pass2">تکرار رمز عبور</label><input id="au-pass2" class="ltr" type="password" autocomplete="new-password" value="${esc(F.pass2)}"></div>` : ''}
       <div class="lk-msg" style="margin:0;min-height:20px">${esc(LK.err)}</div>
       <button class="su-btn" data-a="${M === 'newpass' ? 'passSave' : 'authLogin'}">${M === 'newpass' ? 'ذخیره رمز عبور' : 'ورود'}${ARROW}</button>
-      ${M !== 'newpass' ? `<button class="su-btn" style="margin-top:12px;background:#fff;color:#334155;border:1px solid #d8dee8" data-a="authGoogle">ادامه با Google</button>` : ''}
+      
       ${M === 'login' ? `<button class="lk-link" style="margin-top:6px" data-a="authForgot">فراموشی رمز عبور</button>
-      <div class="su-alt">حساب ندارید؟ <button class="lk-link" style="margin:0" data-a="authToSignup">ثبت نام کنید</button></div>` : ''}
-      ${M === 'signup' ? `<div class="su-alt">از قبل حساب دارید؟ <button class="lk-link" style="margin:0" data-a="authToLogin">وارد شوید</button></div><p class="hint" style="text-align:center;margin-top:8px">پس از ثبت‌نام، کُد شش‌رقمی تأیید به ایمیل شما فرستاده می‌شود.</p>` : ''}
+      ` : ''}
+      
     </div>`;
     return;
   }
@@ -1426,7 +1439,7 @@ async function authLogin(){
 async function authGoogle(){
   if(!supabaseClient) return authErr('اتصال Supabase بارگذاری نشد. صفحه را تازه‌سازی کنید.');
   LK.err = 'در حال انتقال به حساب Google...'; renderLock();
-  const redirectTo = window.location.href.split('#')[0];
+  const redirectTo = AUTH_REDIRECT_URL;
   const { error } = await supabaseClient.auth.signInWithOAuth({
     provider:'google',
     options:{ redirectTo }
@@ -1468,19 +1481,21 @@ async function authForgot(){
   if(!mailOk(mail)) return authErr('ایمیل حساب خود را وارد کنید.');
   if(!supabaseClient) return authErr('اتصال به سرویس حساب برقرار نیست.');
   LK.err = 'در حال فرستادن کُد بازیابی...'; renderLock();
-  const { error } = await supabaseClient.auth.resetPasswordForEmail(mail);
-  if(error) return authErr('ارسال کُد انجام نشد. ایمیل و تنظیمات قالب بازیابی را بررسی کنید.');
-  LK.f.mail = mail; LK.purpose = 'recovery'; LK.pend = null; LK.mode = 'verify'; LK.buf = '';
-  LK.err = 'کُد شش‌رقمی بازیابی به ایمیل شما فرستاده شد.'; renderLock();
+  const { error } = await supabaseClient.auth.resetPasswordForEmail(mail, { redirectTo:AUTH_REDIRECT_URL });
+  if(error) return authErr('ارسال لینک بازیابی انجام نشد. ایمیل و آدرس بازگشت در Supabase را بررسی کنید.');
+  LK.f.mail = mail; LK.err = '';
+  authErr('لینک بازیابی به ایمیل شما فرستاده شد. لینک را باز کنید؛ سپس رمز جدید را همین‌جا ثبت کنید.');
 }
 async function passSave(){
   readF();
+  if(!LK.recoveryVerified || !cloudUser) return authErr('برای تغییر رمز، ابتدا لینک معتبر بازیابی را از ایمیل باز کنید.');
   if(LK.f.pass.length < 6) return authErr('رمز عبور باید حداقل ۶ کاراکتر باشد.');
   if(LK.f.pass !== LK.f.pass2) return authErr('رمز عبور و تکرار آن یکسان نیست.');
   const { error } = await supabaseClient.auth.updateUser({ password:LK.f.pass });
   if(error) return authErr('ذخیره رمز جدید انجام نشد. دوباره تلاش کنید.');
   S.email = cloudUser?.email || LK.f.mail; S.loggedIn = true;
   LK.f.pass = ''; LK.f.pass2 = ''; LK.err = '';
+  LK.recoveryVerified = false;
   lkUnlock();
 }
 async function authLogout(){
@@ -1776,12 +1791,12 @@ document.addEventListener('click', e => {
     case 'lkDel': if(!LK.busy){ LK.buf = LK.buf.slice(0, -1); renderLock(); } break;
     case 'lkOk': lkOk(); break;
     case 'authLogin': authLogin(); break;
-    case 'authGoogle': authGoogle(); break;
+    case 'authGoogle': break;
     case 'authSignup': authErr('ثبت‌نام عمومی بسته است. مدیر باید حساب را از سوپابیس ایجاد کند.'); break;
     case 'authForgot': authForgot(); break;
     case 'passSave': passSave(); break;
     case 'authLogout': authLogout(); break;
-    case 'authToSignup': readF(); LK.mode = 'signup'; LK.err = ''; renderLock(); break;
+    case 'authToSignup': LK.mode = 'login'; LK.err = 'ثبت‌نام عمومی بسته است.'; renderLock(); break;
     case 'authToLogin': readF(); LK.mode = 'login'; LK.err = ''; renderLock(); break;
     case 'vResend': { const em = LK.purpose === 'signup' ? LK.pend?.mail : LK.f.mail; LK.err = 'در حال ارسال دوباره...'; renderLock(); const req = LK.purpose === 'signup' ? supabaseClient.auth.resend({type:'signup',email:em}) : supabaseClient.auth.resetPasswordForEmail(em); req.then(({error})=>{ const m = String(error?.message || '').toLowerCase(); LK.err = error ? ((m.includes('rate limit') || m.includes('email rate')) ? 'محدودیت ارسال ایمیل فعال است؛ کمی صبر کنید.' : 'ارسال دوباره کُد ناموفق بود.') : 'درخواست ارسال دوباره انجام شد؛ ایمیل را بررسی کنید.'; renderLock(); }).catch(()=>{ LK.err = 'ارسال دوباره انجام نشد. اتصال اینترنت را بررسی کنید.'; renderLock(); }); break; }
     case 'vBack': LK.mode = LK.purpose === 'signup' ? 'signup' : 'login'; LK.buf = ''; LK.err = ''; renderLock(); break;
@@ -1949,6 +1964,11 @@ document.addEventListener('click', e => {
     }
 
     case 'saveTx': {
+      // Transactions must not be created or edited while offline.
+      if(!navigator.onLine){
+        showToast('برای ثبت تراکنش، اول به انترنت وصل شوید.');
+        return;
+      }
       const amt = parse(val('f-amount'));
       if(!amt){ document.getElementById('f-amount').focus(); return; }
       const dt = parseDate(val('f-date'));
@@ -2003,6 +2023,21 @@ document.addEventListener('input', e => {
 history.replaceState({v:V}, '');
 render();
 renderLock();
+let recoveryAuthSeen = false;
+if(supabaseClient){
+  supabaseClient.auth.onAuthStateChange((event, session) => {
+    if(event === 'PASSWORD_RECOVERY' && session?.user){
+      recoveryAuthSeen = true;
+      cloudUser = session.user;
+      LK.recoveryVerified = true;
+      LK.locked = true; LK.mode = 'newpass';
+      LK.f = {mail:session.user.email || '', pass:'', pass2:''};
+      LK.err = 'لینک بازیابی معتبر است؛ رمز جدید را وارد کنید.';
+      renderLock();
+    }
+  });
+}
+
 async function initCloudSession(){
   if(!supabaseClient){ LK.locked = true; LK.err = 'اتصال Supabase بارگذاری نشد. اینترنت و آدرس پروژه را بررسی کنید.'; renderLock(); return; }
   const { data, error } = await supabaseClient.auth.getSession();
