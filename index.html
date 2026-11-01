@@ -1307,9 +1307,10 @@ function renderLock(){
       ${M !== 'login' ? `<div class="su-fld"><label for="au-pass2">تکرار رمز عبور</label><input id="au-pass2" class="ltr" type="password" autocomplete="new-password" value="${esc(F.pass2)}"></div>` : ''}
       <div class="lk-msg" style="margin:0;min-height:20px">${esc(LK.err)}</div>
       <button class="su-btn" data-a="${M === 'login' ? 'authLogin' : M === 'signup' ? 'authSignup' : 'passSave'}">${M === 'login' ? 'ورود' : M === 'signup' ? 'ساخت حساب' : 'ذخیره رمز عبور'}${ARROW}</button>
+      ${M !== 'newpass' ? `<button class="su-btn" style="margin-top:12px;background:#fff;color:#334155;border:1px solid #d8dee8" data-a="authGoogle">ادامه با Google</button>` : ''}
       ${M === 'login' ? `<button class="lk-link" style="margin-top:6px" data-a="authForgot">فراموشی رمز عبور</button>
       <div class="su-alt">حساب ندارید؟ <button class="lk-link" style="margin:0" data-a="authToSignup">ثبت نام کنید</button></div>` : ''}
-      ${M === 'signup' ? `<div class="su-alt">از قبل حساب دارید؟ <button class="lk-link" style="margin:0" data-a="authToLogin">وارد شوید</button></div>` : ''}
+      ${M === 'signup' ? `<div class="su-alt">از قبل حساب دارید؟ <button class="lk-link" style="margin:0" data-a="authToLogin">وارد شوید</button></div><p class="hint" style="text-align:center;margin-top:8px">پس از ثبت‌نام، کُد شش‌رقمی تأیید به ایمیل شما فرستاده می‌شود.</p>` : ''}
     </div>`;
     return;
   }
@@ -1422,6 +1423,16 @@ async function authLogin(){
   if(S.pin){ LK.locked = true; LK.mode = 'unlock'; renderLock(); render(); }
   else lkUnlock();
 }
+async function authGoogle(){
+  if(!supabaseClient) return authErr('اتصال Supabase بارگذاری نشد. صفحه را تازه‌سازی کنید.');
+  LK.err = 'در حال انتقال به حساب Google...'; renderLock();
+  const redirectTo = window.location.href.split('#')[0];
+  const { error } = await supabaseClient.auth.signInWithOAuth({
+    provider:'google',
+    options:{ redirectTo }
+  });
+  if(error) return authErr('ورود با Google انجام نشد. فعال‌بودن Google در Supabase و تنظیم آدرس بازگشت را بررسی کنید.');
+}
 async function authSignup(){
   readF();
   const mail = LK.f.mail, pw = LK.f.pass;
@@ -1432,7 +1443,12 @@ async function authSignup(){
   const localCopy = JSON.parse(JSON.stringify({ cur:S.cur || 'toman', parties:S.parties || [] }));
   LK.err = 'در حال ساخت حساب...'; renderLock();
   const { data, error } = await supabaseClient.auth.signUp({ email:mail, password:pw });
-  if(error) return authErr(error.message || 'ثبت‌نام انجام نشد.');
+  if(error){
+    const m = String(error.message || '').toLowerCase();
+    if(m.includes('rate limit') || m.includes('email rate')) return authErr('محدودیت ارسال ایمیل Supabase فعال شده است. فعلاً درخواست تازه نفرستید؛ کمی صبر کنید یا SMTP اختصاصی تنظیم کنید.');
+    if(m.includes('already registered') || m.includes('already been registered')) return authErr('این ایمیل قبلاً ثبت شده است. از قسمت ورود یا فراموشی رمز عبور استفاده کنید.');
+    return authErr(error.message || 'ثبت‌نام انجام نشد.');
+  }
   LK.f.pass = ''; LK.f.pass2 = '';
   if(data.session && data.user){
     cloudUser = data.user; S = { ...S, ...localCopy, email:data.user.email || mail, loggedIn:true };
@@ -1759,13 +1775,14 @@ document.addEventListener('click', e => {
     case 'lkDel': if(!LK.busy){ LK.buf = LK.buf.slice(0, -1); renderLock(); } break;
     case 'lkOk': lkOk(); break;
     case 'authLogin': authLogin(); break;
+    case 'authGoogle': authGoogle(); break;
     case 'authSignup': authSignup(); break;
     case 'authForgot': authForgot(); break;
     case 'passSave': passSave(); break;
     case 'authLogout': authLogout(); break;
     case 'authToSignup': readF(); LK.mode = 'signup'; LK.err = ''; renderLock(); break;
     case 'authToLogin': readF(); LK.mode = 'login'; LK.err = ''; renderLock(); break;
-    case 'vResend': { const em = LK.purpose === 'signup' ? LK.pend?.mail : LK.f.mail; if(LK.purpose === 'signup') supabaseClient.auth.resend({type:'signup',email:em}).then(({error})=>{ LK.err = error ? 'ارسال دوباره کُد ناموفق بود.' : 'کُد تازه فرستاده شد.'; renderLock(); }); else supabaseClient.auth.resetPasswordForEmail(em).then(({error})=>{ LK.err = error ? 'ارسال دوباره کُد ناموفق بود.' : 'کُد تازه فرستاده شد.'; renderLock(); }); break; }
+    case 'vResend': { const em = LK.purpose === 'signup' ? LK.pend?.mail : LK.f.mail; LK.err = 'در حال ارسال دوباره...'; renderLock(); const req = LK.purpose === 'signup' ? supabaseClient.auth.resend({type:'signup',email:em}) : supabaseClient.auth.resetPasswordForEmail(em); req.then(({error})=>{ const m = String(error?.message || '').toLowerCase(); LK.err = error ? ((m.includes('rate limit') || m.includes('email rate')) ? 'محدودیت ارسال ایمیل فعال است؛ کمی صبر کنید.' : 'ارسال دوباره کُد ناموفق بود.') : 'درخواست ارسال دوباره انجام شد؛ ایمیل را بررسی کنید.'; renderLock(); }).catch(()=>{ LK.err = 'ارسال دوباره انجام نشد. اتصال اینترنت را بررسی کنید.'; renderLock(); }); break; }
     case 'vBack': LK.mode = LK.purpose === 'signup' ? 'signup' : 'login'; LK.buf = ''; LK.err = ''; renderLock(); break;
     case 'pinActivate': pinActivate(); break;
     case 'pinDisable': pinDisable(); break;
