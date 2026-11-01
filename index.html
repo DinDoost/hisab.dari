@@ -1295,7 +1295,7 @@ function renderLock(){
   el.classList.remove('hidden');
   if(['login','signup','newpass'].includes(LK.mode)){
     const F = LK.f, M = LK.mode;
-    const heads = { login:['ورود به حساب','ایمیل و رمز عبور خود را وارد کنید'], signup:['ساخت حساب','با ایمیل خود ثبت نام کنید و رمز عبور انتخاب کنید'], newpass:['رمز عبور جدید','رمز عبور جدید را انتخاب کنید'] }[M];
+    const heads = { login:['ورود به حساب','ایمیل و رمز عبور خود را وارد کنید'], signup:['ورود به حساب','ایمیل و رمز عبور خود را وارد کنید'], newpass:['رمز عبور جدید','رمز عبور جدید را انتخاب کنید'] }[M];
     const ARROW = '<svg viewBox="0 0 24 24"><path d="M20 12H4M10 6l-6 6 6 6"/></svg>';
     el.innerHTML = `
     <div class="su-wrap">
@@ -1306,7 +1306,7 @@ function renderLock(){
       <div class="su-fld"><label for="au-pass">رمز عبور</label><input id="au-pass" class="ltr" type="password" autocomplete="${M === 'login' ? 'current-password' : 'new-password'}" value="${esc(F.pass)}"></div>
       ${M !== 'login' ? `<div class="su-fld"><label for="au-pass2">تکرار رمز عبور</label><input id="au-pass2" class="ltr" type="password" autocomplete="new-password" value="${esc(F.pass2)}"></div>` : ''}
       <div class="lk-msg" style="margin:0;min-height:20px">${esc(LK.err)}</div>
-      <button class="su-btn" data-a="${M === 'login' ? 'authLogin' : M === 'signup' ? 'authSignup' : 'passSave'}">${M === 'login' ? 'ورود' : M === 'signup' ? 'ساخت حساب' : 'ذخیره رمز عبور'}${ARROW}</button>
+      <button class="su-btn" data-a="${M === 'newpass' ? 'passSave' : 'authLogin'}">${M === 'newpass' ? 'ذخیره رمز عبور' : 'ورود'}${ARROW}</button>
       ${M !== 'newpass' ? `<button class="su-btn" style="margin-top:12px;background:#fff;color:#334155;border:1px solid #d8dee8" data-a="authGoogle">ادامه با Google</button>` : ''}
       ${M === 'login' ? `<button class="lk-link" style="margin-top:6px" data-a="authForgot">فراموشی رمز عبور</button>
       <div class="su-alt">حساب ندارید؟ <button class="lk-link" style="margin:0" data-a="authToSignup">ثبت نام کنید</button></div>` : ''}
@@ -1433,7 +1433,7 @@ async function authGoogle(){
   });
   if(error) return authErr('ورود با Google انجام نشد. فعال‌بودن Google در Supabase و تنظیم آدرس بازگشت را بررسی کنید.');
 }
-async function authSignup(){
+async function authSignup(){ return authErr('ثبت‌نام عمومی بسته است. مدیر باید حساب را از بخش Authentication → Users در سوپابیس ایجاد کند.'); /*
   readF();
   const mail = LK.f.mail, pw = LK.f.pass;
   if(!mailOk(mail)) return authErr('ایمیل معتبر وارد کنید.');
@@ -1461,6 +1461,7 @@ async function authSignup(){
   LK.pend = { mail, localCopy }; LK.purpose = 'signup'; LK.mode = 'verify'; LK.buf = '';
   LK.err = 'کُد شش‌رقمی تأیید ثبت‌نام به ایمیل شما فرستاده شد.'; renderLock();
 }
+*/ }
 async function authForgot(){
   readF();
   const mail = LK.f.mail;
@@ -1776,7 +1777,7 @@ document.addEventListener('click', e => {
     case 'lkOk': lkOk(); break;
     case 'authLogin': authLogin(); break;
     case 'authGoogle': authGoogle(); break;
-    case 'authSignup': authSignup(); break;
+    case 'authSignup': authErr('ثبت‌نام عمومی بسته است. مدیر باید حساب را از سوپابیس ایجاد کند.'); break;
     case 'authForgot': authForgot(); break;
     case 'passSave': passSave(); break;
     case 'authLogout': authLogout(); break;
@@ -2008,7 +2009,7 @@ async function initCloudSession(){
   if(error){ LK.locked = true; LK.err = 'خواندن نشست کاربری ناموفق بود.'; renderLock(); return; }
   if(!data.session?.user){
     cloudUser = null; cloudReady = false; LK.locked = true;
-    LK.mode = S.email ? 'login' : 'signup'; LK.f.mail = S.email || '';
+    LK.mode = 'login'; LK.f.mail = S.email || '';
     renderLock(); return;
   }
   cloudUser = data.session.user; cloudReady = false;
