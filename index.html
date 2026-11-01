@@ -1,0 +1,2013 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#a67c52">
+<title>حساب دفتری</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#faf6f1;--card:#fff;--text:#3d2b1f;--muted:#8c7866;--pri:#a67c52;--deep:#7d5a3c;--pos:#1e7a4c;--neg:#c0392b;--line:#ebe0d4;--soft:#f6efe7;--ok:#1e9e62}
+*{box-sizing:border-box;margin:0}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;min-height:100dvh}
+button,input,select,textarea{font:inherit}
+#main{max-width:520px;margin:0 auto;padding:0 16px 120px}
+.top{display:flex;align-items:center;justify-content:space-between;padding:16px 4px 12px}
+.top h1{font-size:19px;font-weight:700}
+.top .sp{width:42px;height:42px}
+.ic{background:none;border:0;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;cursor:pointer;color:var(--text)}
+button:focus-visible,input:focus-visible{outline:3px solid #d9b99b;outline-offset:2px}
+.ic svg,.ico{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hero{background:linear-gradient(135deg,#b8906a,var(--deep));color:#fff;border-radius:26px;padding:22px 20px;box-shadow:0 10px 30px rgba(125,90,60,.25)}
+.hero .lbl{opacity:.9;font-size:14px}
+.hero .net{font-size:30px;font-weight:700;margin:10px 0 16px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;direction:rtl}
+.hero .net small{font-size:14px;font-weight:400;opacity:.95}
+.mini-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mini{background:rgba(255,255,255,.16);border-radius:16px;padding:12px}
+.mini span{font-size:13px;opacity:.92}
+.mini span.sm{font-size:11px}
+.mini b{display:block;margin-top:6px;font-size:15px;direction:ltr;text-align:right}
+.search{margin-top:14px}
+input,select,textarea{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:14px;background:#fff;color:var(--text)}
+input:focus,select:focus{outline:2px solid #d9b99b;border-color:transparent}
+.sec-title{margin:22px 4px 0;font-size:15px;font-weight:700}
+.list{display:flex;flex-direction:column;gap:12px;margin-top:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:14px 16px;display:flex;align-items:center;gap:12px;width:100%;color:inherit;text-align:right;cursor:pointer;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.av{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:700;flex:none}
+.nm{flex:1;display:flex;flex-direction:column;min-width:0}
+.nm b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx-card{padding-left:60px}
+.tx-nm b{font-size:13px;line-height:1.55;font-weight:600;white-space:normal;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;line-clamp:4;word-break:break-word}
+.nm small{color:var(--muted);font-size:12px;margin-top:3px}
+.bal{font-size:14px;font-weight:600;direction:ltr;white-space:nowrap;text-align:left}
+.pos{color:var(--pos)}.neg{color:var(--neg)}.zero{color:var(--muted)}
+.bpos{color:#0d6b33;font-weight:700}
+.bneg{color:#c0392b;font-weight:700}
+.bal-col{display:flex;flex-direction:column;align-items:flex-start;gap:3px;flex:none}
+.bal-note{font-size:11px;color:var(--muted);white-space:nowrap}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.empty{text-align:center;color:var(--muted);padding:44px 12px;line-height:1.9}
+.fab{position:fixed;bottom:22px;left:20px;background:var(--pri);color:#fff;border:0;border-radius:999px;padding:15px 24px;font-weight:600;box-shadow:0 10px 24px rgba(166,124,82,.35);cursor:pointer;display:flex;gap:10px;align-items:center}
+.fab svg{width:20px;height:20px;stroke:#fff;stroke-width:2.4;fill:none;stroke-linecap:round}
+.overlay{position:fixed;inset:0;background:rgba(40,28,18,.45);display:flex;align-items:flex-end;justify-content:center;z-index:9}
+.overlay.hidden{display:none}
+.sheet{background:#fff;width:100%;max-width:520px;border-radius:26px 26px 0 0;padding:20px 18px calc(22px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:12px;max-height:90vh;overflow:auto}
+.sh-h{display:flex;justify-content:space-between;align-items:center;font-size:17px;font-weight:700}
+.sheet label{font-size:13px;color:var(--muted);margin-top:4px}
+.btn{padding:14px;border-radius:14px;border:0;font-weight:600;cursor:pointer;width:100%;font-size:15px}
+.pri-btn{background:var(--pri);color:#fff}
+.danger{background:#fdecea;color:var(--neg)}
+.hint{font-size:13px;color:var(--muted);line-height:1.8}
+.hidden{display:none!important}
+.sub{color:var(--muted);font-size:13px}
+
+/* transaction type buttons */
+.tbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tbtn{border:0;border-radius:14px;padding:14px 8px;font-weight:700;font-size:14px;cursor:pointer}
+.tbtn.g{background:#e3f6ec;color:#1e7a4c}
+.tbtn.r{background:#fdecea;color:#c0392b}
+.tbtn.g.on{background:#1e7a4c;color:#fff}
+.tbtn.r.on{background:#c0392b;color:#fff}
+
+/* date button */
+.dbtn{width:100%;display:flex;justify-content:space-between;align-items:center;padding:13px 14px;border:1px solid var(--line);border-radius:14px;background:#fff;color:var(--text);font-size:15px;cursor:pointer}
+.cal-ic svg{width:22px;height:22px;stroke:var(--deep);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+
+/* calendar popup */
+.cal-ov{align-items:center;padding:16px;z-index:30}
+.cal{background:#fff;width:100%;max-width:420px;border-radius:26px;padding:18px 16px 18px}
+.cal-h{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:14px}
+.cal-nav{width:44px;height:44px;border-radius:14px;border:0;background:var(--soft);color:var(--deep);cursor:pointer;font-size:22px;display:grid;place-items:center;flex:none}
+.cal-title{border:0;background:none;font-size:17px;font-weight:700;color:var(--text);cursor:pointer;padding:8px 12px;border-radius:12px}
+.cal-wk,.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
+.cal-wk span{font-size:13px;color:var(--muted);padding:6px 0}
+.cal-grid button{height:44px;border:0;border-radius:14px;background:#f8f5f1;color:var(--text);font-size:15px;cursor:pointer}
+.cal-grid .blank{height:44px}
+.cal-grid button.sel{background:var(--ok);color:#fff;font-weight:700;box-shadow:0 4px 10px rgba(30,158,98,.35)}
+.cal-years{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.cal-years button{height:48px;border:0;border-radius:14px;background:#f8f5f1;color:var(--text);font-size:15px;cursor:pointer}
+.cal-years button.sel{background:var(--ok);color:#fff;font-weight:700}
+.cal-foot{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.cal-foot button{height:52px;border:0;border-radius:16px;font-weight:700;font-size:15px;cursor:pointer}
+.cal-ok{background:var(--ok);color:#fff}
+.cal-cancel{background:#f3eee8;color:var(--text)}
+
+/* settings / menu rows */
+.opt-list{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.opt{display:flex;justify-content:space-between;align-items:center;width:100%;border:1px solid var(--line);background:#fff;color:var(--text);border-radius:14px;padding:14px 16px;font-size:15px;cursor:pointer}
+.opt.on{border-color:var(--pri);background:var(--soft);color:var(--deep);font-weight:700}
+.opt .tick{opacity:0;font-weight:700;font-size:17px}
+.opt.on .tick{opacity:1}
+.page-btns{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+
+/* long-press actions */
+.lp-wrap{position:relative}
+.lp-wrap.on .card{padding-left:124px}
+.card.shaking,.lp-wrap.on .card{animation:wig .35s ease-in-out infinite}
+@keyframes wig{0%,100%{transform:rotate(0)}25%{transform:rotate(-1.4deg)}75%{transform:rotate(1.4deg)}}
+.lp-acts{position:absolute;left:12px;top:50%;transform:translateY(-50%);display:flex;gap:8px;z-index:2}
+.lp-btn{width:46px;height:46px;border-radius:50%;border:0;display:grid;place-items:center;cursor:pointer;background:var(--soft);color:var(--deep);box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.lp-btn.txt{width:auto;padding:0 16px;border-radius:23px;font-size:14px;font-weight:700;font-family:inherit}
+.lp-btn.del{background:#fdecea;color:var(--neg)}
+.lp-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* add customer page */
+.avatar-big{width:120px;height:120px;border-radius:50%;background:var(--soft);display:grid;place-items:center;margin:12px auto 24px}
+.avatar-big svg{width:56px;height:56px;stroke:var(--pri);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.form-card{background:#fff;border:1px solid var(--line);border-radius:26px;padding:20px 16px;display:flex;flex-direction:column;gap:14px}
+.fld{display:flex;align-items:flex-start;gap:10px;border:1px solid var(--line);border-radius:16px;padding:8px 14px;background:#fdfaf6}
+.fld:focus-within{border-color:var(--pri);box-shadow:0 0 0 3px #efe2d3}
+.fld .fi{width:22px;height:22px;flex:none;margin-top:14px}
+.fld .fi svg{width:22px;height:22px;stroke:var(--muted);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.fld .fw{flex:1;display:flex;flex-direction:column;min-width:0}
+.fld label{font-size:12px;color:var(--muted);margin-top:4px}
+.fld input,.fld textarea{border:0;background:transparent;padding:4px 0 8px;font-size:15px;width:100%;resize:none}
+.fld input:focus,.fld textarea:focus{outline:none}
+.fld textarea{min-height:48px}
+.bottom-btn{width:100%;margin-top:20px;padding:16px;border:0;border-radius:18px;background:var(--pri);color:#fff;font-weight:700;font-size:16px;display:flex;justify-content:center;align-items:center;gap:8px;cursor:pointer;box-shadow:0 10px 24px rgba(166,124,82,.3)}
+.bottom-btn svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.info{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;font-size:14px;line-height:1.9;color:var(--text)}
+.info span{color:var(--muted)}
+.title-btn{border:0;background:none;font-size:19px;font-weight:700;color:var(--text);cursor:pointer;padding:8px 10px;border-radius:12px;max-width:65%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.caret{font-size:24px;line-height:1;color:var(--deep);margin-right:4px;vertical-align:middle}
+.pick-row{display:flex;flex-direction:column;gap:8px;padding:4px 0 12px}
+.pchip{display:flex;align-items:center;justify-content:flex-start;gap:12px;border:1px solid var(--line);background:#fff;border-radius:16px;padding:14px 16px;cursor:pointer;font-size:15px;color:var(--text);width:100%;text-align:right}
+.pchip.on{border-color:var(--pri);background:var(--soft);font-weight:700;color:var(--deep)}
+.pchip.add{color:var(--deep);border-style:dashed}
+.pchip svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round}
+.rd{width:18px;height:18px;border-radius:50%;border:2px solid var(--muted);flex:none;position:relative}
+.pchip.on .rd{border-color:var(--ok)}
+.pchip.on .rd::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--ok)}
+.pchip.on{border-color:var(--ok)}
+.shaking,.lp-wrap.on > .hero{animation:wig .35s ease-in-out infinite}
+.hero-acts{top:12px;left:12px;transform:none}
+.pmore{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;border:0;background:var(--soft);color:var(--deep);cursor:pointer;display:grid;place-items:center;z-index:2;font-size:18px;line-height:1;font-weight:700}
+.lp-wrap.on .pmore{display:none}
+.cust-wrap .card{padding-left:56px}
+.cust-acts{flex-direction:row;flex-wrap:wrap;align-items:center;margin-top:8px}
+.cq-wrap{margin-top:10px}
+.cm-btn{width:100%;justify-content:center;padding:16px;font-size:15px}
+.tx-page{display:flex;flex-direction:column;gap:10px;padding-top:4px}
+.tx-page label{font-size:13px;color:var(--muted);margin-top:6px;display:block}
+.tx-page .sub{margin:0}
+.lp-wrap.on .pchip{padding-left:16px}
+.p-acts{display:flex;flex-direction:column;align-items:flex-start;gap:8px;margin-top:8px}
+.pbtn{display:flex;align-items:center;gap:8px;padding:10px 18px;border:0;border-radius:14px;background:var(--soft);color:var(--deep);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer}
+.pbtn.sub{background:#fff;border:1px solid var(--line);margin-right:14px;min-width:150px;justify-content:space-between}
+.pbtn .pk{color:var(--ok);font-weight:700}
+.pbtn.del{background:#fdecea;color:var(--neg)}
+.pbtn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* lock screen */
+#lock{position:fixed;inset:0;z-index:50;background:#f3f6fa;color:#1f2937;display:flex;align-items:center;justify-content:center;padding:24px 24px calc(24px + env(safe-area-inset-bottom,0px));overflow:auto}
+#lock.hidden{display:none}
+.lk-wrap{width:100%;max-width:340px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.lk-ico{width:56px;height:56px;margin-bottom:22px}
+.lk-ico svg{width:100%;height:100%;stroke:#64748b;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.lk-title{font-size:18px;font-weight:700;color:#1f2937;margin-bottom:34px}
+.lk-dots{display:flex;gap:22px;direction:ltr;margin-bottom:14px}
+.dot{width:26px;height:26px;border-radius:50%;border:2px solid #3b8bba;display:inline-block;box-sizing:border-box;transition:background .12s}
+.dot.fill{background:#3b8bba}
+.lk-dots.shake{animation:lkshake .35s}
+@keyframes lkshake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.lk-msg{min-height:22px;font-size:14px;color:#c0392b;margin-bottom:18px;padding:0 6px}
+.pad{display:grid;grid-template-columns:repeat(3,76px);justify-content:space-between;gap:18px 0;width:100%;max-width:300px;direction:ltr}
+.pk-key{width:76px;height:76px;border-radius:50%;border:1px solid #dfe3ea;background:#eef1f6;color:#1a2233;font-size:30px;font-weight:700;cursor:pointer;font-family:Poppins,Vazirmatn,sans-serif;display:grid;place-items:center;padding:0;-webkit-tap-highlight-color:transparent;transition:background .1s,transform .1s}
+.pk-key:active{background:#dde3ec;transform:scale(.95)}
+.pk-key svg{width:30px;height:30px;stroke:#64748b;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.pad .gap{width:76px;height:76px}
+.su-wrap{width:100%;max-width:360px;display:flex;flex-direction:column;gap:14px;text-align:right}
+.su-wrap .lk-ico{align-self:center;margin-bottom:6px}
+.su-h{font-size:22px;font-weight:700;text-align:center;margin:0}
+.su-p{font-size:14px;color:#64748b;text-align:center;margin:0 0 10px}
+.su-fld label{display:block;font-size:13px;color:#64748b;margin-bottom:6px}
+.su-fld input{width:100%;height:54px;border:1.5px solid #dfe3ea;border-radius:16px;background:#fff;padding:0 16px;font-size:16px;font-family:inherit;color:#1f2937;outline:none}
+.su-fld input:focus{border-color:#3b8bba}
+.su-fld input.ltr{direction:ltr;text-align:left}
+.su-btn{position:relative;width:100%;height:60px;border:0;border-radius:22px;background:#3a8bc2;color:#fff;font-size:17px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:10px}
+.su-btn svg{position:absolute;left:22px;top:50%;transform:translateY(-50%);width:24px;height:24px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.su-alt{text-align:center;font-size:14px;color:#64748b;margin-top:6px}
+.lk-link{background:none;border:0;color:#3b8bba;cursor:pointer;font-size:14px;font-family:inherit;margin-top:26px}
+.mail-row{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);background:#fff;border-radius:14px;padding:12px 14px;width:100%}
+.mail-txt{display:flex;flex-direction:column;gap:4px;min-width:0}
+.mail-txt b{font-size:15px}
+.mail-txt small{color:var(--muted);font-size:13px;direction:ltr;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dots-btn{width:40px;height:40px;border-radius:50%;border:0;background:var(--soft);color:var(--deep);font-size:20px;font-weight:700;cursor:pointer;flex:none;line-height:1}
+</style>
+</head>
+<body>
+<div id="main"></div>
+
+<div id="ov" class="overlay hidden">
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
+</div>
+
+<div id="cal" class="overlay cal-ov hidden" role="dialog" aria-modal="true"></div>
+<div id="lock" class="hidden"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const KEY = 'hesab-daftari-v1';
+const SUPABASE_URL = 'https://wvnggzpqtoubuqmowqvj.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_1KZebGzaz17vLkc5HldsRw_1Q5Ckbr_';
+const supabaseClient = window.supabase?.createClient
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  : null;
+let cloudUser = null, cloudReady = false, cloudSyncTimer = null;
+let cloudSyncing = false, cloudSyncAgain = false;
+
+async function cloudLoad(){
+  if(!supabaseClient || !cloudUser) throw new Error('اتصال حساب ابری برقرار نیست.');
+  const u = cloudUser.id;
+  const [pr, cr, tr] = await Promise.all([
+    supabaseClient.from('p').select('id,n,cur').eq('u',u),
+    supabaseClient.from('c').select('id,p,n,ph,ds').eq('u',u),
+    supabaseClient.from('t').select('id,c,a,d,y,m,dd,ts').eq('u',u)
+  ]);
+  if(pr.error) throw pr.error;
+  if(cr.error) throw cr.error;
+  if(tr.error) throw tr.error;
+  const parties = (pr.data || []).map(p => ({
+    id:p.id, n:p.n || '', cur:p.cur || 'toman', c:[]
+  }));
+  const pmap = new Map(parties.map(p => [p.id,p]));
+  const cmap = new Map();
+  (cr.data || []).forEach(c => {
+    const parent = pmap.get(c.p);
+    if(!parent) return;
+    const item = { id:c.id, n:c.n || '', ph:c.ph || '', ds:c.ds || '', tx:[] };
+    parent.c.push(item); cmap.set(item.id,item);
+  });
+  (tr.data || []).forEach(t => {
+    const customer = cmap.get(t.c);
+    if(!customer) return;
+    customer.tx.push({ id:t.id, a:Number(t.a)||0, d:t.d||'', y:Number(t.y)||0,
+      m:Number(t.m)||1, dd:Number(t.dd)||1, ts:Number(t.ts)||0 });
+  });
+  S = { ...S, cur:S.cur || 'toman', parties, email:cloudUser.email || S.email || '', loggedIn:true };
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+}
+
+async function cloudSyncNow(){
+  if(!supabaseClient || !cloudUser) return;
+  if(cloudSyncing){ cloudSyncAgain = true; return; }
+  cloudSyncing = true;
+  try{
+    do{
+      cloudSyncAgain = false;
+      const u = cloudUser.id;
+      const parties = S.parties || [];
+      const customers = parties.flatMap(p => (p.c || []).map(c => ({ p, c })));
+      const transactions = customers.flatMap(x => (x.c.tx || []).map(t => ({ c:x.c, t })));
+      const pRows = parties.map(p => ({ id:String(p.id), u, n:p.n || '', cur:p.cur || 'toman' }));
+      const cRows = customers.map(x => ({ id:String(x.c.id), u, p:String(x.p.id), n:x.c.n || '', ph:x.c.ph || '', ds:x.c.ds || '' }));
+      const tRows = transactions.map(x => ({ id:String(x.t.id), u, c:String(x.c.id), a:Math.trunc(Number(x.t.a)||0), d:x.t.d || '', y:Math.trunc(Number(x.t.y)||0), m:Math.trunc(Number(x.t.m)||1), dd:Math.trunc(Number(x.t.dd)||1), ts:Math.trunc(Number(x.t.ts)||0) }));
+      for(const [table, rows] of [['p',pRows],['c',cRows],['t',tRows]]){
+        if(rows.length){
+          const {error} = await supabaseClient.from(table).upsert(rows, { onConflict:'id' });
+          if(error) throw error;
+        }
+      }
+      async function deleteMissing(table, rows){
+        let q = supabaseClient.from(table).delete().eq('u',u);
+        if(rows.length) q = q.not('id','in',`(${rows.map(r => String(r.id)).join(',')})`);
+        const {error} = await q;
+        if(error) throw error;
+      }
+      await deleteMissing('t', tRows);
+      await deleteMissing('c', cRows);
+      await deleteMissing('p', pRows);
+    }while(cloudSyncAgain);
+  }catch(e){ console.error('Supabase sync error:', e); return false; }
+  finally{ cloudSyncing = false; }
+  return true;
+}
+function queueCloudSync(){
+  if(!cloudReady || !cloudUser) return;
+  clearTimeout(cloudSyncTimer);
+  cloudSyncTimer = setTimeout(() => { cloudSyncNow().catch(e => console.error(e)); }, 500);
+}
+
+/* Codes for PIN recovery and email change.
+   To send codes to the email automatically, create a free account at emailjs.com,
+   add an email service and a template whose recipient is {{to_email}} and whose text
+   contains {{purpose}} and {{code}}. Paste the three values below.
+   If they are left empty, the phone's mail app opens with the code instead. */
+const MAIL_CFG = { service:'', template:'', publicKey:'' };
+const ICON = {
+  menu:'<svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>',
+  search:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>',
+  back:'<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>',
+  chev:'<svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>',
+  edit:'<svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg>',
+  trash:'<svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>',
+  share:'<svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.6M8.2 13.2l7.6 4.6"/></svg>',
+  book:'<svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M9 7h6M9 11h6"/></svg>',
+  plus:'<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
+  check:'<svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg>',
+  user:'<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/></svg>',
+  phone:'<svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>',
+  note:'<svg viewBox="0 0 24 24"><path d="M5 4h14v12l-4 4H5z"/><path d="M9 9h6M9 13h4"/></svg>',
+  cal:'<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
+  close:'<svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><path d="M6 6l12 12M18 6L6 18"/></svg>'
+};
+const WD = ['ش','ی','د','س','چ','پ','ج'];
+const MONTHS = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
+
+/* ---------- helpers ---------- */
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function latin(s){
+  return String(s)
+    .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+    .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+}
+function parse(v){ return parseInt(latin(v).replace(/[^0-9]/g,'') || '0', 10); }
+function fa(n){ return String(n).replace(/\d/g, x => '۰۱۲۳۴۵۶۷۸۹'[x]); }
+function p2(n){ return (n < 10 ? '0' : '') + n; }
+function num(n){ return Math.abs(n).toLocaleString('en-US'); }
+const CURS = { toman:'تومان', afn:'افغانی' };
+function pcur(p){ return (p && CURS[p.cur]) ? p.cur : 'toman'; }
+function curKey(){ const p = (typeof findParty === 'function') ? findParty(V.openId) : null; return (p && p.cur) || S.cur || 'toman'; }
+function curLabel(){ return CURS[curKey()] || 'تومان'; }
+function money(n){ return num(n) + ' ' + curLabel(); }
+function signed(n){ return n > 0 ? '+' + money(n) : n < 0 ? '−' + money(n) : '-'; }
+/* balance colors: positive (customer owes us) red, negative (customer has a claim) green */
+function cls(n){ return n > 0 ? 'neg' : n < 0 ? 'pos' : 'zero'; }
+/* balances: positive = I have a claim (dark green); negative = customer has a claim (red) */
+function balCls(n){ return n > 0 ? 'bpos' : n < 0 ? 'bneg' : 'zero'; }
+function tally(balances){
+  let pos = 0, neg = 0;
+  balances.forEach(b => { if(b > 0) pos += b; else neg += -b; });
+  return { pos, neg, net: pos - neg };
+}
+/* totals over all transactions of the given customers:
+   pos = everything I paid/gave to customers, neg = everything I received from customers, net = pos - neg */
+function tallyC(custs){
+  let pos = 0, neg = 0;
+  custs.forEach(c => c.tx.forEach(t => { if(t.a > 0) pos += t.a; else neg += -t.a; }));
+  return { pos, neg, net: pos - neg };
+}
+function custStatus(b){
+  if(b < 0) return 'مشتری طلب دارد';
+  if(b > 0) return 'مشتری بدهکار است';
+  return 'تسویه‌اید';
+}
+function groupStatus(n){
+  if(n > 0) return 'مجموع طلب شما از مشتریان';
+  if(n < 0) return 'مجموع طلب مشتریان از شما';
+  return 'تسویه‌اید';
+}
+
+/* Jalali (Persian solar) calendar */
+function g2j(gy, gm, gd){
+  const gdm = [0,31,59,90,120,151,181,212,243,273,304,334];
+  const gy2 = gm > 2 ? gy + 1 : gy;
+  let days = 355666 + 365*gy + Math.floor((gy2+3)/4) - Math.floor((gy2+99)/100) + Math.floor((gy2+399)/400) + gd + gdm[gm-1];
+  let jy = -1595 + 33*Math.floor(days/12053);
+  days %= 12053;
+  jy += 4*Math.floor(days/1461);
+  days %= 1461;
+  if(days > 365){ jy += Math.floor((days-1)/365); days = (days-1) % 365; }
+  let jm, jd;
+  if(days < 186){ jm = 1 + Math.floor(days/31); jd = 1 + (days % 31); }
+  else { jm = 7 + Math.floor((days-186)/30); jd = 1 + ((days-186) % 30); }
+  return [jy, jm, jd];
+}
+function isLeap(y){ return [1,5,9,13,17,22,26,30].includes(((y % 33) + 33) % 33); }
+function daysIn(y, m){ return m <= 6 ? 31 : m <= 11 ? 30 : (isLeap(y) ? 30 : 29); }
+function jToDate(y, m, d){
+  let base = null;
+  for(let k = 19; k <= 22; k++){
+    const x = new Date(y + 621, 2, k);
+    const [jy, jm, jd] = g2j(x.getFullYear(), x.getMonth()+1, x.getDate());
+    if(jy === y && jm === 1 && jd === 1){ base = x; break; }
+  }
+  if(!base) base = new Date(y + 621, 2, 21);
+  const off = m <= 6 ? (m-1)*31 : 186 + (m-7)*30;
+  return new Date(base.getFullYear(), base.getMonth(), base.getDate() + off + d - 1);
+}
+function today(){
+  const d = new Date();
+  const [y, m, dd] = g2j(d.getFullYear(), d.getMonth()+1, d.getDate());
+  return { y, m, d: dd };
+}
+function jStr(y, m, d){ return String(y) + '/' + p2(m) + '/' + p2(d); }
+function parseDate(s){
+  const parts = latin(s).trim().split(/[\/\-\.]/).map(x => parseInt(x, 10));
+  if(parts.length !== 3 || parts.some(x => isNaN(x))) return null;
+  const [y, m, d] = parts;
+  if(y < 1300 || y > 1500 || m < 1 || m > 12 || d < 1 || d > 31) return null;
+  return { y, m, d };
+}
+function kOf(t){ return t.y*10000 + t.m*100 + t.dd; }
+function sortTx(tx){ return [...tx].sort((a, b) => (kOf(b) - kOf(a)) || (b.ts - a.ts)); }
+/* when the ⋮ of one transaction is tapped, only that transaction is listed */
+function txList(c){
+  const sorted = sortTx(c.tx);
+  if(LPSEL && LPSEL.kind === 'txmode' && LPSEL.cid === c.id){
+    return sorted.filter(t => t.id === LPSEL.tid);
+  }
+  return sorted;
+}
+
+/* ---------- data ---------- */
+function load(){
+  let d = null;
+  try{ d = JSON.parse(localStorage.getItem(KEY)); }catch(e){}
+  if(!d || !Array.isArray(d.parties)) return { cur:'toman', parties:[] };
+  const t = today();
+  d.parties.forEach(p => { if(!p.cur) p.cur = d.cur || 'toman'; });
+  d.parties.forEach(p => p.c.forEach(c => {
+    if(!Array.isArray(c.tx)){
+      c.tx = c.b ? [{ id:uid(), a:c.b, d:'مانده اولیه', y:t.y, m:t.m, dd:t.d, ts:Date.now() }] : [];
+      delete c.b;
+    }
+  }));
+  return d;
+}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} queueCloudSync(); }
+let S = load();
+let V = { view:'list', openId:null, custId:null, search:false, q:'' };
+let SUI = { curOpen:false };
+let CAL = { open:false, mode:'days', sel:{y:0,m:1,d:1}, vy:0, vm:1 };
+let LPSEL = null;     /* long-press selection: {key, view, kind, pid, cid, tid} */
+let LPJUST = false;   /* swallow the click that follows a long press */
+let LPT = null;
+
+/* ---------- back navigation (phone back button) ---------- */
+let OV = [];   /* open overlays, in order: 'sheet' and/or 'cal' */
+let IGN = 0;   /* popstate events caused by closing an overlay on screen */
+function pushOv(name){ OV.push(name); history.pushState({v:V, ov:name}, ''); }
+function popOv(name){
+  const i = OV.lastIndexOf(name);
+  if(i < 0) return;
+  OV.splice(i, 1);
+  IGN++;
+  history.back();
+}
+/* go to another page; each page is a history step so the phone back button walks back one page at a time */
+/* soft generated tones: rising for entering a page, falling for going back */
+let AC = null;
+function softTone(f1, f2, dur, wave){
+  try{
+    if(!AC) AC = new (window.AudioContext || window.webkitAudioContext)();
+    if(AC.state === 'suspended') AC.resume();
+    const o = AC.createOscillator(), g = AC.createGain();
+    const t = AC.currentTime;
+    o.type = wave;
+    o.frequency.setValueAtTime(f1, t);
+    o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.035, t + 0.04);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(AC.destination);
+    o.start(t); o.stop(t + dur + 0.02);
+  }catch(e){}
+}
+function soundForward(){ softTone(480, 640, 0.22, 'sine'); }
+function soundBack(){ softTone(640, 420, 0.22, 'triangle'); }
+
+function goTo(next, replace){
+  const st = Object.assign({view:'list', openId:null, custId:null, search:false, q:''}, next);
+  if(replace) history.replaceState({v:st}, ''); else { history.pushState({v:st}, ''); soundForward(); }
+  V = st; LPSEL = null; render(); window.scrollTo(0,0);
+}
+function closeCal(){
+  CAL.open = false; calRender();
+  if(OV.includes('cal')) popOv('cal');
+}
+window.addEventListener('popstate', e => {
+  if(IGN > 0){ IGN--; return; }
+  if(OV.length){
+    const top = OV.pop();
+    if(top === 'cal'){ CAL.open = false; calRender(); }
+    else document.getElementById('ov').classList.add('hidden');
+    return;
+  }
+  soundBack();
+  const st = e.state && e.state.v ? e.state.v : {view:'list'};
+  V = Object.assign({view:'list', openId:null, custId:null, search:false, q:''}, st);
+  LPSEL = null; render(); window.scrollTo(0,0);
+});
+
+/* after saving or deleting a transaction from the full page, go to the customers page */
+function afterTx(){
+  if(V.view === 'txEdit'){ closeSheet(); goTo({view:'cust', openId:V.openId, custId:V.custId}, true); return; }
+  closeSheet(); render();
+}
+/* customer search: by part of the name, or by part of the phone number */
+function custMatch(c, q){
+  if(!q) return true;
+  const qq = latin(q).trim();
+  if(c.n.includes(qq)) return true;
+  const digits = qq.replace(/\D/g, '');
+  return digits.length > 0 && (c.ph || '').includes(digits);
+}
+function findParty(id){ return S.parties.find(p => p.id === id); }
+function findCust(pid, cid){ const p = findParty(pid); return p && p.c.find(c => c.id === cid); }
+function custBal(c){ return c.tx.reduce((s, t) => s + t.a, 0); }
+function allBalances(){ const a = []; S.parties.forEach(p => p.c.forEach(c => a.push(custBal(c)))); return a; }
+const COLORS = [['#f1e4d3','#7d5a3c'],['#e6efe3','#4d6b3f'],['#efe6e1','#8a4b35'],['#ece6dc','#6b5a3e'],['#f3e8d8','#a0692e']];
+function colorFor(s){ let h = 0; for(const ch of s) h = (h*31 + ch.charCodeAt(0)) >>> 0; return COLORS[h % COLORS.length]; }
+
+/* ---------- views ---------- */
+function summaryHTML(t, label){
+  return `
+  <section class="hero">
+    <div class="lbl">${label}</div>
+    <div class="net"><span>${num(t.net)}</span><span>${curLabel()}</span><small>${groupStatus(t.net)}</small></div>
+    <div class="mini-row">
+      <div class="mini"><span class="sm">پرداخت کامل به مشتریان</span><b>${money(t.pos)}</b></div>
+      <div class="mini"><span class="sm">گرفت کامل از مشتریان</span><b>${money(t.neg)}</b></div>
+    </div>
+  </section>`;
+}
+function pageHead(title, back){
+  return `<header class="top">
+    <button class="ic" data-a="back" data-v="${back}" aria-label="بازگشت">${ICON.back}</button>
+    <h1>${title}</h1>
+    <span class="sp"></span>
+  </header>`;
+}
+/* wraps a card with the edit / delete buttons shown after a long press */
+function lpWrap(key, card, acts){
+  const on = LPSEL && LPSEL.key === key;
+  return `<div class="lp-wrap ${on ? 'on' : ''}">${card}${on ? `<div class="lp-acts">${acts}</div>` : ''}</div>`;
+}
+
+function render(){
+  const m = document.getElementById('main');
+  if(V.view === 'detail') V.view = 'list';
+  if(LPSEL && LPSEL.view !== V.view) LPSEL = null;
+
+  if(V.view === 'menu'){
+    m.innerHTML = pageHead('منو', 'list') + `
+      <div class="opt-list">
+        <button class="opt" data-a="openSettings"><span>تنظیمات</span><span class="sub">${ICON.chev}</span></button>
+      </div>`;
+    return;
+  }
+
+  if(V.view === 'currency'){
+    m.innerHTML = pageHead('مبلغ پیش‌فرض', 'settings') + `
+      <p class="hint" style="margin:0 4px 10px">برای طرف حساب‌های جدید. مبلغ هر طرف حساب را از ⋮ کنار نامش تغییر دهید.</p>
+      <div class="opt-list">
+        ${Object.keys(CURS).map(k => `<button class="opt ${(S.cur || 'toman') === k ? 'on' : ''}" data-a="cur" data-v="${k}"><span>${CURS[k]}</span><span class="tick">✓</span></button>`).join('')}
+      </div>`;
+    return;
+  }
+
+  if(V.view === 'settings'){
+    m.innerHTML = pageHead('تنظیمات', 'menu') + `
+      <div class="opt-list" style="margin-top:0">
+        ${emailSection()}
+      </div>
+      ${pinSection()}
+      <div class="opt-list" style="margin-top:22px"><button class="opt" data-a="authLogout"><span>خروج از حساب</span><span class="sub">${ICON.chev}</span></button></div>
+
+`;
+    return;
+  }
+
+  if(V.view === 'addCust'){
+    const p = findParty(V.openId);
+    if(!p){ V.view = 'list'; return render(); }
+    m.innerHTML = pageHead('درج مشتری جدید', 'detail') + `
+      <div class="avatar-big">${ICON.user}</div>
+      <div class="form-card">
+        <div class="fld">
+          <span class="fi">${ICON.user}</span>
+          <div class="fw"><label for="f-name">نام مشتری</label><input id="f-name" maxlength="60"></div>
+        </div>
+        <div class="fld">
+          <span class="fi">${ICON.phone}</span>
+          <div class="fw"><label for="f-phone">شماره تلفن</label><input id="f-phone" inputmode="tel" maxlength="20"></div>
+        </div>
+        <div class="fld">
+          <span class="fi">${ICON.note}</span>
+          <div class="fw"><label for="f-ds">توضیحات (اختیاری)</label><textarea id="f-ds" rows="2" maxlength="200"></textarea></div>
+        </div>
+      </div>
+      <button class="bottom-btn" data-a="saveCust" data-p="${p.id}">${ICON.check}<span>ثبت</span></button>`;
+    setTimeout(() => { const i = document.getElementById('f-name'); if(i) i.focus(); }, 60);
+    return;
+  }
+
+  if(V.view === 'custMenu'){
+    const p = findParty(V.openId), c = p && findCust(p.id, V.custId);
+    if(!c){ V.view = 'list'; return render(); }
+    const ids = `data-p="${p.id}" data-c="${c.id}"`;
+    m.innerHTML = pageHead(esc(c.n), 'list') + `
+      <div class="tx-page">
+        ${c.ph || c.ds ? `<div class="info">
+          ${c.ph ? `<div><span>شماره تلفن: </span>${fa(c.ph)}</div>` : ''}
+          ${c.ds ? `<div><span>توضیحات: </span>${esc(c.ds)}</div>` : ''}
+        </div>` : ''}
+        <button class="pbtn cm-btn" data-a="cMenuEdit" ${ids}>${ICON.edit}<span>ویرایش</span></button>
+        <button class="pbtn del cm-btn" data-a="cDelTx" ${ids}>${ICON.trash}<span>حذف همه تراکنش‌ها</span></button>
+        <button class="pbtn del cm-btn" data-a="cDel" ${ids}>${ICON.trash}<span>حذف مشتری</span></button>
+      </div>`;
+    return;
+  }
+  if(V.view === 'custEditPage'){
+    const p = findParty(V.openId), c = p && findCust(p.id, V.custId);
+    if(!c){ V.view = 'list'; return render(); }
+    m.innerHTML = pageHead('ویرایش مشتری', 'custMenu') + `
+      <div class="tx-page">
+        <label for="f-name">نام مشتری</label>
+        <input id="f-name" value="${esc(c.n)}" maxlength="60">
+        <label for="f-phone">شماره تلفن</label>
+        <input id="f-phone" inputmode="tel" maxlength="20" value="${c.ph ? fa(c.ph) : ''}">
+        <label for="f-ds">توضیحات (اختیاری)</label>
+        <textarea id="f-ds" rows="2" maxlength="200">${esc(c.ds || '')}</textarea>
+        <button class="btn pri-btn" data-a="saveCustPage" data-p="${p.id}" data-c="${c.id}">ثبت ویرایش</button>
+      </div>`;
+    return;
+  }
+  if(V.view === 'txEdit'){
+    const p = findParty(V.openId), c = p && findCust(p.id, V.custId);
+    const t = c && c.tx.find(x => x.id === V.txId);
+    if(!t){ V.view = 'list'; return render(); }
+    m.innerHTML = `<div class="tx-page">${SHEETS.txForm(p, c, t, true)}</div>`;
+    return;
+  }
+  if(V.view === 'cust'){
+    const p = findParty(V.openId), c = p && findCust(p.id, V.custId);
+    if(!c){ V.view = 'detail'; V.custId = null; return render(); }
+    const bal = custBal(c);
+    const debts = c.tx.filter(t => t.a > 0).reduce((s, t) => s + t.a, 0);
+    const pays = c.tx.filter(t => t.a < 0).reduce((s, t) => s - t.a, 0);
+    m.innerHTML = `
+      <header class="top">
+        <button class="ic" data-a="back" data-v="detail" aria-label="بازگشت">${ICON.back}</button>
+        <h1>${esc(c.n)}</h1>
+        <button class="ic" data-a="share" data-p="${p.id}" data-c="${c.id}" aria-label="اشتراک گذاری">${ICON.share}</button>
+      </header>
+      <section class="hero">
+        <div class="lbl">مانده حساب ${esc(c.n)}</div>
+        <div class="net"><span>${num(bal)}</span><span>${curLabel()}</span><small>${custStatus(bal)}</small></div>
+        <div class="mini-row">
+          <div class="mini"><span>گرفت مشتری</span><b>${money(debts)}</b></div>
+          <div class="mini"><span>پرداخت مشتری</span><b>${money(pays)}</b></div>
+        </div>
+      </section>
+      ${c.ph || c.ds ? `
+      <div class="info" style="margin-top:14px">
+        ${c.ph ? `<div><span>شماره تلفن: </span>${fa(c.ph)}</div>` : ''}
+        ${c.ds ? `<div><span>توضیحات: </span>${esc(c.ds)}</div>` : ''}
+      </div>` : ''}
+      <div class="sec-title">تراکنش‌ها</div>
+      <div class="list">
+        ${c.tx.length ? txList(c).map(t => {
+          const key = `txmode:${p.id}:${c.id}:${t.id}`;
+          const on = LPSEL && LPSEL.key === key;
+          return `<div class="lp-wrap">
+          <div class="card tx-card" style="cursor:default">
+            <span class="nm tx-nm"><b>${esc(t.d || 'بدون شرح')}</b><small>${jStr(t.y, t.m, t.dd)}</small></span>
+            <span class="bal ${cls(t.a)}">${money(t.a)}</span>
+          </div>
+          ${on ? '' : `<button class="pmore" data-a="txMore" data-p="${p.id}" data-c="${c.id}" data-t="${t.id}" aria-label="گزینه‌ها">⋮</button>`}
+          ${on ? `<div class="p-acts">
+            <button class="pbtn" data-a="lpEdit" data-k="tx" data-p="${p.id}" data-c="${c.id}" data-t="${t.id}">${ICON.edit}<span>ویرایش</span></button>
+            <button class="pbtn del" data-a="lpDel" data-p="${p.id}" data-c="${c.id}" data-t="${t.id}">${ICON.trash}<span>حذف</span></button>
+          </div>` : ''}
+          </div>`;
+        }).join('')
+        : `<div class="empty">هنوز تراکنشی ثبت نشده.<br>با دکمه پایین صفحه، اولین تراکنش را ثبت کنید.</div>`}
+      </div>
+      <button class="fab" data-a="addTx" data-p="${p.id}" data-c="${c.id}">${ICON.plus}<span>ثبت تراکنش</span></button>`;
+    return;
+  }
+
+  if(V.view === 'detail'){
+    const p = findParty(V.openId);
+    if(!p){ V.view = 'list'; return render(); }
+    const t = tallyC(p.c);
+    m.innerHTML = `
+      <header class="top">
+        <button class="ic" data-a="back" data-v="list" aria-label="بازگشت">${ICON.back}</button>
+        <h1>${esc(p.n)}</h1>
+        <button class="ic" data-a="partyEdit" aria-label="ویرایش طرف حساب">${ICON.edit}</button>
+      </header>
+      ${summaryHTML(t, 'مجموع حساب این طرف حساب')}
+      <div class="sec-title">مشتریان</div>
+      <div class="list">
+        ${p.c.length ? p.c.map(c => {
+          const b = custBal(c), col = colorFor(c.n);
+          const card = `
+          <button class="card" data-a="cust" data-p="${p.id}" data-c="${c.id}">
+            <span class="av" style="background:${col[0]};color:${col[1]}">${esc(c.n.charAt(0))}</span>
+            <span class="nm"><b>${esc(c.n)}</b><small>${c.ph ? fa(c.ph) : c.tx.length + ' تراکنش'}</small></span>
+            <span class="bal ${balCls(b)}">${b === 0 ? '-' : money(b)}</span>
+          </button>`;
+          const mk = `cust:${p.id}:${c.id}`;
+          const menuOpen = LPSEL && LPSEL.key === mk;
+          const ids = `data-p="${p.id}" data-c="${c.id}"`;
+          return `<div class="lp-wrap cust-wrap">${card}${menuOpen
+            ? `<div class="p-acts cust-acts">
+                <button class="pbtn" data-a="cEdit" ${ids}>${ICON.edit}<span>ویرایش</span></button>
+                <button class="pbtn del" data-a="cDelTx" ${ids}>${ICON.trash}<span>حذف همه تراکنش‌ها</span></button>
+                <button class="pbtn del" data-a="cDel" ${ids}>${ICON.trash}<span>حذف مشتری</span></button>
+              </div>`
+            : `<button class="pmore" data-a="custMore" ${ids} aria-label="گزینه‌ها">⋮</button>`}</div>`;
+        }).join('')
+        : `<div class="empty">هنوز مشتری‌ای برای این طرف حساب ثبت نشده.<br>با دکمه پایین صفحه، اولین مشتری را اضافه کنید.</div>`}
+      </div>
+      <button class="fab" data-a="addCust" data-p="${p.id}">${ICON.plus}<span>افزودن مشتری</span></button>`;
+    return;
+  }
+
+  if(V.view === 'list'){ renderMain(m); return; }
+  const t = tallyC(S.parties.flatMap(p => p.c));
+  const q = V.q.trim();
+  const parties = S.parties.filter(p => !q || p.n.includes(q));
+  m.innerHTML = `
+    <header class="top">
+      <button class="ic" data-a="menu" aria-label="منو">${ICON.menu}</button>
+      <h1>حساب دفتری</h1>
+      <button class="ic" data-a="search" aria-label="جستجو">${ICON.search}</button>
+    </header>
+    ${summaryHTML(t, 'مجموع حساب‌های مشتریان')}
+    ${V.search ? `<div class="search"><input id="q" type="search" placeholder="جستجوی طرف حساب..." value="${esc(V.q)}"></div>` : ''}
+    <div class="list">
+      ${parties.length ? parties.map(p => {
+        const pt = tallyC(p.c);
+        const col = colorFor(p.n);
+        const key = `party:${p.id}`;
+        const card = `
+        <button class="card" data-a="open" data-p="${p.id}" data-lp="${key}">
+          <span class="av" style="background:${col[0]};color:${col[1]}">${esc(p.n.charAt(0))}</span>
+          <span class="nm"><b>${esc(p.n)}</b><small>${p.c.length} مشتری</small></span>
+          <span class="bal ${balCls(pt.net)}">${p.c.length ? signed(pt.net) : '-'}</span>
+        </button>`;
+        const acts = `<button class="lp-btn" data-a="lpEdit" data-k="party" data-p="${p.id}" aria-label="ویرایش">${ICON.edit}</button>`;
+        return lpWrap(key, card, acts);
+      }).join('') : `<div class="empty">${S.parties.length ? 'طرف حسابی با این نام پیدا نشد.' : 'هنوز طرف حسابی ثبت نشده.<br>با دکمه پایین صفحه، اولین طرف حساب را اضافه کنید.'}</div>`}
+    </div>
+    <button class="fab" data-a="addParty">${ICON.plus}<span>افزودن طرف حساب</span></button>`;
+
+  if(V.search){
+    const i = document.getElementById('q');
+    if(i){ i.focus(); i.setSelectionRange(i.value.length, i.value.length); }
+  }
+}
+
+/* ---------- sharing a customer ---------- */
+function custSummary(c){
+  const bal = custBal(c);
+  const gave = c.tx.filter(t => t.a > 0).reduce((s, t) => s + t.a, 0);
+  const got  = c.tx.filter(t => t.a < 0).reduce((s, t) => s - t.a, 0);
+  let balLine;
+  if(bal > 0) balLine = `مانده کامل: ${money(bal)} (مشتری بدهکار است)`;
+  else if(bal < 0) balLine = `طلب کامل مشتری: ${money(bal)}`;
+  else balLine = 'تسویه‌اید';
+  return { name: c.n, got, gave, balLine };
+}
+function textOf(s){
+  return [s.name, `گرفت کامل: ${money(s.got)}`, `داد کامل: ${money(s.gave)}`, s.balLine].join('\n');
+}
+async function shareText(s){
+  const text = textOf(s);
+  if(navigator.share){ try{ await navigator.share({ text }); return; }catch(e){ return; } }
+  try{ await navigator.clipboard.writeText(text); alert('متن کپی شد.'); }
+  catch(e){ alert(text); }
+}
+async function shareImage(s){
+  const W = 800, H = 460;
+  const cv = document.createElement('canvas');
+  cv.width = W; cv.height = H;
+  const x = cv.getContext('2d');
+  try{ await document.fonts.load('bold 40px Vazirmatn'); await document.fonts.load('24px Vazirmatn'); }catch(e){}
+  const font = 'Vazirmatn, Tahoma, sans-serif';
+  x.fillStyle = '#faf6f1'; x.fillRect(0, 0, W, H);
+  x.fillStyle = '#a67c52'; x.fillRect(0, 0, W, 120);
+  x.textAlign = 'right'; x.textBaseline = 'middle';
+  x.fillStyle = '#ffffff'; x.font = `bold 40px ${font}`; x.fillText(s.name, W - 40, 60);
+  x.fillStyle = '#3d2b1f'; x.font = `26px ${font}`;
+  x.fillText(`گرفت کامل: ${money(s.got)}`, W - 40, 190);
+  x.fillText(`داد کامل: ${money(s.gave)}`, W - 40, 260);
+  x.font = `bold 28px ${font}`; x.fillText(s.balLine, W - 40, 340);
+  x.fillStyle = '#8c7866'; x.font = `18px ${font}`; x.fillText('حساب دفتری', W - 40, H - 40);
+  cv.toBlob(async blob => {
+    const file = new File([blob], `${s.name}.png`, { type: 'image/png' });
+    if(navigator.canShare && navigator.canShare({ files: [file] })){
+      try{ await navigator.share({ files: [file], title: s.name }); return; }catch(e){ return; }
+    }
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `${s.name}.png`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+  }, 'image/png');
+}
+function sharePdf(s){
+  const html = `<!DOCTYPE html><html dir="rtl" lang="fa"><head><meta charset="utf-8"><title>${esc(s.name)}</title>
+    <style>body{font-family:Vazirmatn,Tahoma,sans-serif;padding:32px;color:#3d2b1f}h1{font-size:24px;margin-bottom:18px}p{font-size:17px;line-height:2}</style>
+    </head><body><h1>${esc(s.name)}</h1><p>گرفت کامل: ${money(s.got)}</p><p>داد کامل: ${money(s.gave)}</p><p><b>${esc(s.balLine)}</b></p></body></html>`;
+  const f = document.createElement('iframe');
+  f.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0';
+  document.body.appendChild(f);
+  const d = f.contentWindow.document;
+  d.open(); d.write(html); d.close();
+  setTimeout(() => {
+    try{ f.contentWindow.focus(); f.contentWindow.print(); }
+    catch(e){ alert('ذخیره PDF در این مرورگر پشتیبانی نمی‌شود.'); }
+    setTimeout(() => f.remove(), 1500);
+  }, 300);
+}
+
+/* ---------- invoice (فاکتور) ---------- */
+function todayStr(){ const t = today(); return jStr(t.y, t.m, t.d); }
+/* گرفت = money received-side amounts (a>0), پرداخت = payments (a<0), same as the customer page */
+function invRows(c){
+  const list = [...c.tx].sort((a, b) => (kOf(a) - kOf(b)) || (a.ts - b.ts));
+  let got = 0, paid = 0;
+  const rows = list.map((t, i) => {
+    const g = t.a > 0 ? t.a : 0, pd = t.a < 0 ? -t.a : 0;
+    got += g; paid += pd;
+    return { i: i + 1, date: jStr(t.y, t.m, t.dd), desc: t.d || '—', got: g, paid: pd };
+  });
+  return { rows, got, paid, bal: custBal(c) };
+}
+function balText(bal){
+  if(bal > 0) return `باقی مانده: ${money(bal)} (مشتری بدهکار است)`;
+  if(bal < 0) return `طلب: ${money(bal)}`;
+  return 'تسویه‌اید';
+}
+function invHTML(c){
+  const d = invRows(c);
+  const trs = d.rows.map(r => `<tr><td>${fa(r.i)}</td><td>${r.date}</td><td>${esc(r.desc)}</td><td>${r.got ? num(r.got) : ''}</td><td>${r.paid ? num(r.paid) : ''}</td></tr>`).join('');
+  return `<!DOCTYPE html><html dir="rtl" lang="fa"><head><meta charset="utf-8"><title>${esc(c.n)}</title>
+  <style>
+    body{font-family:Vazirmatn,Tahoma,sans-serif;padding:28px;color:#3d2b1f}
+    h1{font-size:26px;margin:0 0 4px}
+    .meta{color:#8c7866;font-size:13px;margin-bottom:14px}
+    hr{border:0;border-top:2px solid #a67c52;margin:10px 0 16px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th,td{border-bottom:1px solid #ebe0d4;padding:8px 6px;text-align:right}
+    th{background:#f6efe7}
+    tfoot td{font-weight:700;border-top:2px solid #a67c52}
+    .end{margin-top:18px;font-size:18px;font-weight:700}
+  </style></head><body>
+  <h1>${esc(c.n)}</h1>
+  <div class="meta">فاکتور حساب — ${todayStr()}</div>
+  <hr>
+  <table>
+    <thead><tr><th>ردیف</th><th>تاریخ</th><th>شرح</th><th>گرفت (${curLabel()})</th><th>پرداخت (${curLabel()})</th></tr></thead>
+    <tbody>${trs || '<tr><td colspan="5">تراکنشی ثبت نشده</td></tr>'}</tbody>
+    <tfoot><tr><td colspan="3">جمع</td><td>${num(d.got)}</td><td>${num(d.paid)}</td></tr></tfoot>
+  </table>
+  <div class="end">${balText(d.bal)}</div>
+  </body></html>`;
+}
+function sharePdf2(c){
+  const f = document.createElement('iframe');
+  f.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0';
+  document.body.appendChild(f);
+  const d = f.contentWindow.document;
+  d.open(); d.write(invHTML(c)); d.close();
+  setTimeout(() => {
+    try{ f.contentWindow.focus(); f.contentWindow.print(); }
+    catch(e){ alert('ذخیره PDF در این مرورگر پشتیبانی نمی‌شود.'); }
+    setTimeout(() => f.remove(), 1500);
+  }, 300);
+}
+function clipText(x, text, max){
+  let t = String(text);
+  while(t.length > 1 && x.measureText(t).width > max) t = t.slice(0, -1);
+  return t === String(text) ? t : t.slice(0, -1) + '…';
+}
+async function shareImg2(c){
+  const d = invRows(c);
+  const W = 800, rowH = 40;
+  const H = 220 + d.rows.length * rowH + 150;
+  const cv = document.createElement('canvas');
+  cv.width = W; cv.height = H;
+  const x = cv.getContext('2d');
+  try{ await document.fonts.load('bold 30px Vazirmatn'); await document.fonts.load('16px Vazirmatn'); }catch(e){}
+  const font = 'Vazirmatn, Tahoma, sans-serif';
+  x.fillStyle = '#ffffff'; x.fillRect(0, 0, W, H);
+  x.textBaseline = 'middle';
+
+  x.textAlign = 'right';
+  x.fillStyle = '#3d2b1f'; x.font = `bold 32px ${font}`;
+  x.fillText(c.n, W - 40, 56);
+  x.textAlign = 'left';
+  x.fillStyle = '#8c7866'; x.font = `16px ${font}`;
+  x.fillText('فاکتور حساب', 40, 56);
+  x.textAlign = 'right';
+  x.fillText(`تاریخ: ${todayStr()}`, W - 40, 96);
+
+  x.fillStyle = '#a67c52'; x.fillRect(40, 122, W - 80, 3);
+
+  const COL = { no: W - 40, date: W - 120, desc: W - 290, got: W - 490, paid: W - 640 };
+  let y = 160;
+  x.font = `bold 16px ${font}`; x.fillStyle = '#7d5a3c';
+  x.textAlign = 'right';
+  x.fillText('ردیف', COL.no, y);
+  x.fillText('تاریخ', COL.date, y);
+  x.fillText('شرح', COL.desc, y);
+  x.fillText(`گرفت`, COL.got, y);
+  x.fillText(`پرداخت`, COL.paid, y);
+
+  y = 200;
+  x.font = `15px ${font}`;
+  d.rows.forEach((r, idx) => {
+    if(idx % 2 === 1){ x.fillStyle = '#fbf8f4'; x.fillRect(40, y - rowH/2, W - 80, rowH); }
+    x.fillStyle = '#3d2b1f';
+    x.textAlign = 'right';
+    x.fillText(fa(r.i), COL.no, y);
+    x.fillText(r.date, COL.date, y);
+    x.fillText(clipText(x, r.desc, 170), COL.desc, y);
+    if(r.got) x.fillText(num(r.got), COL.got, y);
+    if(r.paid) x.fillText(num(r.paid), COL.paid, y);
+    y += rowH;
+  });
+
+  x.fillStyle = '#a67c52'; x.fillRect(40, y, W - 80, 2);
+  y += 28;
+  x.font = `bold 16px ${font}`; x.fillStyle = '#3d2b1f';
+  x.textAlign = 'right';
+  x.fillText('جمع', COL.desc, y);
+  x.fillText(num(d.got), COL.got, y);
+  x.fillText(num(d.paid), COL.paid, y);
+  y += 50;
+  x.font = `bold 22px ${font}`;
+  x.fillText(balText(d.bal), W - 40, y);
+
+  cv.toBlob(async blob => {
+    const file = new File([blob], `${c.n}.png`, { type: 'image/png' });
+    if(navigator.canShare && navigator.canShare({ files: [file] })){
+      try{ await navigator.share({ files: [file], title: c.n }); return; }catch(e){ return; }
+    }
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `${c.n}.png`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+  }, 'image/png');
+}
+
+/* ---------- invoice in the sample layout ---------- */
+function latinDate(y, m, d){ return `${y}-${m}-${d}`; }
+function amtText(n){ return Math.abs(n).toLocaleString('en-US') + ' ' + curLabel(); }
+function invData(c){
+  const list = [...c.tx].sort((a, b) => (kOf(b) - kOf(a)) || (b.ts - a.ts));
+  let got = 0, pay = 0;
+  const rows = list.map((t, i) => {
+    if(t.a > 0) got += t.a; else pay += -t.a;
+    return { no: i + 1, amt: -t.a, type: t.a > 0 ? 'گرفت' : 'پرداخت', date: latinDate(t.y, t.m, t.dd), desc: t.d || '—' };
+  });
+  return { rows, got, pay, bal: custBal(c) };
+}
+function invHTML3(c){
+  const d = invData(c);
+  const t = today();
+  const bc = d.bal > 0 ? '#c0392b' : d.bal < 0 ? '#1e7a4c' : '#333';
+  const bl = d.bal > 0 ? 'بدهکار' : d.bal < 0 ? 'طلبکار' : '';
+  const trs = d.rows.map(r => `<tr>
+      <td>${r.no}</td>
+      <td class="num">${Math.abs(r.amt).toLocaleString('en-US')} ${curLabel()}</td>
+      <td style="color:${r.type === 'گرفت' ? '#c0392b' : '#1e7a4c'}">${r.type}</td>
+      <td>${r.date}</td>
+      <td class="desc">${esc(r.desc)}</td>
+    </tr>`).join('');
+  return `<!DOCTYPE html><html dir="rtl" lang="fa"><head><meta charset="utf-8"><title>${esc(c.n)}</title>
+  <style>
+    body{font-family:Vazirmatn,Tahoma,sans-serif;margin:0;padding:28px;color:#333;font-size:13px}
+    .name{text-align:right;font-size:14px;color:#555;padding-bottom:12px;border-bottom:1px solid #ddd}
+    .name b{color:#222;font-size:15px}
+    .sum{display:flex;justify-content:space-between;text-align:center;margin:18px 0 22px}
+    .sum span{display:block;color:#555;font-size:13px}
+    .sum b{display:block;margin-top:6px;font-size:15px;direction:ltr}
+    .sum small{font-size:12px;font-weight:400}
+    h3{font-size:15px;margin:0 0 10px;text-align:right}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    thead th{background:#2c5f8a;color:#fff;padding:9px 6px;font-weight:700}
+    td{border:1px solid #e1e1e1;padding:9px 6px;text-align:center}
+    td.desc{text-align:right;width:40%;white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere;line-height:1.7}
+    tr{page-break-inside:avoid}
+    td.num{direction:ltr;white-space:nowrap}
+    .foot{margin-top:28px;border-top:1px solid #ddd;padding-top:10px;text-align:right;color:#555;font-size:12px;line-height:1.9}
+    .foot b{color:#222;font-size:13px;direction:ltr;display:inline-block}
+  </style></head><body>
+  <div class="name">نام مشتری: <b>${esc(c.n)}</b></div>
+  <div class="sum">
+    <div><span>مجموع گرفت</span><b>${amtText(d.got)}</b></div>
+    <div><span>مجموع پرداخت</span><b>${amtText(d.pay)}</b></div>
+    <div><span>حساب مشتری</span><b style="color:${bc}">${amtText(d.bal)} <small>${bl ? '(' + bl + ')' : ''}</small></b></div>
+  </div>
+  <h3>لیست تراکنش‌ها</h3>
+  <table>
+    <thead><tr><th>شماره</th><th>مبلغ</th><th>نوع</th><th>تاریخ</th><th>توضیح</th></tr></thead>
+    <tbody>${trs || '<tr><td colspan="5">تراکنشی ثبت نشده</td></tr>'}</tbody>
+  </table>
+  <div class="foot">تاریخ تولید گزارش<br><b>${latinDate(t.y, t.m, t.d)}</b><br>ساخته شده با حساب دفتری</div>
+  </body></html>`;
+}
+function sharePdf3(c){
+  const f = document.createElement('iframe');
+  f.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0';
+  document.body.appendChild(f);
+  const d = f.contentWindow.document;
+  d.open(); d.write(invHTML3(c)); d.close();
+  setTimeout(() => {
+    try{ f.contentWindow.focus(); f.contentWindow.print(); }
+    catch(e){ alert('ذخیره PDF در این مرورگر پشتیبانی نمی‌شود.'); }
+    setTimeout(() => f.remove(), 1500);
+  }, 300);
+}
+function fitText(x, text, cx, y, max, size, font, bold){
+  let sz = size;
+  do{ x.font = `${bold ? 'bold ' : ''}${sz}px ${font}`; sz--; }while(x.measureText(text).width > max && sz > 8);
+  x.fillText(text, cx, y);
+}
+async function shareImg3(c){
+  const d = invData(c);
+  const font = 'Vazirmatn, Tahoma, sans-serif';
+  try{ await document.fonts.load('bold 16px Vazirmatn'); await document.fonts.load('bold 14px Vazirmatn'); await document.fonts.load('600 14px Vazirmatn'); }catch(e){}
+  const W = 800, tTop = 200, hdrH = 36, LH = 24, minRow = 42, DESC_W = 280;
+  /* wrap the description so the whole text shows (rows grow taller) */
+  const mx = document.createElement('canvas').getContext('2d');
+  mx.font = `bold 15px ${font}`;
+  const wrapLines = (text, maxW) => {
+    const out = [];
+    String(text).split(/\r?\n/).forEach(para => {
+      let line = '';
+      para.split(/\s+/).filter(Boolean).forEach(w0 => {
+        let w = w0;
+        while(mx.measureText(w).width > maxW){
+          let k = w.length;
+          while(k > 1 && mx.measureText(w.slice(0, k)).width > maxW) k--;
+          if(line){ out.push(line); line = ''; }
+          out.push(w.slice(0, k)); w = w.slice(k);
+        }
+        const t = line ? line + ' ' + w : w;
+        if(line && mx.measureText(t).width > maxW){ out.push(line); line = w; } else line = t;
+      });
+      out.push(line);
+    });
+    return out.length ? out : [''];
+  };
+  const rowLines = d.rows.map(r => wrapLines(r.desc, DESC_W));
+  const rowHs = rowLines.map(l => Math.max(minRow, l.length * LH + 16));
+  const tBottom = tTop + hdrH + rowHs.reduce((a, b) => a + b, 0);
+  const H = tBottom + 130;
+  const cv = document.createElement('canvas');
+  const Q = 3; cv.width = W * Q; cv.height = H * Q;
+  const x = cv.getContext('2d');
+  x.scale(Q, Q); x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high';
+  const unit = curLabel();
+  const amt = n => Math.abs(n).toLocaleString('en-US') + ' ' + unit;
+  x.fillStyle = '#ffffff'; x.fillRect(0, 0, W, H);
+  x.textBaseline = 'middle';
+
+  /* customer name */
+  x.font = `bold 16px ${font}`;
+  const lbl = 'نام مشتری: ';
+  const lblW = x.measureText(lbl).width;
+  x.textAlign = 'right'; x.fillStyle = '#222';
+  x.fillText(lbl, W - 40, 40);
+  x.font = `bold 18px ${font}`; x.fillStyle = '#000';
+  x.fillText(c.n, W - 40 - lblW, 40);
+  x.fillStyle = '#bbb'; x.fillRect(40, 64, W - 80, 1.5);
+
+  /* summary */
+  const SC = { got: W - 120, pay: W - 400, bal: W - 660 };
+  x.textAlign = 'center';
+  x.font = `bold 14px ${font}`; x.fillStyle = '#222';
+  x.fillText('مجموع گرفت', SC.got, 104);
+  x.fillText('مجموع پرداخت', SC.pay, 104);
+  x.fillText('حساب مشتری', SC.bal, 104);
+  x.font = `bold 17px ${font}`; x.fillStyle = '#000';
+  fitText(x, amt(d.got), SC.got, 132, 240, 17, font, true);
+  fitText(x, amt(d.pay), SC.pay, 132, 240, 17, font, true);
+  const bc = d.bal > 0 ? '#c0392b' : d.bal < 0 ? '#1e7a4c' : '#333';
+  const bl = d.bal > 0 ? ' (بدهکار)' : d.bal < 0 ? ' (طلبکار)' : '';
+  x.fillStyle = bc;
+  fitText(x, amt(d.bal) + bl, SC.bal, 132, 210, 17, font, true);
+
+  /* table title */
+  x.textAlign = 'right'; x.fillStyle = '#000'; x.font = `bold 17px ${font}`;
+  x.fillText('لیست تراکنش‌ها', W - 40, 178);
+
+  /* table */
+  const B = [W - 40, W - 100, W - 240, W - 320, W - 460, 40];
+  x.fillStyle = '#2c5f8a'; x.fillRect(40, tTop, W - 80, hdrH);
+  x.fillStyle = '#ffffff'; x.font = `bold 15px ${font}`; x.textAlign = 'center';
+  const heads = ['شماره', 'مبلغ', 'نوع', 'تاریخ', 'توضیح'];
+  for(let k = 0; k < 5; k++){
+    x.fillText(heads[k], (B[k] + B[k + 1]) / 2, tTop + hdrH / 2);
+  }
+  let y = tTop + hdrH;
+  x.font = `bold 15px ${font}`;
+  d.rows.forEach((r, ri) => {
+    const rowH = rowHs[ri];
+    const cy = y + rowH / 2;
+    x.fillStyle = '#cfcfcf'; x.fillRect(40, y + rowH - 1, W - 80, 1);
+    x.textAlign = 'center';
+    x.fillStyle = '#000';
+    x.fillText(String(r.no), (B[0] + B[1]) / 2, cy);
+    const sign = '';
+    fitText(x, sign + Math.abs(r.amt).toLocaleString('en-US') + ' ' + unit, (B[1] + B[2]) / 2, cy, B[1] - B[2] - 8, 15, font, true); x.font = `bold 15px ${font}`;
+    x.fillStyle = r.type === 'گرفت' ? '#c0392b' : '#1e7a4c';
+    x.fillText(r.type, (B[2] + B[3]) / 2, cy);
+    x.fillStyle = '#000';
+    x.fillText(r.date, (B[3] + B[4]) / 2, cy);
+    x.textAlign = 'right';
+    const ls = rowLines[ri], top0 = cy - (ls.length - 1) * LH / 2;
+    ls.forEach((ln, k) => x.fillText(ln, B[4] - 10, top0 + k * LH));
+    x.textAlign = 'center';
+    y += rowH;
+  });
+  x.fillStyle = '#cfcfcf';
+  B.forEach(bx => x.fillRect(bx, tTop, 1, tBottom - tTop));
+  x.fillRect(40, tTop, 1, tBottom - tTop);
+
+  /* footer */
+  x.textAlign = 'right'; x.fillStyle = '#222'; x.font = `bold 14px ${font}`;
+  const t = today();
+  x.fillText('تاریخ تولید گزارش', W - 40, tBottom + 34);
+  x.fillStyle = '#000'; x.font = `bold 15px ${font}`;
+  x.fillText(latinDate(t.y, t.m, t.d), W - 40, tBottom + 56);
+  x.fillStyle = '#222'; x.font = `bold 14px ${font}`;
+  x.fillText('ساخته شده با حساب دفتری', W - 40, tBottom + 78);
+
+  cv.toBlob(async blob => {
+    const file = new File([blob], `${c.n}.png`, { type: 'image/png' });
+    if(navigator.canShare && navigator.canShare({ files: [file] })){
+      try{ await navigator.share({ files: [file], title: c.n }); return; }catch(e){ return; }
+    }
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `${c.n}.png`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+  }, 'image/png');
+}
+
+/* ---------- main page: one selected party at a time ---------- */
+function pickRow(p){
+  return `<div class="pick-row">
+    ${S.parties.map(x => {
+      const key = `party:${x.id}`;
+      const on = LPSEL && LPSEL.key === key;
+      const isSel = p && x.id === p.id;
+      return `<div class="lp-wrap ${on ? 'on' : ''}">
+        <button class="pchip ${isSel ? 'on' : ''}" data-a="selParty" data-p="${x.id}" data-lp="${key}" data-hold="2000"><span class="rd"></span><span>${esc(x.n)}</span></button>
+        ${on
+          ? `<div class="p-acts">
+          <button class="pbtn" data-a="pEdit" data-p="${x.id}">${ICON.edit}<span>ویرایش</span></button>
+          <button class="pbtn del" data-a="pDel" data-p="${x.id}">${ICON.trash}<span>حذف</span></button>
+          <button class="pbtn" data-a="pCur" data-p="${x.id}"><span>مبلغ: ${CURS[x.cur] || 'تومان'}</span><span>${LPSEL.cur ? '▴' : '▾'}</span></button>
+          ${LPSEL.cur ? Object.keys(CURS).map(k => `<button class="pbtn sub" data-a="setPCur" data-p="${x.id}" data-v="${k}"><span>${CURS[k]}</span><span class="pk">${(x.cur || 'toman') === k ? '✓' : ''}</span></button>`).join('') : ''}
+        </div>`
+          : `<button class="pmore" data-a="pMore" data-p="${x.id}" aria-label="گزینه‌ها">⋮</button>`}
+      </div>`;
+    }).join('')}
+    <button class="pchip add" data-a="addParty">${ICON.plus}<span>افزودن طرف حساب</span></button>
+  </div>`;
+}
+function partySection(p){
+  const t = tallyC(p.c);
+  const key = `party:${p.id}`;
+  const on = LPSEL && LPSEL.key === key;
+  const q = V.q.trim();
+  const custs = p.c.filter(c => custMatch(c, q));
+  return `
+    <div class="lp-wrap ${on ? 'on' : ''}">
+      <section class="hero" data-lp="${key}">
+        <div class="lbl">مجموع حساب ${esc(p.n)}</div>
+        <div class="net"><span>${num(t.net)}</span><span>${curLabel()}</span><small>${groupStatus(t.net)}</small></div>
+        <div class="mini-row">
+          <div class="mini"><span class="sm">پرداخت کامل به مشتریان</span><b>${money(t.pos)}</b></div>
+          <div class="mini"><span class="sm">گرفت کامل از مشتریان</span><b>${money(t.neg)}</b></div>
+        </div>
+      </section>
+      ${on ? `<div class="lp-acts hero-acts"><button class="lp-btn" data-a="lpEdit" data-k="party" data-p="${p.id}" aria-label="ویرایش">${ICON.edit}</button></div>` : ''}
+    </div>
+    <div class="sec-title">مشتریان</div>
+    <div class="cq-wrap"><input id="cq" type="search" placeholder="جستجوی مشتری با نام یا شماره تلفن..." value="${esc(V.q)}"></div>
+    <div class="list">
+      ${custs.length ? custs.map(c => {
+        const b = custBal(c), col = colorFor(c.n);
+        const card = `
+        <button class="card" data-a="cust" data-p="${p.id}" data-c="${c.id}">
+          <span class="av" style="background:${col[0]};color:${col[1]}">${esc(c.n.charAt(0))}</span>
+          <span class="nm"><b>${esc(c.n)}</b><small>${c.ph ? fa(c.ph) : c.tx.length + ' تراکنش'}</small></span>
+          <span class="bal-col"><span class="bal ${balCls(b)}">${b === 0 ? '-' : money(b)}</span>${b === 0 ? '' : `<small class="bal-note">${b > 0 ? 'بدهکار است' : 'طلب دارد'}</small>`}</span>
+        </button>`;
+        const mk = `cust:${p.id}:${c.id}`;
+        const menuOpen = LPSEL && LPSEL.key === mk;
+        const ids = `data-p="${p.id}" data-c="${c.id}"`;
+        return `<div class="lp-wrap cust-wrap">${card}${menuOpen
+          ? `<div class="p-acts cust-acts">
+              <button class="pbtn" data-a="cEdit" ${ids}>${ICON.edit}<span>ویرایش</span></button>
+              <button class="pbtn del" data-a="cDelTx" ${ids}>${ICON.trash}<span>حذف همه تراکنش‌ها</span></button>
+              <button class="pbtn del" data-a="cDel" ${ids}>${ICON.trash}<span>حذف مشتری</span></button>
+            </div>`
+          : `<button class="pmore" data-a="custMore" ${ids} aria-label="گزینه‌ها">⋮</button>`}</div>`;
+      }).join('') : `<div class="empty">${p.c.length ? 'مشتری‌ای با این نام یا شماره پیدا نشد.' : 'هنوز مشتری‌ای برای این طرف حساب ثبت نشده.<br>با دکمه پایین صفحه، اولین مشتری را اضافه کنید.'}</div>`}
+    </div>`;
+}
+function renderMain(m){
+  const p = findParty(V.openId) || S.parties[0] || null;
+  if(p && V.openId !== p.id) V.openId = p.id;
+  const title = p ? p.n : 'حساب دفتری';
+  m.innerHTML = `
+    <header class="top">
+      <button class="ic" data-a="menu" aria-label="منو">${ICON.menu}</button>
+      <button class="title-btn" data-a="togglePick">${esc(title)} <span class="caret">${V.pick ? '▴' : '▾'}</span></button>
+      <span class="sp"></span>
+    </header>
+    ${(V.pick || !p) ? pickRow(p) : ''}
+    ${V.search ? `<div class="search"><input id="q" type="search" placeholder="جستجوی مشتری..." value="${esc(V.q)}"></div>` : ''}
+    ${V.pick ? '' : (p ? partySection(p) : `<div class="empty">هنوز طرف حسابی ثبت نشده.<br>با دکمه ▾ کنار عنوان، اولین طرف حساب را اضافه کنید.</div>`)}
+    ${p && !V.pick ? `<button class="fab" data-a="addCust" data-p="${p.id}">${ICON.plus}<span>افزودن مشتری</span></button>` : ''}`;
+  if(V.search){
+    const i = document.getElementById('q');
+    if(i){ i.focus(); i.setSelectionRange(i.value.length, i.value.length); }
+  }
+}
+
+/* ---------- email codes ---------- */
+let EM = { newMail:'', code:'' };
+const mailOk = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+function makeCode(){ return String(Math.floor(1000 + Math.random() * 9000)); }
+/* returns 'auto' when the code was sent by the service, or 'mail' when the mail app was opened */
+async function sendCode(to, code, purpose){
+  if(MAIL_CFG.service && MAIL_CFG.template && MAIL_CFG.publicKey){
+    const r = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        service_id: MAIL_CFG.service,
+        template_id: MAIL_CFG.template,
+        user_id: MAIL_CFG.publicKey,
+        template_params: { to_email: to, code: code, purpose: purpose }
+      })
+    });
+    if(!r.ok) throw new Error('mail failed');
+    return 'auto';
+  }
+  const a = document.createElement('a');
+  a.href = `mailto:${to}?subject=${encodeURIComponent(purpose)}&body=${encodeURIComponent(purpose + ': ' + code)}`;
+  a.click();
+  return 'mail';
+}
+async function emailSend(){
+  const v = val('f-mail').trim();
+  if(!mailOk(v)){ alert('ایمیل معتبر وارد کنید.'); return; }
+  if(S.email && v.toLowerCase() === S.email.toLowerCase()){ alert('این ایمیل همان ایمیل فعلی است.'); return; }
+  if(!supabaseClient || !cloudUser){ alert('ابتدا وارد حساب شوید.'); return; }
+  const { error } = await supabaseClient.auth.updateUser({ email:v });
+  if(error){ alert('درخواست تغییر ایمیل انجام نشد. دوباره تلاش کنید.'); return; }
+  alert('درخواست تغییر ایمیل ثبت شد. لینک تأیید را از ایمیل جدید باز کنید.');
+  closeSheet();
+}
+function emailConfirm(){ return; }
+function emailSection(){
+  const row = S.email
+    ? `<div class="mail-row"><span class="mail-txt"><b>ایمیل حساب</b><small>${esc(S.email)}</small></span><button class="dots-btn" data-a="emailMore" aria-label="گزینه‌ها">⋮</button></div>`
+    : `<button class="opt" data-a="emailEdit"><span>افزودن ایمیل</span><span class="sub">${ICON.chev}</span></button>`;
+  return `<div class="sec-title" style="margin:22px 4px 0">ایمیل</div><div class="opt-list" style="margin-top:8px">${row}</div>`;
+}
+
+function pinSection(){
+  return `<div class="sec-title" style="margin:22px 4px 0">رمز ورود</div>
+    <div class="opt-list" style="margin-top:8px">
+      ${S.pin
+        ? `<div class="mail-row"><span class="mail-txt"><b>رمز ورود فعال است</b></span><button class="opt" style="width:auto;padding:8px 14px;border-radius:12px" data-a="pinDisable"><span>غیرفعال کردن</span></button></div>`
+        : `<button class="su-btn" style="margin-top:0;height:54px;border-radius:18px" data-a="pinActivate">فعال کردن رمز ورود</button>`}
+    </div>`;
+}
+
+/* ---------- lock screen (PIN) ---------- */
+let LK = { locked:true, mode:S.email ? 'login' : 'signup', fromSettings:false, f:{mail:S.email||'',pass:'',pass2:''}, vCode:'', purpose:'', pend:null, buf:'', err:'', newPin:'', showPad:false, recCode:'' };
+function lkMax(){ return LK.mode === 'verify' ? 6 : 4; }
+function renderLock(){
+  const el = document.getElementById('lock');
+  if(!LK.locked){ el.classList.add('hidden'); el.innerHTML = ''; return; }
+  el.classList.remove('hidden');
+  if(['login','signup','newpass'].includes(LK.mode)){
+    const F = LK.f, M = LK.mode;
+    const heads = { login:['ورود به حساب','ایمیل و رمز عبور خود را وارد کنید'], signup:['ساخت حساب','با ایمیل خود ثبت نام کنید و رمز عبور انتخاب کنید'], newpass:['رمز عبور جدید','رمز عبور جدید را انتخاب کنید'] }[M];
+    const ARROW = '<svg viewBox="0 0 24 24"><path d="M20 12H4M10 6l-6 6 6 6"/></svg>';
+    el.innerHTML = `
+    <div class="su-wrap">
+      <div class="lk-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/></svg></div>
+      <h1 class="su-h">${heads[0]}</h1>
+      <p class="su-p">${heads[1]}</p>
+      ${M !== 'newpass' ? `<div class="su-fld"><label for="au-mail">ایمیل</label><input id="au-mail" class="ltr" type="email" inputmode="email" autocomplete="email" value="${esc(F.mail)}"></div>` : ''}
+      <div class="su-fld"><label for="au-pass">رمز عبور</label><input id="au-pass" class="ltr" type="password" autocomplete="${M === 'login' ? 'current-password' : 'new-password'}" value="${esc(F.pass)}"></div>
+      ${M !== 'login' ? `<div class="su-fld"><label for="au-pass2">تکرار رمز عبور</label><input id="au-pass2" class="ltr" type="password" autocomplete="new-password" value="${esc(F.pass2)}"></div>` : ''}
+      <div class="lk-msg" style="margin:0;min-height:20px">${esc(LK.err)}</div>
+      <button class="su-btn" data-a="${M === 'login' ? 'authLogin' : M === 'signup' ? 'authSignup' : 'passSave'}">${M === 'login' ? 'ورود' : M === 'signup' ? 'ساخت حساب' : 'ذخیره رمز عبور'}${ARROW}</button>
+      ${M === 'login' ? `<button class="lk-link" style="margin-top:6px" data-a="authForgot">فراموشی رمز عبور</button>
+      <div class="su-alt">حساب ندارید؟ <button class="lk-link" style="margin:0" data-a="authToSignup">ثبت نام کنید</button></div>` : ''}
+      ${M === 'signup' ? `<div class="su-alt">از قبل حساب دارید؟ <button class="lk-link" style="margin:0" data-a="authToLogin">وارد شوید</button></div>` : ''}
+    </div>`;
+    return;
+  }
+  const titles = {
+    unlock: 'پین کد را وارد کنید',
+    setup1: 'یک پین کد ۴ رقمی انتخاب کنید',
+    setup2: 'پین کد را دوباره وارد کنید',
+    recover: 'کد ارسال‌شده به ایمیل را وارد کنید',
+    verify: 'کُد شش‌رقمی ارسال‌شده به ایمیل را وارد کنید'
+  };
+  let dots = '';
+  for(let i = 0; i < lkMax(); i++) dots += `<span class="dot ${i < LK.buf.length ? 'fill' : ''}"></span>`;
+  const LOCKSVG = '<svg viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10.5" rx="3"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></svg>';
+  const DELSVG = '<svg viewBox="0 0 24 24"><path d="M9 5h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-6-7z"/><path d="M12.5 9.5l5 5M17.5 9.5l-5 5"/></svg>';
+  const pad = `<div class="pad">
+      ${['1','2','3','4','5','6','7','8','9'].map(d => `<button class="pk-key" data-a="lkKey" data-v="${d}">${d}</button>`).join('')}
+      <span class="gap"></span>
+      <button class="pk-key" data-a="lkKey" data-v="0">0</button>
+      <button class="pk-key" data-a="lkDel" aria-label="پاک کردن">${DELSVG}</button>
+    </div>`;
+  el.innerHTML = `
+    <div class="lk-wrap">
+      <div class="lk-ico">${LOCKSVG}</div>
+      <div class="lk-title">${titles[LK.mode]}</div>
+      <div class="lk-dots ${LK.shake ? 'shake' : ''}">${dots}</div>
+      <div class="lk-msg">${esc(LK.err)}</div>
+      ${pad}
+      ${LK.mode === 'unlock' ? `<button class="lk-link" data-a="lkForgot">فراموشی رمز</button>` : ''}
+      ${LK.fromSettings ? `<button class="lk-link" data-a="lkAbort">انصراف</button>` : ''}
+      ${LK.mode === 'recover' ? `<button class="lk-link" data-a="lkCancel">بازگشت</button>` : ''}
+      ${LK.mode === 'verify' ? `<button class="lk-link" data-a="vResend">ارسال دوباره کد</button><button class="lk-link" style="margin-top:10px" data-a="vBack">بازگشت</button>` : ''}
+    </div>`;
+  LK.shake = false;
+}
+function lkUnlock(){
+  LK.locked = false; LK.buf = ''; LK.err = ''; LK.showPad = false; LK.fromSettings = false;
+  renderLock(); soundForward(); render();
+}
+async function lkOk(){
+  const max = lkMax();
+  if(LK.buf.length < max){ LK.err = `رمز ${fa(max)} رقمی را کامل کنید.`; renderLock(); return; }
+  if(LK.mode === 'unlock'){
+    if(LK.buf === S.pin) return lkUnlock();
+    LK.err = 'رمز اشتباه است.'; LK.buf = ''; LK.shake = true; renderLock(); return;
+  }
+  if(LK.mode === 'verify'){
+    const mail = LK.purpose === 'signup' ? LK.pend?.mail : LK.f.mail;
+    const type = LK.purpose === 'signup' ? 'signup' : 'recovery';
+    const { data, error } = await supabaseClient.auth.verifyOtp({ email:mail, token:LK.buf, type });
+    if(error){ LK.err = 'کُد نادرست یا منقضی شده است. دوباره تلاش کنید.'; LK.buf = ''; LK.shake = true; renderLock(); return; }
+    LK.buf = ''; LK.err = ''; cloudUser = data.user || data.session?.user || null;
+    if(!cloudUser){ LK.err = 'تأیید انجام شد، اما حساب کاربری دریافت نشد. دوباره وارد شوید.'; LK.mode = 'login'; renderLock(); return; }
+    if(LK.purpose === 'signup'){
+      S.email = cloudUser.email || mail; S.loggedIn = true;
+      delete S.passHash; delete S.reg;
+      cloudReady = true;
+      const synced = await cloudSyncNow();
+      if(!synced){ LK.err = 'حساب تأیید شد، اما ذخیره اولیه اطلاعات انجام نشد. تنظیمات دیتابیس را بررسی کنید.'; renderLock(); return; }
+      LK.f = { mail:S.email, pass:'', pass2:'' };
+      return lkUnlock();
+    }
+    try{ await cloudLoad(); cloudReady = true; }
+    catch(e){ LK.err = 'دریافت اطلاعات حساب انجام نشد. اتصال اینترنت را بررسی کنید.'; renderLock(); return; }
+    LK.mode = 'newpass'; LK.f.pass = ''; LK.f.pass2 = ''; renderLock(); return;
+  }
+  if(LK.mode === 'setup1'){
+    LK.newPin = LK.buf; LK.buf = ''; LK.mode = 'setup2'; LK.err = ''; renderLock(); return;
+  }
+  if(LK.mode === 'setup2'){
+    if(LK.buf === LK.newPin){ S.pin = LK.buf; save(); LK.newPin = ''; return lkUnlock(); }
+    LK.err = 'رمزها یکسان نیستند. دوباره انتخاب کنید.';
+    LK.buf = ''; LK.newPin = ''; LK.mode = 'setup1'; renderLock(); return;
+  }
+  if(LK.mode === 'recover'){
+    if(LK.buf === LK.recCode){
+      LK.recCode = ''; delete S.pin; save();
+      LK.mode = 'setup1'; LK.buf = ''; LK.showPad = true;
+      LK.err = 'رمز جدید را انتخاب کنید.'; renderLock(); return;
+    }
+    LK.err = 'کد اشتباه است.'; LK.buf = ''; LK.shake = true; renderLock();
+  }
+}
+async function hashPw(mail, pw){
+  try{
+    const b = new TextEncoder().encode('hd1|' + pw);
+    const h = await crypto.subtle.digest('SHA-256', b);
+    return [...new Uint8Array(h)].map(x => x.toString(16).padStart(2, '0')).join('');
+  }catch(e){ return 'p:' + btoa(unescape(encodeURIComponent(pw))); }
+}
+function readF(){
+  LK.f = { mail: val('au-mail').trim() || LK.f.mail, pass: val('au-pass'), pass2: val('au-pass2') };
+  if(!document.getElementById('au-mail')) LK.f.mail = LK.f.mail;
+}
+function authErr(msg){ LK.err = msg; renderLock(); }
+async function authLogin(){
+  readF();
+  const mail = LK.f.mail, pw = LK.f.pass;
+  if(!mailOk(mail)) return authErr('ایمیل معتبر وارد کنید.');
+  if(!pw) return authErr('رمز عبور را وارد کنید.');
+  if(!supabaseClient) return authErr('کتابخانه اتصال بارگذاری نشد. صفحه را تازه‌سازی کنید.');
+  LK.err = 'در حال بررسی حساب...'; renderLock();
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email:mail, password:pw });
+  if(error) return authErr('ایمیل یا رمز عبور درست نیست. اگر حساب قدیمی دارید، رمز را بازیابی کنید.');
+  cloudUser = data.user; cloudReady = false;
+  try{ await cloudLoad(); cloudReady = true; }
+  catch(e){ await supabaseClient.auth.signOut(); cloudUser = null; return authErr('دریافت اطلاعات حساب از پایگاه داده ناموفق بود. تنظیمات دیتابیس را بررسی کنید.'); }
+  S.email = cloudUser.email || mail; S.loggedIn = true;
+  delete S.passHash; delete S.reg;
+  LK.f.pass = ''; LK.err = '';
+  if(S.pin){ LK.locked = true; LK.mode = 'unlock'; renderLock(); render(); }
+  else lkUnlock();
+}
+async function authSignup(){
+  readF();
+  const mail = LK.f.mail, pw = LK.f.pass;
+  if(!mailOk(mail)) return authErr('ایمیل معتبر وارد کنید.');
+  if(pw.length < 6) return authErr('رمز عبور باید حداقل ۶ کاراکتر باشد.');
+  if(pw !== LK.f.pass2) return authErr('رمز عبور و تکرار آن یکسان نیست.');
+  if(!supabaseClient) return authErr('کتابخانه اتصال بارگذاری نشد. صفحه را تازه‌سازی کنید.');
+  const localCopy = JSON.parse(JSON.stringify({ cur:S.cur || 'toman', parties:S.parties || [] }));
+  LK.err = 'در حال ساخت حساب...'; renderLock();
+  const { data, error } = await supabaseClient.auth.signUp({ email:mail, password:pw });
+  if(error) return authErr(error.message || 'ثبت‌نام انجام نشد.');
+  LK.f.pass = ''; LK.f.pass2 = '';
+  if(data.session && data.user){
+    cloudUser = data.user; S = { ...S, ...localCopy, email:data.user.email || mail, loggedIn:true };
+    delete S.passHash; delete S.reg; cloudReady = true;
+    const synced = await cloudSyncNow();
+    if(!synced) return authErr('حساب ساخته شد، اما ذخیره اطلاعات انجام نشد. سیاست‌های دیتابیس را بررسی کنید.');
+    LK.f = { mail:S.email, pass:'', pass2:'' };
+    return lkUnlock();
+  }
+  LK.pend = { mail, localCopy }; LK.purpose = 'signup'; LK.mode = 'verify'; LK.buf = '';
+  LK.err = 'کُد شش‌رقمی تأیید ثبت‌نام به ایمیل شما فرستاده شد.'; renderLock();
+}
+async function authForgot(){
+  readF();
+  const mail = LK.f.mail;
+  if(!mailOk(mail)) return authErr('ایمیل حساب خود را وارد کنید.');
+  if(!supabaseClient) return authErr('اتصال به سرویس حساب برقرار نیست.');
+  LK.err = 'در حال فرستادن کُد بازیابی...'; renderLock();
+  const { error } = await supabaseClient.auth.resetPasswordForEmail(mail);
+  if(error) return authErr('ارسال کُد انجام نشد. ایمیل و تنظیمات قالب بازیابی را بررسی کنید.');
+  LK.f.mail = mail; LK.purpose = 'recovery'; LK.pend = null; LK.mode = 'verify'; LK.buf = '';
+  LK.err = 'کُد شش‌رقمی بازیابی به ایمیل شما فرستاده شد.'; renderLock();
+}
+async function passSave(){
+  readF();
+  if(LK.f.pass.length < 6) return authErr('رمز عبور باید حداقل ۶ کاراکتر باشد.');
+  if(LK.f.pass !== LK.f.pass2) return authErr('رمز عبور و تکرار آن یکسان نیست.');
+  const { error } = await supabaseClient.auth.updateUser({ password:LK.f.pass });
+  if(error) return authErr('ذخیره رمز جدید انجام نشد. دوباره تلاش کنید.');
+  S.email = cloudUser?.email || LK.f.mail; S.loggedIn = true;
+  LK.f.pass = ''; LK.f.pass2 = ''; LK.err = '';
+  lkUnlock();
+}
+async function authLogout(){
+  if(!confirm('از حساب خارج می‌شوید؟')) return;
+  if(supabaseClient) await supabaseClient.auth.signOut();
+  cloudReady = false; cloudUser = null; clearTimeout(cloudSyncTimer);
+  S = { cur:'toman', parties:[], email:'', loggedIn:false };
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+  LK.locked = true; LK.mode = 'login'; LK.err = ''; LK.buf = '';
+  LK.f = { mail:'', pass:'', pass2:'' };
+  render(); renderLock();
+}
+function pinActivate(){
+  LK.locked = true; LK.mode = 'setup1'; LK.buf = ''; LK.err = ''; LK.newPin = ''; LK.fromSettings = true;
+  renderLock();
+}
+function pinDisable(){
+  if(!confirm('رمز ورود غیرفعال شود؟')) return;
+  delete S.pin; save(); render();
+}
+async function lkForgot(){
+  if(!S.email){
+    LK.err = 'هنوز ایمیلی ثبت نشده است. بعد از ورود، در تنظیمات ایمیل را ثبت کنید.';
+    renderLock(); return;
+  }
+  LK.recCode = String(Math.floor(1000 + Math.random() * 9000));
+  LK.mode = 'recover'; LK.buf = ''; LK.showPad = true;
+  try{
+    const how = await sendCode(S.email, LK.recCode, 'کد بازیابی رمز حساب دفتری');
+    LK.err = how === 'auto'
+      ? 'کد به ایمیل شما فرستاده شد. کد را وارد کنید.'
+      : 'برنامه ایمیل باز شد. کد را به همین ایمیل بفرستید، سپس کد را اینجا وارد کنید.';
+  }catch(e){
+    LK.err = 'ارسال کد انجام نشد. دوباره تلاش کنید.';
+  }
+  renderLock();
+}
+
+/* ---------- sheets ---------- */
+function openSheet(html){
+  const ovEl = document.getElementById('ov');
+  document.getElementById('sheet').innerHTML = html;
+  if(ovEl.classList.contains('hidden')){ ovEl.classList.remove('hidden'); pushOv('sheet'); }
+  setTimeout(() => { const i = document.querySelector('#sheet input:not([type=hidden])'); if(i) i.focus(); }, 60);
+}
+function closeSheet(){
+  const ovEl = document.getElementById('ov');
+  if(ovEl.classList.contains('hidden')) return;
+  ovEl.classList.add('hidden');
+  if(OV.includes('sheet')) popOv('sheet');
+}
+function sheetHead(title){
+  return `<div class="sh-h"><span>${title}</span><button class="ic" data-a="close" aria-label="بستن">${ICON.close}</button></div>`;
+}
+function val(id){ const el = document.getElementById(id); return el ? el.value : ''; }
+
+/* ---------- calendar popup ---------- */
+function calRender(){
+  const el = document.getElementById('cal');
+  if(!CAL.open){ el.classList.add('hidden'); el.innerHTML = ''; return; }
+  el.classList.remove('hidden');
+  const t = today();
+  const foot = `
+    <div class="cal-foot">
+      <button type="button" class="cal-cancel" data-a="calCancel">انصراف</button>
+      <button type="button" class="cal-ok" data-a="calOk">تأیید تاریخ</button>
+    </div>`;
+
+  if(CAL.mode === 'years'){
+    const lo = Math.min(t.y - 10, CAL.sel.y), hi = Math.max(t.y + 5, CAL.sel.y);
+    let ys = '';
+    for(let y = lo; y <= hi; y++){
+      ys += `<button type="button" class="${y === CAL.vy ? 'sel' : ''}" data-a="calYear" data-v="${y}">${fa(y)}</button>`;
+    }
+    el.innerHTML = `
+      <div class="cal">
+        <div class="cal-h"><button type="button" class="cal-title" data-a="calYears">انتخاب سال</button></div>
+        <div class="cal-years">${ys}</div>
+        ${foot}
+      </div>`;
+    return;
+  }
+
+  const dim = daysIn(CAL.vy, CAL.vm);
+  const first = (jToDate(CAL.vy, CAL.vm, 1).getDay() + 1) % 7;
+  let g = '';
+  for(let i = 0; i < first; i++) g += '<span class="blank"></span>';
+  for(let d = 1; d <= dim; d++){
+    const isSel = CAL.sel.y === CAL.vy && CAL.sel.m === CAL.vm && CAL.sel.d === d;
+    g += `<button type="button" class="${isSel ? 'sel' : ''}" data-a="calDay" data-v="${d}">${fa(d)}</button>`;
+  }
+  el.innerHTML = `
+    <div class="cal">
+      <div class="cal-h">
+        <button type="button" class="cal-nav" data-a="calPrev" aria-label="ماه قبل">‹</button>
+        <button type="button" class="cal-title" data-a="calYears">${MONTHS[CAL.vm-1]} ${fa(CAL.vy)}</button>
+        <button type="button" class="cal-nav" data-a="calNext" aria-label="ماه بعد">›</button>
+      </div>
+      <div class="cal-wk">${WD.map(w => `<span>${w}</span>`).join('')}</div>
+      <div class="cal-grid">${g}</div>
+      ${foot}
+    </div>`;
+}
+
+const SHEETS = {
+  emailOpts(){
+    return sheetHead('ایمیل') + `
+      <div class="opt-list">
+        <button class="opt" data-a="emailEdit"><span>تغییر ایمیل</span><span class="sub">${ICON.chev}</span></button>
+      </div>`;
+  },
+  emailStep(step){
+    if(step === 'code'){
+      return sheetHead('تأیید ایمیل جدید') + `
+        <p class="hint">کد ۴ رقمی به <b>${esc(EM.newMail)}</b> فرستاده شد. کد را وارد کنید.</p>
+        <label for="f-code">کد تأیید</label>
+        <input id="f-code" inputmode="numeric" maxlength="4" autocomplete="off">
+        <button class="btn pri-btn" data-a="emailConfirm">تأیید ایمیل جدید</button>
+        <button class="btn" style="background:var(--soft);color:var(--deep)" data-a="emailEdit">تغییر ایمیل</button>`;
+    }
+    return sheetHead('تغییر ایمیل') + `
+      <p class="hint">این ایمیل برای ورود و بازیابی رمز عبور استفاده می‌شود. برای تأیید، لینک تأیید از طرف Supabase به ایمیل جدید فرستاده می‌شود. مشتری‌ها و تراکنش‌های شما تغییری نمی‌کنند و رمز عبور همان می‌ماند.</p>
+      <label for="f-mail">ایمیل جدید</label>
+      <input id="f-mail" type="email" inputmode="email" value="${esc(S.email || '')}" autocomplete="off">
+      <button class="btn pri-btn" data-a="emailSend">ارسال لینک تأیید</button>`;
+  },
+  share(p, c){
+    return sheetHead('اشتراک گذاری') + `
+      <div class="opt-list">
+        <button class="opt" data-a="shareAs" data-v="pdf" data-p="${p.id}" data-c="${c.id}"><span>اشتراک PDF</span><span class="sub">${ICON.chev}</span></button>
+        <button class="opt" data-a="shareAs" data-v="img" data-p="${p.id}" data-c="${c.id}"><span>اشتراک به شکل عکس</span><span class="sub">${ICON.chev}</span></button>
+
+      </div>`;
+  },
+  confirmDel(act, name, p, c){
+    const isParty = act === 'party' || act === 'editParty';
+    const label = act === 'txs' ? 'حذف همه تراکنش‌ها' : act === 'party' ? 'حذف طرف حساب' : act === 'editParty' ? 'ادامه ویرایش' : 'حذف مشتری';
+    return sheetHead(act === 'editParty' ? 'تأیید ویرایش' : 'تأیید حذف') + `
+      <p class="hint">برای تأیید، ${isParty ? 'اسم طرف حساب' : 'اسم مشتری'} را دقیقاً بنویسید:<br><b>${esc(name)}</b></p>
+      <input id="del-name" data-exp="${esc(name)}" autocomplete="off">
+      <button class="btn danger" id="del-ok" disabled data-a="doDel" data-act="${act}" data-p="${p.id}" data-c="${c ? c.id : ''}">${label}</button>`;
+  },
+  partyAdd(){
+    return sheetHead('افزودن طرف حساب') + `
+      <label for="f-name">نام طرف حساب</label>
+      <input id="f-name" maxlength="60">
+      <button class="btn pri-btn" data-a="saveParty">ذخیره</button>`;
+  },
+  partyEdit(p){
+    return sheetHead('ویرایش طرف حساب') + `
+      <label for="f-name">نام طرف حساب</label>
+      <input id="f-name" value="${esc(p.n)}" maxlength="60">
+      <button class="btn pri-btn" data-a="savePartyName" data-p="${p.id}">ثبت ویرایش</button>
+      <button class="btn danger" data-a="askDel" data-act="party" data-p="${p.id}">حذف این طرف حساب و همه مشتریانش</button>`;
+  },
+  partyCur(p){
+    const k = p.cur || S.cur || 'toman';
+    return sheetHead('مبلغ ' + esc(p.n)) + `
+      <p class="hint">واحد پول این طرف حساب. تغییر آن اعداد را عوض نمی‌کند، فقط نام مبلغ را تغییر می‌دهد.</p>
+      <div class="opt-list">
+        ${Object.keys(CURS).map(c => `<button class="opt ${k === c ? 'on' : ''}" data-a="setPCur" data-p="${p.id}" data-v="${c}"><span>${CURS[c]}</span><span class="tick">✓</span></button>`).join('')}
+      </div>`;
+  },
+  custEdit(p, c){
+    return sheetHead('ویرایش مشتری') + `
+      <label for="f-name">نام مشتری</label>
+      <input id="f-name" value="${esc(c.n)}" maxlength="60">
+      <button class="btn pri-btn" data-a="saveCustName" data-p="${p.id}" data-c="${c.id}">ثبت ویرایش</button>
+      <button class="btn danger" data-a="askDel" data-act="txs" data-p="${p.id}" data-c="${c.id}">حذف همه تراکنش‌ها</button>
+      <button class="btn danger" data-a="askDel" data-act="cust" data-p="${p.id}" data-c="${c.id}">حذف مشتری</button>`;
+  },
+  txForm(p, c, t, page){
+    const editing = !!t;
+    const amt = t ? Math.abs(t.a) : 0;
+    const typ = t ? (t.a > 0 ? 1 : -1) : 1;
+    const x = t ? { y:t.y, m:t.m, d:t.dd } : today();
+    const date = jStr(x.y, x.m, x.d);
+    return (page ? pageHead(editing ? 'ویرایش تراکنش' : 'ثبت تراکنش', 'cust') : sheetHead(editing ? 'ویرایش تراکنش' : 'ثبت تراکنش')) + `
+      <p class="sub">مشتری: <b>${esc(c.n)}</b></p>
+      <label>نوع تراکنش</label>
+      <div class="tbtns">
+        <button type="button" class="tbtn g ${typ < 0 ? 'on' : ''}" data-a="setType" data-v="-1">از مشتری پول گرفتم</button>
+        <button type="button" class="tbtn r ${typ > 0 ? 'on' : ''}" data-a="setType" data-v="1">به مشتری پول دادم</button>
+      </div>
+      <input type="hidden" id="f-type" value="${typ}">
+      <label for="f-amount">مبلغ (${curLabel()})</label>
+      <input id="f-amount" class="money" inputmode="numeric" placeholder="0" value="${amt ? amt.toLocaleString('en-US') : ''}">
+      <label for="f-desc">شرح</label>
+      <input id="f-desc" maxlength="120" value="${esc(t ? t.d : '')}">
+      <label>تاریخ (شمسی)</label>
+      <button type="button" class="dbtn" data-a="calOpen"><span id="dtxt">${date}</span><span class="cal-ic">${ICON.cal}</span></button>
+      <input type="hidden" id="f-date" value="${date}">
+      <button class="btn pri-btn" data-a="saveTx" data-p="${p.id}" data-c="${c.id}" ${t ? `data-t="${t.id}"` : ''}>${editing ? 'ثبت ویرایش' : 'ثبت تراکنش'}</button>
+      ${editing ? `<button class="btn danger" data-a="delTx" data-p="${p.id}" data-c="${c.id}" data-t="${t.id}">حذف این تراکنش</button>` : ''}`;
+  }
+};
+
+/* ---------- events ---------- */
+/* long press (1 second) on a card shows edit / delete buttons */
+/* Hold for one second: the card starts shaking after a short moment,
+   and at one second the edit/delete buttons appear. Lifting the finger
+   or moving it early cancels the hold. */
+let LPEL = null, LPS = null;
+function lpStart(e){
+  LPJUST = false;
+  clearTimeout(LPT); clearTimeout(LPS);
+  if(LPEL){ LPEL.classList.remove('shaking'); LPEL = null; }
+  const el = e.target && e.target.closest ? e.target.closest('[data-lp]') : null;
+  if(!el) return;
+  LPEL = el;
+  LPS = setTimeout(() => el.classList.add('shaking'), 350);
+  LPT = setTimeout(() => {
+    const key = el.dataset.lp;
+    const [kind, pid, cid, tid] = key.split(':');
+    LPSEL = { key, view: V.view, kind, pid, cid, tid };
+    LPJUST = true;
+    LPEL = null;
+    render();
+    if(navigator.vibrate) navigator.vibrate(20);
+  }, el.dataset.hold ? parseInt(el.dataset.hold, 10) : 1000);
+}
+function lpCancel(){
+  clearTimeout(LPT); clearTimeout(LPS);
+  if(LPEL){ LPEL.classList.remove('shaking'); LPEL = null; }
+}
+document.addEventListener('touchstart', lpStart, {passive:true});
+document.addEventListener('mousedown', lpStart);
+['touchend','touchcancel','touchmove','mouseup'].forEach(ev => document.addEventListener(ev, lpCancel, {passive:true}));
+document.addEventListener('contextmenu', e => { if(e.target.closest('[data-lp]')) e.preventDefault(); });
+
+document.addEventListener('click', e => {
+  if(e.target.id === 'cal'){ closeCal(); return; }
+  if(e.target.id === 'ov'){ closeSheet(); return; }
+  if(LPJUST){ LPJUST = false; return; }
+  if(LPSEL && !e.target.closest('.lp-acts, .p-acts')){ LPSEL = null; render(); return; }
+  const el = e.target.closest('[data-a]');
+  if(!el) return;
+  const a = el.dataset.a;
+  const p = findParty(el.dataset.p);
+  const c = p && findCust(p.id, el.dataset.c);
+  const t = c && el.dataset.t ? c.tx.find(x => x.id === el.dataset.t) : null;
+
+  switch(a){
+    case 'menu': goTo({view:'menu'}); break;
+    case 'openSettings': SUI.curOpen = false; goTo({view:'settings'}); break;
+    case 'close': closeSheet(); break;
+    case 'search': V.search = !V.search; if(!V.search) V.q = ''; render(); break;
+    case 'selParty':
+      V.openId = el.dataset.p; V.pick = false;
+      history.replaceState({v:Object.assign({}, V)}, '');
+      render(); window.scrollTo(0,0); break;
+    case 'togglePick':
+      V.pick = !V.pick; render(); break;
+    case 'cust': goTo({view:'cust', openId:p.id, custId:c.id}); break;
+    case 'back': {
+      history.back(); break;
+    }
+
+    case 'curOpen':
+      goTo({view:'currency'}); break;
+    case 'cur':
+      S.cur = el.dataset.v; save();
+      SUI.curOpen = false; render(); break;
+
+    case 'reset':
+      if(confirm('همه طرف حساب‌ها و مشتری‌ها پاک شوند؟ این کار قابل بازگشت نیست.')){
+        S = { cur: S.cur, parties: [] }; save();
+        V = { view:'list', openId:null, custId:null, search:false, q:'' };
+        render();
+      }
+      break;
+
+    /* long-press actions */
+    case 'lpEdit': {
+      const k = el.dataset.k;
+      LPSEL = null;
+      if(k === 'party'){ const pp = findParty(el.dataset.p); render(); openSheet(SHEETS.partyEdit(pp)); }
+      else if(k === 'cust'){ render(); openSheet(SHEETS.custEdit(p, c)); }
+      else if(k === 'tx'){ render(); openSheet(SHEETS.txForm(p, c, t)); }
+      break;
+    }
+    case 'lpDel':
+      if(t && confirm('این تراکنش حذف شود؟')){
+        c.tx = c.tx.filter(x => x.id !== t.id); save();
+      }
+      LPSEL = null; render(); break;
+
+        case 'lkKey':
+      if(LK.buf.length < lkMax() && !LK.busy){ LK.buf += el.dataset.v; LK.err = ''; }
+      renderLock();
+      if(LK.buf.length >= lkMax() && !LK.busy){ LK.busy = true; setTimeout(() => { LK.busy = false; lkOk(); }, 180); }
+      break;
+    case 'lkDel': if(!LK.busy){ LK.buf = LK.buf.slice(0, -1); renderLock(); } break;
+    case 'lkOk': lkOk(); break;
+    case 'authLogin': authLogin(); break;
+    case 'authSignup': authSignup(); break;
+    case 'authForgot': authForgot(); break;
+    case 'passSave': passSave(); break;
+    case 'authLogout': authLogout(); break;
+    case 'authToSignup': readF(); LK.mode = 'signup'; LK.err = ''; renderLock(); break;
+    case 'authToLogin': readF(); LK.mode = 'login'; LK.err = ''; renderLock(); break;
+    case 'vResend': { const em = LK.purpose === 'signup' ? LK.pend?.mail : LK.f.mail; if(LK.purpose === 'signup') supabaseClient.auth.resend({type:'signup',email:em}).then(({error})=>{ LK.err = error ? 'ارسال دوباره کُد ناموفق بود.' : 'کُد تازه فرستاده شد.'; renderLock(); }); else supabaseClient.auth.resetPasswordForEmail(em).then(({error})=>{ LK.err = error ? 'ارسال دوباره کُد ناموفق بود.' : 'کُد تازه فرستاده شد.'; renderLock(); }); break; }
+    case 'vBack': LK.mode = LK.purpose === 'signup' ? 'signup' : 'login'; LK.buf = ''; LK.err = ''; renderLock(); break;
+    case 'pinActivate': pinActivate(); break;
+    case 'pinDisable': pinDisable(); break;
+    case 'lkAbort': LK.locked = false; LK.fromSettings = false; LK.buf = ''; LK.newPin = ''; LK.err = ''; renderLock(); render(); break;
+    case 'lkForgot': lkForgot(); break;
+    case 'lkCancel': LK.mode = 'unlock'; LK.buf = ''; LK.err = ''; LK.showPad = false; renderLock(); break;
+    case 'emailEdit': openSheet(SHEETS.emailStep('enter')); break;
+    case 'emailMore': openSheet(SHEETS.emailOpts()); break;
+    case 'emailSend': emailSend(); break;
+    case 'emailConfirm': emailConfirm(); break;
+
+    case 'share': openSheet(SHEETS.share(p, c)); break;
+    case 'shareAs': {
+
+      closeSheet();
+
+      if(el.dataset.v === 'img') shareImg3(c);
+      else sharePdf3(c);
+      break;
+    }
+    case 'pMore':
+      LPSEL = { key: `party:${el.dataset.p}`, view: V.view, kind: 'party', pid: el.dataset.p };
+      render(); break;
+    case 'pEdit':
+    case 'pDel': {
+      const pp = findParty(el.dataset.p);
+      LPSEL = null; render();
+      if(pp) openSheet(SHEETS.confirmDel(a === 'pEdit' ? 'editParty' : 'party', pp.n, pp, null));
+      break;
+    }
+
+    case 'pCur': {
+      if(LPSEL) LPSEL.cur = !LPSEL.cur;
+      render(); break;
+    }
+    case 'setPCur': {
+      const pp = findParty(el.dataset.p);
+      if(pp && CURS[el.dataset.v]){ pp.cur = el.dataset.v; save(); }
+      if(LPSEL) LPSEL.cur = false;
+      render(); break;
+    }
+    case 'addParty': openSheet(SHEETS.partyAdd()); break;
+    case 'saveParty': {
+      const n = val('f-name').trim();
+      if(!n){ document.getElementById('f-name').focus(); return; }
+      S.parties.push({ id: uid(), n, c: [], cur: 'toman' }); save(); closeSheet(); render(); break;
+    }
+    case 'partyEdit': openSheet(SHEETS.partyEdit(findParty(V.openId))); break;
+    case 'savePartyName': {
+      const n = val('f-name').trim();
+      if(!n){ document.getElementById('f-name').focus(); return; }
+      p.n = n; save(); closeSheet(); render(); break;
+    }
+    case 'askDel': {
+      const act = el.dataset.act;
+      const name = act === 'party' ? (p && p.n) : (c && c.n);
+      /* deleting a party from its edit sheet */
+      if(!name) return;
+      openSheet(SHEETS.confirmDel(act, name, p, c));
+      break;
+    }
+    case 'doDel': {
+      const act = el.dataset.act;
+      const target = (act === 'party' || act === 'editParty') ? p : c;
+      if(!target || val('del-name').trim() !== target.n) return;
+      if(act === 'editParty'){ openSheet(SHEETS.partyEdit(p)); return; }
+      if(act === 'party'){
+        S.parties = S.parties.filter(x => x.id !== p.id); save();
+        V = { view:'list', openId:null, custId:null, search:V.search, q:V.q }; history.replaceState({v:{view:'list'}}, '');
+      } else if(act === 'cust'){
+        p.c = p.c.filter(x => x.id !== c.id); save();
+        V.view = 'detail'; V.custId = null; history.replaceState({v:{view:'detail', openId:p.id}}, '');
+      } else if(act === 'txs'){
+        c.tx = []; save();
+        if(V.view === 'custMenu'){ V = {view:'list', openId:p.id, custId:null, search:false, q:V.q}; history.replaceState({v:V}, ''); }
+      }
+      closeSheet(); render(); break;
+    }
+
+    case 'addCust':
+      goTo({view:'addCust', openId:p.id}); break;
+    case 'saveCust': {
+      const n = val('f-name').trim();
+      const ph = latin(val('f-phone')).replace(/\D/g, '');
+      const ds = val('f-ds').trim();
+      if(!n){ document.getElementById('f-name').focus(); alert('نام مشتری را وارد کنید.'); return; }
+      if(ph.length < 7){ document.getElementById('f-phone').focus(); alert('شماره تلفن معتبر وارد کنید.'); return; }
+      const dup = S.parties.some(pp => pp.c.some(cc => cc.ph === ph));
+      if(dup){ alert('مشتری با این شماره قبلاً ثبت شده است.'); return; }
+      p.c.push({ id: uid(), n, ph, ds, tx: [] }); save();
+      goTo({view:'detail', openId:p.id}, true); break;
+    }
+    case 'custMore':
+      goTo({view:'custMenu', openId:p.id, custId:c.id}); break;
+    case 'cMenuEdit':
+      goTo({view:'custEditPage', openId:p.id, custId:c.id}); break;
+    case 'saveCustPage': {
+      const n = val('f-name').trim();
+      const ph = latin(val('f-phone')).replace(/\D/g, '');
+      const ds = val('f-ds').trim();
+      if(!n){ document.getElementById('f-name').focus(); alert('نام مشتری را وارد کنید.'); return; }
+      if(ph.length < 7){ document.getElementById('f-phone').focus(); alert('شماره تلفن معتبر وارد کنید.'); return; }
+      const dup = S.parties.some(pp => pp.c.some(cc => cc.id !== c.id && cc.ph === ph));
+      if(dup){ alert('مشتری با این شماره قبلاً ثبت شده است.'); return; }
+      c.n = n; c.ph = ph; c.ds = ds; save();
+      goTo({view:'list', openId:p.id}, true); break;
+    }
+    case 'cDelTx':
+      LPSEL = null; render(); openSheet(SHEETS.confirmDel('txs', c.n, p, c)); break;
+    case 'cDel':
+      LPSEL = null; render(); openSheet(SHEETS.confirmDel('cust', c.n, p, c)); break;
+    case 'custEdit': openSheet(SHEETS.custEdit(p, c)); break;
+    case 'saveCustName': {
+      const n = val('f-name').trim();
+      if(!n){ document.getElementById('f-name').focus(); return; }
+      c.n = n; save(); closeSheet(); render(); break;
+    }
+
+
+    case 'addTx': openSheet(SHEETS.txForm(p, c)); break;
+    case 'txMore':
+      goTo({view:'txEdit', openId:p.id, custId:c.id, txId:t.id}); break;
+    case 'txMoreOld':
+      LPSEL = { key: `txmode:${p.id}:${c.id}:${t.id}`, view: V.view, kind: 'txmode', pid: p.id, cid: c.id, tid: t.id };
+      render(); break;
+
+    case 'setType': {
+      const f = document.getElementById('f-type');
+      if(f) f.value = el.dataset.v;
+      document.querySelectorAll('.tbtn').forEach(b => b.classList.toggle('on', b === el));
+      break;
+    }
+
+    /* calendar popup */
+    case 'calOpen': {
+      const dt = parseDate(val('f-date')) || today();
+      if(!OV.includes('cal')) pushOv('cal');
+      CAL = { open:true, mode:'days', sel:{ y:dt.y, m:dt.m, d:dt.d }, vy:dt.y, vm:dt.m };
+      calRender(); break;
+    }
+    case 'calPrev':
+      CAL.vm--; if(CAL.vm < 1){ CAL.vm = 12; CAL.vy--; }
+      calRender(); break;
+    case 'calNext':
+      CAL.vm++; if(CAL.vm > 12){ CAL.vm = 1; CAL.vy++; }
+      calRender(); break;
+    case 'calYears':
+      CAL.mode = CAL.mode === 'years' ? 'days' : 'years';
+      calRender(); break;
+    case 'calYear':
+      CAL.vy = parseInt(el.dataset.v, 10); CAL.mode = 'days';
+      calRender(); break;
+    case 'calDay':
+      CAL.sel = { y: CAL.vy, m: CAL.vm, d: parseInt(el.dataset.v, 10) };
+      calRender(); break;
+    case 'calCancel':
+      closeCal(); break;
+    case 'calOk': {
+      const s = jStr(CAL.sel.y, CAL.sel.m, CAL.sel.d);
+      const f = document.getElementById('f-date'); if(f) f.value = s;
+      const dt = document.getElementById('dtxt'); if(dt) dt.textContent = s;
+      closeCal(); break;
+    }
+
+    case 'saveTx': {
+      const amt = parse(val('f-amount'));
+      if(!amt){ document.getElementById('f-amount').focus(); return; }
+      const dt = parseDate(val('f-date'));
+      if(!dt){ alert('تاریخ معتبر نیست. دوباره از تقویم انتخاب کنید.'); return; }
+      const amount = amt * parseInt(val('f-type'), 10);
+      const d = val('f-desc').trim();
+      if(t){
+        Object.assign(t, { a: amount, d, y: dt.y, m: dt.m, dd: dt.d });
+      } else {
+        c.tx.push({ id: uid(), a: amount, d, y: dt.y, m: dt.m, dd: dt.d, ts: Date.now() });
+      }
+      save(); afterTx(); break;
+    }
+    case 'delTx':
+      if(confirm('این تراکنش حذف شود؟')){
+        c.tx = c.tx.filter(x => x.id !== t.id); save(); afterTx();
+      }
+      break;
+  }
+});
+
+document.addEventListener('keydown', e => {
+  if(e.key === 'Enter' && e.target.id === 'f-name'){
+    const btn = document.querySelector('#sheet [data-a^="save"]');
+    if(btn) btn.click();
+  }
+  if(e.key === 'Escape'){
+    if(CAL.open){ closeCal(); }
+    else closeSheet();
+  }
+});
+
+document.addEventListener('input', e => {
+  if(e.target.id === 'q'){ V.q = e.target.value; render(); return; }
+  if(e.target.id === 'cq'){
+    V.q = e.target.value; render();
+    const i = document.getElementById('cq');
+    if(i){ i.focus(); i.setSelectionRange(i.value.length, i.value.length); }
+    return;
+  }
+  if(e.target.id === 'del-name'){
+    const ok = document.getElementById('del-ok');
+    if(ok) ok.disabled = e.target.value.trim() !== e.target.dataset.exp;
+    return;
+  }
+  if(e.target.classList.contains('money')){
+    const n = parse(e.target.value);
+    e.target.value = e.target.value.trim() === '' ? '' : n.toLocaleString('en-US');
+  }
+});
+
+history.replaceState({v:V}, '');
+render();
+renderLock();
+async function initCloudSession(){
+  if(!supabaseClient){ LK.locked = true; LK.err = 'اتصال Supabase بارگذاری نشد. اینترنت و آدرس پروژه را بررسی کنید.'; renderLock(); return; }
+  const { data, error } = await supabaseClient.auth.getSession();
+  if(error){ LK.locked = true; LK.err = 'خواندن نشست کاربری ناموفق بود.'; renderLock(); return; }
+  if(!data.session?.user){
+    cloudUser = null; cloudReady = false; LK.locked = true;
+    LK.mode = S.email ? 'login' : 'signup'; LK.f.mail = S.email || '';
+    renderLock(); return;
+  }
+  cloudUser = data.session.user; cloudReady = false;
+  try{
+    await cloudLoad(); cloudReady = true; S.loggedIn = true; delete S.passHash; delete S.reg;
+    LK.f.mail = S.email;
+    if(S.pin){ LK.locked = true; LK.mode = 'unlock'; renderLock(); render(); }
+    else lkUnlock();
+  }catch(e){
+    console.error('Supabase initial load error:',e);
+    LK.locked = true; LK.mode = 'login'; LK.f.mail = cloudUser.email || '';
+    LK.err = 'بارگذاری اطلاعات ابری ناموفق بود. جدول‌ها و سیاست‌های امنیتی را بررسی کنید.';
+    renderLock();
+  }
+}
+initCloudSession();
+</script>
+</body>
+</html>
