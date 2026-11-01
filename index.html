@@ -174,6 +174,8 @@ input:focus,select:focus{outline:2px solid #d9b99b;border-color:transparent}
 .lk-dots.shake{animation:lkshake .35s}
 @keyframes lkshake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 .lk-msg{min-height:22px;font-size:14px;color:#c0392b;margin-bottom:18px;padding:0 6px}
+.lk-msg.ok{color:#1e9e62;font-weight:700}
+.lk-msg.busy{color:#3b8bba}
 .pad{display:grid;grid-template-columns:repeat(3,76px);justify-content:space-between;gap:18px 0;width:100%;max-width:300px;direction:ltr}
 .pk-key{width:76px;height:76px;border-radius:50%;border:1px solid #dfe3ea;background:#eef1f6;color:#1a2233;font-size:30px;font-weight:700;cursor:pointer;font-family:Poppins,Vazirmatn,sans-serif;display:grid;place-items:center;padding:0;-webkit-tap-highlight-color:transparent;transition:background .1s,transform .1s}
 .pk-key:active{background:#dde3ec;transform:scale(.95)}
@@ -432,17 +434,45 @@ function load(){
 }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} queueCloudSync(); }
 let toastTimer = null;
-function showToast(message){
+function showToast(message, ok){
   let el = document.getElementById('app-toast');
   if(!el){
     el = document.createElement('div'); el.id = 'app-toast';
     el.style.cssText = 'position:fixed;top:12px;left:16px;right:16px;z-index:1000;max-width:520px;margin:0 auto;padding:13px 16px;border-radius:14px;background:#c0392b;color:#fff;text-align:center;font-weight:700;box-shadow:0 6px 20px #0002';
     document.body.appendChild(el);
   }
-  el.textContent = message; el.style.display = 'block';
+  el.textContent = (ok ? '✓ ' : '') + message; el.style.background = ok ? '#1e9e62' : '#c0392b'; el.style.display = 'block';
   clearTimeout(toastTimer); toastTimer = setTimeout(()=>{el.style.display='none';},3500);
 }
 
+/* ---------- writes count as saved only after the cloud has really received them ---------- */
+let WRITING = false;
+function withTimeout(p, ms){ return Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms))]); }
+function lkSay(msg, kind){ LK.err = msg; LK.kind = kind || ''; renderLock(); }
+async function cloudCommit(){
+  if(!navigator.onLine || !cloudUser || !supabaseClient) return false;
+  for(let i = 0; i < 150 && cloudSyncing; i++) await new Promise(r => setTimeout(r, 100));
+  try{ return (await withTimeout(cloudSyncNow(), 20000)) === true; }
+  catch(e){ return false; }
+}
+async function commitWrite(mutate, okMsg){
+  if(WRITING) return false;
+  if(!navigator.onLine){ showToast('برای ثبت، اول به انترنت وصل شوید.'); return false; }
+  WRITING = true;
+  const snap = JSON.stringify(S);
+  try{
+    mutate();
+    if(!(await cloudCommit())){
+      S = JSON.parse(snap);
+      showToast('ثبت انجام نشد. به انترنت وصل شوید و دوباره تلاش کنید.');
+      render();
+      return false;
+    }
+    try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+    if(okMsg) showToast(okMsg, true);
+    return true;
+  } finally { WRITING = false; }
+}
 let S = load();
 let V = { view:'list', openId:null, custId:null, search:false, q:'' };
 let SUI = { curOpen:false };
@@ -482,7 +512,7 @@ function softTone(f1, f2, dur, wave){
   }catch(e){}
 }
 function soundForward(){ softTone(480, 640, 0.22, 'sine'); }
-function soundBack(){ softTone(640, 420, 0.22, 'triangle'); }
+function soundBack(){ soundForward(); }
 
 function goTo(next, replace){
   const st = Object.assign({view:'list', openId:null, custId:null, search:false, q:''}, next);
@@ -541,7 +571,7 @@ function summaryHTML(t, label){
 }
 function pageHead(title, back){
   return `<header class="top">
-    <button class="ic" data-a="back" data-v="${back}" aria-label="بازگشت">${ICON.back}</button>
+    <span class="sp"></span>
     <h1>${title}</h1>
     <span class="sp"></span>
   </header>`;
@@ -656,7 +686,7 @@ function render(){
     const pays = c.tx.filter(t => t.a < 0).reduce((s, t) => s - t.a, 0);
     m.innerHTML = `
       <header class="top">
-        <button class="ic" data-a="back" data-v="detail" aria-label="بازگشت">${ICON.back}</button>
+        <span class="sp"></span>
         <h1>${esc(c.n)}</h1>
         <button class="ic" data-a="share" data-p="${p.id}" data-c="${c.id}" aria-label="اشتراک گذاری">${ICON.share}</button>
       </header>
@@ -702,7 +732,7 @@ function render(){
     const t = tallyC(p.c);
     m.innerHTML = `
       <header class="top">
-        <button class="ic" data-a="back" data-v="list" aria-label="بازگشت">${ICON.back}</button>
+        <span class="sp"></span>
         <h1>${esc(p.n)}</h1>
         <button class="ic" data-a="partyEdit" aria-label="ویرایش طرف حساب">${ICON.edit}</button>
       </header>
@@ -1318,7 +1348,7 @@ function renderLock(){
       ${M !== 'newpass' ? `<div class="su-fld"><label for="au-mail">ایمیل</label><input id="au-mail" class="ltr" type="email" inputmode="email" autocomplete="email" value="${esc(F.mail)}"></div>` : ''}
       <div class="su-fld"><label for="au-pass">رمز عبور</label><input id="au-pass" class="ltr" type="password" autocomplete="${M === 'login' ? 'current-password' : 'new-password'}" value="${esc(F.pass)}"></div>
       ${M !== 'login' ? `<div class="su-fld"><label for="au-pass2">تکرار رمز عبور</label><input id="au-pass2" class="ltr" type="password" autocomplete="new-password" value="${esc(F.pass2)}"></div>` : ''}
-      <div class="lk-msg" style="margin:0;min-height:20px">${esc(LK.err)}</div>
+      <div class="lk-msg ${LK.kind || ''}" style="margin:0;min-height:20px">${esc(LK.err)}</div>
       <button class="su-btn" data-a="${M === 'newpass' ? 'passSave' : 'authLogin'}">${M === 'newpass' ? 'ذخیره رمز عبور' : 'ورود'}${ARROW}</button>
       
       ${M === 'login' ? `<button class="lk-link" style="margin-top:6px" data-a="authForgot">فراموشی رمز عبور</button>
@@ -1417,22 +1447,32 @@ function readF(){
   LK.f = { mail: val('au-mail').trim() || LK.f.mail, pass: val('au-pass'), pass2: val('au-pass2') };
   if(!document.getElementById('au-mail')) LK.f.mail = LK.f.mail;
 }
-function authErr(msg){ LK.err = msg; renderLock(); }
+function authErr(msg){ lkSay(msg, ''); }
 async function authLogin(){
   readF();
   const mail = LK.f.mail, pw = LK.f.pass;
   if(!mailOk(mail)) return authErr('ایمیل معتبر وارد کنید.');
   if(!pw) return authErr('رمز عبور را وارد کنید.');
   if(!supabaseClient) return authErr('کتابخانه اتصال بارگذاری نشد. صفحه را تازه‌سازی کنید.');
-  LK.err = 'در حال بررسی حساب...'; renderLock();
-  const { data, error } = await supabaseClient.auth.signInWithPassword({ email:mail, password:pw });
-  if(error) return authErr('ایمیل یا رمز عبور درست نیست. اگر حساب قدیمی دارید، رمز را بازیابی کنید.');
+  if(!navigator.onLine) return authErr('به اینترنت وصل نیستید. اینترنت را روشن کنید و دوباره وارد شوید.');
+  lkSay('در حال بررسی حساب...', 'busy');
+  let res;
+  try{ res = await withTimeout(supabaseClient.auth.signInWithPassword({ email:mail, password:pw }), 20000); }
+  catch(e){ return authErr('ورود انجام نشد؛ اتصال اینترنت را بررسی کنید.'); }
+  const { data, error } = res;
+  if(error){
+    if(String(error.message || '').toLowerCase().includes('not confirmed')) return authErr('حساب شما هنوز تأیید نشده است. ایمیل تأیید را باز کنید.');
+    return authErr('ایمیل یا رمز عبور درست نیست. اگر حساب قدیمی دارید، رمز را بازیابی کنید.');
+  }
   cloudUser = data.user; cloudReady = false;
   try{ await cloudLoad(); cloudReady = true; }
   catch(e){ await supabaseClient.auth.signOut(); cloudUser = null; return authErr('دریافت اطلاعات حساب از پایگاه داده ناموفق بود. تنظیمات دیتابیس را بررسی کنید.'); }
   S.email = cloudUser.email || mail; S.loggedIn = true;
   delete S.passHash; delete S.reg;
-  LK.f.pass = ''; LK.err = '';
+  LK.f.pass = '';
+  lkSay('با موفقیت وارد حساب خود شدید', 'ok');
+  await new Promise(r => setTimeout(r, 1000));
+  LK.err = ''; LK.kind = '';
   if(S.pin){ LK.locked = true; LK.mode = 'unlock'; renderLock(); render(); }
   else lkUnlock();
 }
@@ -1726,7 +1766,7 @@ document.addEventListener('mousedown', lpStart);
 ['touchend','touchcancel','touchmove','mouseup'].forEach(ev => document.addEventListener(ev, lpCancel, {passive:true}));
 document.addEventListener('contextmenu', e => { if(e.target.closest('[data-lp]')) e.preventDefault(); });
 
-document.addEventListener('click', e => {
+document.addEventListener('click', async e => {
   if(e.target.id === 'cal'){ closeCal(); return; }
   if(e.target.id === 'ov'){ closeSheet(); return; }
   if(LPJUST){ LPJUST = false; return; }
@@ -1779,7 +1819,7 @@ document.addEventListener('click', e => {
     }
     case 'lpDel':
       if(t && confirm('این تراکنش حذف شود؟')){
-        c.tx = c.tx.filter(x => x.id !== t.id); save();
+        await commitWrite(() => { c.tx = c.tx.filter(x => x.id !== t.id); }, 'تراکنش حذف شد');
       }
       LPSEL = null; render(); break;
 
@@ -1836,7 +1876,7 @@ document.addEventListener('click', e => {
     }
     case 'setPCur': {
       const pp = findParty(el.dataset.p);
-      if(pp && CURS[el.dataset.v]){ pp.cur = el.dataset.v; save(); }
+      if(pp && CURS[el.dataset.v]){ await commitWrite(() => { pp.cur = el.dataset.v; }); }
       if(LPSEL) LPSEL.cur = false;
       render(); break;
     }
@@ -1844,13 +1884,15 @@ document.addEventListener('click', e => {
     case 'saveParty': {
       const n = val('f-name').trim();
       if(!n){ document.getElementById('f-name').focus(); return; }
-      S.parties.push({ id: uid(), n, c: [], cur: 'toman' }); save(); closeSheet(); render(); break;
+      if(await commitWrite(() => { S.parties.push({ id: uid(), n, c: [], cur: 'toman' }); }, 'طرف حساب ثبت شد')){ closeSheet(); render(); }
+      break;
     }
     case 'partyEdit': openSheet(SHEETS.partyEdit(findParty(V.openId))); break;
     case 'savePartyName': {
       const n = val('f-name').trim();
       if(!n){ document.getElementById('f-name').focus(); return; }
-      p.n = n; save(); closeSheet(); render(); break;
+      if(await commitWrite(() => { p.n = n; }, 'تغییرات ذخیره شد')){ closeSheet(); render(); }
+      break;
     }
     case 'askDel': {
       const act = el.dataset.act;
@@ -1866,13 +1908,13 @@ document.addEventListener('click', e => {
       if(!target || val('del-name').trim() !== target.n) return;
       if(act === 'editParty'){ openSheet(SHEETS.partyEdit(p)); return; }
       if(act === 'party'){
-        S.parties = S.parties.filter(x => x.id !== p.id); save();
+        if(!await commitWrite(() => { S.parties = S.parties.filter(x => x.id !== p.id); }, 'طرف حساب حذف شد')) return;
         V = { view:'list', openId:null, custId:null, search:V.search, q:V.q }; history.replaceState({v:{view:'list'}}, '');
       } else if(act === 'cust'){
-        p.c = p.c.filter(x => x.id !== c.id); save();
+        if(!await commitWrite(() => { p.c = p.c.filter(x => x.id !== c.id); }, 'مشتری حذف شد')) return;
         V.view = 'detail'; V.custId = null; history.replaceState({v:{view:'detail', openId:p.id}}, '');
       } else if(act === 'txs'){
-        c.tx = []; save();
+        if(!await commitWrite(() => { c.tx = []; }, 'تراکنش‌ها حذف شد')) return;
         if(V.view === 'custMenu'){ V = {view:'list', openId:p.id, custId:null, search:false, q:V.q}; history.replaceState({v:V}, ''); }
       }
       closeSheet(); render(); break;
@@ -1888,8 +1930,8 @@ document.addEventListener('click', e => {
       if(ph.length < 7){ document.getElementById('f-phone').focus(); alert('شماره تلفن معتبر وارد کنید.'); return; }
       const dup = S.parties.some(pp => pp.c.some(cc => cc.ph === ph));
       if(dup){ alert('مشتری با این شماره قبلاً ثبت شده است.'); return; }
-      p.c.push({ id: uid(), n, ph, ds, tx: [] }); save();
-      goTo({view:'detail', openId:p.id}, true); break;
+      if(await commitWrite(() => { p.c.push({ id: uid(), n, ph, ds, tx: [] }); }, 'مشتری ثبت شد')) goTo({view:'detail', openId:p.id}, true);
+      break;
     }
     case 'custMore':
       goTo({view:'custMenu', openId:p.id, custId:c.id}); break;
@@ -1903,8 +1945,8 @@ document.addEventListener('click', e => {
       if(ph.length < 7){ document.getElementById('f-phone').focus(); alert('شماره تلفن معتبر وارد کنید.'); return; }
       const dup = S.parties.some(pp => pp.c.some(cc => cc.id !== c.id && cc.ph === ph));
       if(dup){ alert('مشتری با این شماره قبلاً ثبت شده است.'); return; }
-      c.n = n; c.ph = ph; c.ds = ds; save();
-      goTo({view:'list', openId:p.id}, true); break;
+      if(await commitWrite(() => { c.n = n; c.ph = ph; c.ds = ds; }, 'تغییرات ذخیره شد')) goTo({view:'list', openId:p.id}, true);
+      break;
     }
     case 'cDelTx':
       LPSEL = null; render(); openSheet(SHEETS.confirmDel('txs', c.n, p, c)); break;
@@ -1914,7 +1956,8 @@ document.addEventListener('click', e => {
     case 'saveCustName': {
       const n = val('f-name').trim();
       if(!n){ document.getElementById('f-name').focus(); return; }
-      c.n = n; save(); closeSheet(); render(); break;
+      if(await commitWrite(() => { c.n = n; }, 'تغییرات ذخیره شد')){ closeSheet(); render(); }
+      break;
     }
 
 
@@ -1964,27 +2007,26 @@ document.addEventListener('click', e => {
     }
 
     case 'saveTx': {
-      // Transactions must not be created or edited while offline.
-      if(!navigator.onLine){
-        showToast('برای ثبت تراکنش، اول به انترنت وصل شوید.');
-        return;
-      }
       const amt = parse(val('f-amount'));
       if(!amt){ document.getElementById('f-amount').focus(); return; }
       const dt = parseDate(val('f-date'));
       if(!dt){ alert('تاریخ معتبر نیست. دوباره از تقویم انتخاب کنید.'); return; }
       const amount = amt * parseInt(val('f-type'), 10);
       const d = val('f-desc').trim();
-      if(t){
-        Object.assign(t, { a: amount, d, y: dt.y, m: dt.m, dd: dt.d });
-      } else {
-        c.tx.push({ id: uid(), a: amount, d, y: dt.y, m: dt.m, dd: dt.d, ts: Date.now() });
-      }
-      save(); afterTx(); break;
+      const okTx = await commitWrite(() => {
+        if(t){
+          Object.assign(t, { a: amount, d, y: dt.y, m: dt.m, dd: dt.d });
+        } else {
+          c.tx.push({ id: uid(), a: amount, d, y: dt.y, m: dt.m, dd: dt.d, ts: Date.now() });
+        }
+      }, t ? 'تراکنش ویرایش و ثبت شد' : 'تراکنش ثبت شد');
+      if(okTx) afterTx();
+      break;
     }
     case 'delTx':
       if(confirm('این تراکنش حذف شود؟')){
-        c.tx = c.tx.filter(x => x.id !== t.id); save(); afterTx();
+        const okDel = await commitWrite(() => { c.tx = c.tx.filter(x => x.id !== t.id); }, 'تراکنش حذف شد');
+        if(okDel) afterTx();
       }
       break;
   }
