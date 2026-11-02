@@ -132,6 +132,15 @@ input:focus,select:focus{outline:2px solid #d9b99b;border-color:transparent}
 .crop-wrap{display:flex;justify-content:center;margin-top:6px}
 .crop-wrap canvas{width:260px;max-width:100%;height:auto;aspect-ratio:1/1;background:#f3eee8;border-radius:16px;border:1px solid var(--line);touch-action:none;cursor:grab}
 #crop-zoom{padding:0;height:28px}
+.portal{position:fixed;inset:0;z-index:1000;background:var(--bg);overflow:auto;padding-bottom:40px}
+.portal.hidden{display:none!important}
+.pt-wrap{max-width:520px;margin:0 auto;padding:16px}
+.pt-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.pt-top h1{font-size:19px;font-weight:700}
+.pt-top .sp{width:42px;height:42px}
+.pt-head{display:flex;flex-direction:column;align-items:center;gap:10px;margin:14px 0}
+.pt-head b{font-size:18px}
+.pt-photo{width:110px;height:110px;border-radius:50%;object-fit:cover;background:var(--soft);display:grid;place-items:center;font-size:40px;font-weight:700;color:var(--deep)}
 .form-card{background:#fff;border:1px solid var(--line);border-radius:26px;padding:20px 16px;display:flex;flex-direction:column;gap:14px}
 .fld{display:flex;align-items:flex-start;gap:10px;border:1px solid var(--line);border-radius:16px;padding:8px 14px;background:#fdfaf6}
 .fld:focus-within{border-color:var(--pri);box-shadow:0 0 0 3px #efe2d3}
@@ -253,7 +262,7 @@ async function cloudLoad(){
   const u = cloudUser.id;
   const [pr, cr, tr] = await Promise.all([
     supabaseClient.from('p').select('id,n,cur').eq('u',u),
-    supabaseClient.from('c').select('id,p,n,ph,ds,pf').eq('u',u),
+    supabaseClient.from('c').select('id,p,n,ph,ds,pf,ac').eq('u',u),
     supabaseClient.from('t').select('id,c,a,d,y,m,dd,ts').eq('u',u)
   ]);
   if(pr.error) throw pr.error;
@@ -267,7 +276,7 @@ async function cloudLoad(){
   (cr.data || []).forEach(c => {
     const parent = pmap.get(c.p);
     if(!parent) return;
-    const item = { id:c.id, n:c.n || '', ph:c.ph || '', ds:c.ds || '', pf:c.pf || '', tx:[] };
+    const item = { id:c.id, n:c.n || '', ph:c.ph || '', ds:c.ds || '', pf:c.pf || '', ac:c.ac || '', tx:[] };
     parent.c.push(item); cmap.set(item.id,item);
   });
   (tr.data || []).forEach(t => {
@@ -292,7 +301,7 @@ async function cloudSyncNow(){
       const customers = parties.flatMap(p => (p.c || []).map(c => ({ p, c })));
       const transactions = customers.flatMap(x => (x.c.tx || []).map(t => ({ c:x.c, t })));
       const pRows = parties.map(p => ({ id:String(p.id), u, n:p.n || '', cur:p.cur || 'toman' }));
-      const cRows = customers.map(x => ({ id:String(x.c.id), u, p:String(x.p.id), n:x.c.n || '', ph:x.c.ph || '', ds:x.c.ds || '', pf:x.c.pf || null }));
+      const cRows = customers.map(x => ({ id:String(x.c.id), u, p:String(x.p.id), n:x.c.n || '', ph:x.c.ph || '', ds:x.c.ds || '', pf:x.c.pf || null, ac:x.c.ac || null }));
       const tRows = transactions.map(x => ({ id:String(x.t.id), u, c:String(x.c.id), a:Math.trunc(Number(x.t.a)||0), d:x.t.d || '', y:Math.trunc(Number(x.t.y)||0), m:Math.trunc(Number(x.t.m)||1), dd:Math.trunc(Number(x.t.dd)||1), ts:Math.trunc(Number(x.t.ts)||0) }));
       for(const [table, rows] of [['p',pRows],['c',cRows],['t',tRows]]){
         if(rows.length){
@@ -679,6 +688,10 @@ function render(){
           <span class="fi">${ICON.note}</span>
           <div class="fw"><label for="f-ds">توضیحات (اختیاری)</label><textarea id="f-ds" rows="2" maxlength="200"></textarea></div>
         </div>
+        <div class="fld">
+          <span class="fi"><svg viewBox="0 0 24 24" style="stroke:var(--muted);fill:none;stroke-width:1.8;stroke-linecap:round"><rect x="5" y="10.5" width="14" height="10.5" rx="3"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></svg></span>
+          <div class="fw"><label for="f-code">کد ورود مشتری (۴ رقمی)</label><input id="f-code" inputmode="numeric" maxlength="4"></div>
+        </div>
       </div>
       <button class="bottom-btn" data-a="saveCust" data-p="${p.id}">${ICON.check}<span>ثبت</span></button>`;
     setTimeout(() => { const i = document.getElementById('f-name'); if(i) i.focus(); }, 60);
@@ -714,6 +727,8 @@ function render(){
         <input id="f-phone" inputmode="tel" maxlength="20" value="${c.ph ? fa(c.ph) : ''}">
         <label for="f-ds">توضیحات (اختیاری)</label>
         <textarea id="f-ds" rows="2" maxlength="200">${esc(c.ds || '')}</textarea>
+        <label for="f-code">کد ورود مشتری (۴ رقمی، برای تغییر وارد کنید)</label>
+        <input id="f-code" inputmode="numeric" maxlength="4" value="${esc(c.ac || '')}">
         <button class="btn pri-btn" data-a="saveCustPage" data-p="${p.id}" data-c="${c.id}">ثبت ویرایش</button>
       </div>`;
     return;
@@ -1411,6 +1426,7 @@ function renderLock(){
       <button class="su-btn" data-a="${M === 'newpass' ? 'passSave' : 'authLogin'}">${M === 'newpass' ? 'ذخیره رمز عبور' : 'ورود'}${ARROW}</button>
       
       ${M === 'login' ? `<button class="lk-link" style="margin-top:6px" data-a="authForgot">فراموشی رمز عبور</button>
+      <button class="lk-link" data-a="portalOpen">حساب مشتری</button>
       ` : ''}
       
     </div>`;
@@ -1972,6 +1988,89 @@ async function uploadAvatar(blob, cid){
   if(error) throw error;
   return bucket.getPublicUrl(path).data.publicUrl + '?v=' + Date.now();
 }
+async function phoneTakenElsewhere(ph){
+  try{
+    const { data, error } = await supabaseClient.rpc('phone_taken', { p_phone: ph, p_owner: cloudUser.id });
+    if(error){ console.error('phone check error:', error); return false; }
+    return data === true;
+  }catch(e){ console.error(e); return false; }
+}
+/* ---------- customer portal (read-only) ---------- */
+let PORTAL = { stage:'login', phone:'', code:'', err:'', busy:false, data:null };
+function portalEl(){
+  let el = document.getElementById('portal');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'portal'; el.className = 'portal hidden';
+    document.body.appendChild(el);
+  }
+  return el;
+}
+function closePortal(){
+  PORTAL.data = null; PORTAL.code = ''; PORTAL.err = '';
+  const el = document.getElementById('portal');
+  if(el){ el.classList.add('hidden'); el.innerHTML = ''; }
+}
+function renderPortal(){
+  const el = portalEl();
+  const LOCKSVG = '<svg viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10.5" rx="3"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></svg>';
+  if(PORTAL.stage === 'login'){
+    el.innerHTML = `
+      <div class="pt-wrap">
+        <div class="pt-top"><span class="sp"></span><h1>حساب مشتری</h1><button class="ic" data-a="portalClose" aria-label="بستن">${ICON.close}</button></div>
+        <p class="hint">شماره تلفن و کد ۴ رقمی را که طرف حساب تعیین کرده وارد کنید.</p>
+        <div class="form-card" style="margin-top:12px">
+          <div class="fld"><span class="fi">${ICON.phone}</span><div class="fw"><label for="pt-phone">شماره تلفن</label><input id="pt-phone" inputmode="tel" maxlength="20" value="${esc(PORTAL.phone)}"></div></div>
+          <div class="fld"><span class="fi">${LOCKSVG}</span><div class="fw"><label for="pt-code">کد ۴ رقمی</label><input id="pt-code" inputmode="numeric" maxlength="4" value="${esc(PORTAL.code)}"></div></div>
+        </div>
+        <div class="hint" style="min-height:22px;color:var(--neg)">${esc(PORTAL.err)}</div>
+        <button class="bottom-btn" data-a="portalLogin">${ICON.check}<span>تأیید</span></button>
+      </div>`;
+  } else {
+    const d = PORTAL.data || {};
+    const txs = (d.transactions || []).slice().sort((a, b) => (Number(b.ts) || 0) - (Number(a.ts) || 0));
+    const total = txs.reduce((s, t) => s + (Number(t.a) || 0), 0);
+    const rows = txs.length
+      ? txs.map(t => `
+        <div class="card"><span class="nm"><b>${esc(t.d || '-')}</b><small>${fa(jStr(t.y, t.m, t.dd))}</small></span><span class="bal ${balCls(Number(t.a) || 0)}">${money(Number(t.a) || 0)}</span></div>`).join('')
+      : `<div class="empty">هنوز تراکنشی ثبت نشده است.</div>`;
+    el.innerHTML = `
+      <div class="pt-wrap">
+        <div class="pt-top"><span class="sp"></span><h1>حساب من</h1><button class="ic" data-a="portalClose" aria-label="بستن">${ICON.close}</button></div>
+        <div class="pt-head">
+          ${d.photo ? `<img class="pt-photo" src="${esc(d.photo)}" alt="">` : `<span class="pt-photo">${esc((d.name || '؟').charAt(0))}</span>`}
+          <b>${esc(d.name || '')}</b>
+        </div>
+        <div class="hero"><div class="lbl">مانده حساب</div><div class="net">${money(total)}</div></div>
+        <div class="sec-title">تراکنش‌ها</div>
+        <div class="list">${rows}</div>
+        <p class="hint" style="margin-top:14px">این صفحه فقط برای مشاهده است.</p>
+        <button class="bottom-btn" data-a="portalClose">بستن و خروج</button>
+      </div>`;
+  }
+  el.classList.remove('hidden');
+}
+async function portalLogin(){
+  if(PORTAL.busy) return;
+  PORTAL.phone = latin(val('pt-phone')).replace(/\D/g, '');
+  PORTAL.code = latin(val('pt-code')).replace(/\D/g, '');
+  if(PORTAL.phone.length < 7){ PORTAL.err = 'شماره تلفن را درست وارد کنید.'; return renderPortal(); }
+  if(PORTAL.code.length !== 4){ PORTAL.err = 'کد ۴ رقمی را وارد کنید.'; return renderPortal(); }
+  if(!supabaseClient){ PORTAL.err = 'اتصال برقرار نیست. صفحه را تازه کنید.'; return renderPortal(); }
+  PORTAL.busy = true; PORTAL.err = 'در حال بررسی...'; renderPortal();
+  const { data, error } = await supabaseClient.rpc('customer_portal', { p_phone: PORTAL.phone, p_code: PORTAL.code });
+  PORTAL.busy = false;
+  if(error){
+    const m = String(error.message || '');
+    PORTAL.err = m.includes('locked') ? 'به‌دلیل تلاش‌های زیاد، ۱۵ دقیقه بعد دوباره امتحان کنید.'
+      : m.includes('invalid') ? 'شماره تلفن یا کد درست نیست.'
+      : 'ورود انجام نشد؛ اتصال اینترنت را بررسی کنید.';
+    PORTAL.code = '';
+    return renderPortal();
+  }
+  PORTAL.data = data; PORTAL.stage = 'data'; PORTAL.err = ''; PORTAL.code = '';
+  renderPortal();
+}
 document.addEventListener('change', e => {
   if(e.target.id === 'photo-input') onPhotoChosen(e.target);
 });
@@ -2133,6 +2232,12 @@ document.addEventListener('click', async e => {
       closeSheet(); render(); break;
     }
 
+    case 'portalOpen':
+      PORTAL = { stage:'login', phone:'', code:'', err:'', busy:false, data:null }; renderPortal(); break;
+    case 'portalClose':
+      closePortal(); break;
+    case 'portalLogin':
+      portalLogin(); break;
     case 'pickPhoto':
       document.getElementById('photo-input')?.click(); break;
     case 'cropOk': {
@@ -2156,13 +2261,16 @@ document.addEventListener('click', async e => {
       if(ph.length < 7){ document.getElementById('f-phone').focus(); alert('شماره تلفن معتبر وارد کنید.'); return; }
       const dup = S.parties.some(pp => pp.c.some(cc => cc.ph === ph));
       if(dup){ alert('مشتری با این شماره قبلاً ثبت شده است.'); return; }
+      if(await phoneTakenElsewhere(ph)){ document.getElementById('f-phone').focus(); alert('این شماره تلفن در حساب دیگری ثبت شده است.'); return; }
+      const ac = latin(val('f-code')).replace(/\D/g, '');
+      if(ac.length !== 4){ document.getElementById('f-code').focus(); alert('کد ۴ رقمی مشتری را وارد کنید.'); return; }
       const id = uid();
       let pf = '';
       if(PHOTO){
         try{ pf = await uploadAvatar(PHOTO.blob, id); }
-        catch(err){ console.error(err); alert('ذخیره عکس انجام نشد. اتصال اینترنت را بررسی کنید.'); return; }
+        catch(err){ console.error(err); alert('ذخیره عکس انجام نشد: ' + (err && (err.message || err.error || JSON.stringify(err))) + (navigator.onLine ? '' : ' | اینترنت قطع است')); return; }
       }
-      if(await commitWrite(() => { p.c.push({ id, n, ph, ds, pf, tx: [] }); }, 'مشتری ثبت شد', el)){
+      if(await commitWrite(() => { p.c.push({ id, n, ph, ds, ac, pf, tx: [] }); }, 'مشتری ثبت شد', el)){
         PHOTO = null; goTo({view:'detail', openId:p.id}, true);
       }
       break;
@@ -2179,12 +2287,15 @@ document.addEventListener('click', async e => {
       if(ph.length < 7){ document.getElementById('f-phone').focus(); alert('شماره تلفن معتبر وارد کنید.'); return; }
       const dup = S.parties.some(pp => pp.c.some(cc => cc.id !== c.id && cc.ph === ph));
       if(dup){ alert('مشتری با این شماره قبلاً ثبت شده است.'); return; }
+      if(await phoneTakenElsewhere(ph)){ document.getElementById('f-phone').focus(); alert('این شماره تلفن در حساب دیگری ثبت شده است.'); return; }
+      const ac = latin(val('f-code')).replace(/\D/g, '');
+      if(ac && ac.length !== 4){ document.getElementById('f-code').focus(); alert('کد باید ۴ رقمی باشد.'); return; }
       let pf = null;
       if(PHOTO){
         try{ pf = await uploadAvatar(PHOTO.blob, c.id); }
-        catch(err){ console.error(err); alert('ذخیره عکس انجام نشد. اتصال اینترنت را بررسی کنید.'); return; }
+        catch(err){ console.error(err); alert('ذخیره عکس انجام نشد: ' + (err && (err.message || err.error || JSON.stringify(err))) + (navigator.onLine ? '' : ' | اینترنت قطع است')); return; }
       }
-      if(await commitWrite(() => { c.n = n; c.ph = ph; c.ds = ds; if(pf) c.pf = pf; }, 'تغییرات ذخیره شد', el)){
+      if(await commitWrite(() => { c.n = n; c.ph = ph; c.ds = ds; if(pf) c.pf = pf; if(ac) c.ac = ac; }, 'تغییرات ذخیره شد', el)){
         PHOTO = null; goTo({view:'list', openId:p.id}, true);
       }
       break;
