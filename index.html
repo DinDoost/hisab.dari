@@ -134,7 +134,11 @@ input:focus,select:focus{outline:2px solid #d9b99b;border-color:transparent}
 #crop-zoom{padding:0;height:28px}
 .portal{position:fixed;inset:0;z-index:1000;background:var(--bg);overflow:auto;padding-bottom:40px}
 .portal.hidden{display:none!important}
-.pt-wrap{max-width:520px;margin:0 auto;padding:16px}
+.pt-wrap{max-width:520px;margin:0 auto;padding:16px;position:relative}
+.pt-menu{position:absolute;top:58px;right:14px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 10px 24px rgba(0,0,0,.15);padding:6px;z-index:5}
+.pt-menu.hidden{display:none}
+.pt-menu-b{border:0;background:none;color:var(--neg);font-weight:700;font-size:15px;padding:12px 16px;cursor:pointer;white-space:nowrap}
+.pt-dots{font-size:26px;line-height:1;font-weight:700}
 .pt-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .pt-top h1{font-size:19px;font-weight:700}
 .pt-top .sp{width:42px;height:42px}
@@ -579,6 +583,7 @@ window.addEventListener('popstate', e => {
   if(IGN > 0){ IGN--; return; }
   if(OV.length){
     const top = OV.pop();
+    if(top === 'portal'){ closePortal(); return; }
     if(top === 'cal'){ CAL.open = false; calRender(); }
     else document.getElementById('ov').classList.add('hidden');
     return;
@@ -1996,7 +2001,21 @@ async function phoneTakenElsewhere(ph){
   }catch(e){ console.error(e); return false; }
 }
 /* ---------- customer portal (read-only) ---------- */
-let PORTAL = { stage:'login', phone:'', code:'', err:'', busy:false, data:null };
+let PORTAL = { stage:'login', phone:'', saved:false, code:'', err:'', busy:false, data:null };
+const PORTAL_PHONE_KEY = 'hisab_portal_phone';
+function readPortalPhone(){ try{ return localStorage.getItem(PORTAL_PHONE_KEY) || ''; }catch(e){ return ''; } }
+function writePortalPhone(ph){ try{ localStorage.setItem(PORTAL_PHONE_KEY, ph); }catch(e){} }
+function forgetPortalPhone(){ try{ localStorage.removeItem(PORTAL_PHONE_KEY); }catch(e){} }
+function openPortal(){
+  const sp = readPortalPhone();
+  PORTAL = { stage:'login', phone:sp, saved:!!sp, code:'', err:'', busy:false, data:null };
+  renderPortal();
+  if(!OV.includes('portal')) pushOv('portal');
+}
+function closePortalByUser(){
+  if(OV.includes('portal')) popOv('portal');
+  closePortal();
+}
 function portalEl(){
   let el = document.getElementById('portal');
   if(!el){
@@ -2018,9 +2037,9 @@ function renderPortal(){
     el.innerHTML = `
       <div class="pt-wrap">
         <div class="pt-top"><span class="sp"></span><h1>حساب مشتری</h1><button class="ic" data-a="portalClose" aria-label="بستن">${ICON.close}</button></div>
-        <p class="hint">شماره تلفن و کد ۴ رقمی را که طرف حساب تعیین کرده وارد کنید.</p>
+        <p class="hint">${PORTAL.saved ? 'کد ۴ رقمی خود را وارد کنید.' : 'شماره تلفن و کد ۴ رقمی را که طرف حساب تعیین کرده وارد کنید.'}</p>
         <div class="form-card" style="margin-top:12px">
-          <div class="fld"><span class="fi">${ICON.phone}</span><div class="fw"><label for="pt-phone">شماره تلفن</label><input id="pt-phone" inputmode="tel" maxlength="20" value="${esc(PORTAL.phone)}"></div></div>
+          ${PORTAL.saved ? '' : `<div class="fld"><span class="fi">${ICON.phone}</span><div class="fw"><label for="pt-phone">شماره تلفن</label><input id="pt-phone" inputmode="tel" maxlength="20" value="${esc(PORTAL.phone)}"></div></div>`}
           <div class="fld"><span class="fi">${LOCKSVG}</span><div class="fw"><label for="pt-code">کد ۴ رقمی</label><input id="pt-code" inputmode="numeric" maxlength="4" value="${esc(PORTAL.code)}"></div></div>
         </div>
         <div class="hint" style="min-height:22px;color:var(--neg)">${esc(PORTAL.err)}</div>
@@ -2036,7 +2055,8 @@ function renderPortal(){
       : `<div class="empty">هنوز تراکنشی ثبت نشده است.</div>`;
     el.innerHTML = `
       <div class="pt-wrap">
-        <div class="pt-top"><span class="sp"></span><h1>حساب من</h1><button class="ic" data-a="portalClose" aria-label="بستن">${ICON.close}</button></div>
+        <div class="pt-top"><button class="ic" data-a="portalMenu" aria-label="گزینه‌ها"><span class="pt-dots">⋮</span></button><h1>حساب من</h1><button class="ic" data-a="portalClose" aria-label="بستن">${ICON.close}</button></div>
+        <div id="pt-menu" class="pt-menu hidden"><button class="pt-menu-b" data-a="portalLogout">خروج از حساب</button></div>
         <div class="pt-head">
           ${d.photo ? `<img class="pt-photo" src="${esc(d.photo)}" alt="">` : `<span class="pt-photo">${esc((d.name || '؟').charAt(0))}</span>`}
           <b>${esc(d.name || '')}</b>
@@ -2045,14 +2065,13 @@ function renderPortal(){
         <div class="sec-title">تراکنش‌ها</div>
         <div class="list">${rows}</div>
         <p class="hint" style="margin-top:14px">این صفحه فقط برای مشاهده است.</p>
-        <button class="bottom-btn" data-a="portalClose">بستن و خروج</button>
       </div>`;
   }
   el.classList.remove('hidden');
 }
 async function portalLogin(){
   if(PORTAL.busy) return;
-  PORTAL.phone = latin(val('pt-phone')).replace(/\D/g, '');
+  if(!PORTAL.saved) PORTAL.phone = latin(val('pt-phone')).replace(/\D/g, '');
   PORTAL.code = latin(val('pt-code')).replace(/\D/g, '');
   if(PORTAL.phone.length < 7){ PORTAL.err = 'شماره تلفن را درست وارد کنید.'; return renderPortal(); }
   if(PORTAL.code.length !== 4){ PORTAL.err = 'کد ۴ رقمی را وارد کنید.'; return renderPortal(); }
@@ -2068,6 +2087,7 @@ async function portalLogin(){
     PORTAL.code = '';
     return renderPortal();
   }
+  writePortalPhone(PORTAL.phone); PORTAL.saved = true;
   PORTAL.data = data; PORTAL.stage = 'data'; PORTAL.err = ''; PORTAL.code = '';
   renderPortal();
 }
@@ -2233,11 +2253,20 @@ document.addEventListener('click', async e => {
     }
 
     case 'portalOpen':
-      PORTAL = { stage:'login', phone:'', code:'', err:'', busy:false, data:null }; renderPortal(); break;
+      openPortal(); break;
     case 'portalClose':
-      closePortal(); break;
+      closePortalByUser(); break;
     case 'portalLogin':
       portalLogin(); break;
+    case 'portalMenu':
+      document.getElementById('pt-menu')?.classList.toggle('hidden'); break;
+    case 'portalLogout':
+      if(confirm('از حساب خارج می‌شوید؟ دفعه بعد باید شماره تلفن و کد ۴ رقمی را وارد کنید.')){
+        forgetPortalPhone();
+        PORTAL = { stage:'login', phone:'', saved:false, code:'', err:'', busy:false, data:null };
+        renderPortal();
+      }
+      break;
     case 'pickPhoto':
       document.getElementById('photo-input')?.click(); break;
     case 'cropOk': {
