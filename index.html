@@ -205,6 +205,8 @@ input:focus,select:focus{outline:2px solid #d9b99b;border-color:transparent}
 .mail-row{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);background:#fff;border-radius:14px;padding:12px 14px;width:100%}
 .mail-txt{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1}
 .mail-txt b{font-size:15px}
+.net-dot{width:12px;height:12px;border-radius:50%;background:#c0392b;flex:none;margin:0 15px;box-shadow:0 0 0 3px rgba(192,57,43,.18);transition:background .3s,box-shadow .3s}
+.net-dot.on{background:#1e9e62;box-shadow:0 0 0 3px rgba(30,158,98,.2)}
 .srow{display:flex;flex-direction:column;gap:6px;margin-top:12px}
 .srow-b{width:100%;border:1px solid var(--line);background:#fff;color:var(--text);border-radius:12px;padding:8px 14px;font-size:14px;font-weight:600;cursor:pointer;text-align:right}
 .srow-out{margin-top:18px}
@@ -227,6 +229,7 @@ input:focus,select:focus{outline:2px solid #d9b99b;border-color:transparent}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const KEY = 'hesab-daftari-v1';
+var NET_OK = navigator.onLine;
 const SUPABASE_URL = 'https://wvnggzpqtoubuqmowqvj.supabase.co';
 const AUTH_REDIRECT_URL = 'https://dindoost.github.io/hisab.dari/';
 const SUPABASE_ANON_KEY = 'sb_publishable_1KZebGzaz17vLkc5HldsRw_1Q5Ckbr_';
@@ -604,7 +607,7 @@ function pageHead(title, back){
   return `<header class="top">
     <span class="sp"></span>
     <h1>${title}</h1>
-    <span class="sp"></span>
+    <span class="net-dot ${NET_OK ? 'on' : ''}" title="وضعیت اتصال به اینترنت"></span>
   </header>`;
 }
 /* wraps a card with the edit / delete buttons shown after a long press */
@@ -720,7 +723,7 @@ function render(){
       <header class="top">
         <span class="sp"></span>
         <h1>${esc(c.n)}</h1>
-        <button class="ic" data-a="share" data-p="${p.id}" data-c="${c.id}" aria-label="اشتراک گذاری">${ICON.share}</button>
+        <span class="net-dot ${NET_OK ? 'on' : ''}" title="وضعیت اتصال به اینترنت"></span>
       </header>
       <section class="hero">
         <div class="lbl">مانده حساب ${esc(c.n)}</div>
@@ -730,11 +733,13 @@ function render(){
           <div class="mini"><span>پرداخت مشتری</span><b>${money(pays)}</b></div>
         </div>
       </section>
-      ${c.ph || c.ds ? `
-      <div class="info" style="margin-top:14px">
-        ${c.ph ? `<div><span>شماره تلفن: </span>${fa(c.ph)}</div>` : ''}
-        ${c.ds ? `<div><span>توضیحات: </span>${esc(c.ds)}</div>` : ''}
-      </div>` : ''}
+      <div class="info" style="margin-top:14px;display:flex;align-items:center;gap:8px">
+        <div style="flex:1;min-width:0">
+          ${c.ph ? `<div><span>شماره تلفن: </span>${fa(c.ph)}</div>` : ''}
+          ${c.ds ? `<div><span>توضیحات: </span>${esc(c.ds)}</div>` : ''}
+        </div>
+        <button class="ic" data-a="share" data-p="${p.id}" data-c="${c.id}" aria-label="اشتراک گذاری">${ICON.share}</button>
+      </div>
       <div class="sec-title">تراکنش‌ها</div>
       <div class="list">
         ${c.tx.length ? txList(c).map(t => {
@@ -1297,7 +1302,7 @@ function renderMain(m){
     <header class="top">
       <button class="ic" data-a="menu" aria-label="منو">${ICON.menu}</button>
       <button class="title-btn" data-a="togglePick">${esc(title)} <span class="caret">${V.pick ? '▴' : '▾'}</span></button>
-      <span class="sp"></span>
+      <span class="net-dot ${NET_OK ? 'on' : ''}" title="وضعیت اتصال به اینترنت"></span>
     </header>
     ${(V.pick || !p) ? pickRow(p) : ''}
     ${V.search ? `<div class="search"><input id="q" type="search" placeholder="جستجوی مشتری..." value="${esc(V.q)}"></div>` : ''}
@@ -1433,6 +1438,7 @@ function renderLock(){
   LK.shake = false;
 }
 function lkUnlock(){
+  try{ sessionStorage.setItem('hisab_unlocked', '1'); }catch(e){}
   LK.locked = false; LK.buf = ''; LK.err = ''; LK.showPad = false; LK.fromSettings = false;
   renderLock(); soundForward(); render();
 }
@@ -2148,6 +2154,27 @@ document.addEventListener('input', e => {
   }
 });
 
+function setNet(v){
+  NET_OK = v;
+  document.querySelectorAll('.net-dot').forEach(d => d.classList.toggle('on', v));
+}
+async function checkNet(){
+  if(!navigator.onLine){ setNet(false); return; }
+  const c = new AbortController();
+  const t = setTimeout(() => c.abort(), 3000);
+  try{
+    await fetch(SUPABASE_URL + '/auth/v1/health', { mode:'no-cors', cache:'no-store', signal:c.signal });
+    setNet(true);
+  }catch(e){
+    setNet(false);
+  }finally{
+    clearTimeout(t);
+  }
+}
+window.addEventListener('offline', () => setNet(false));
+window.addEventListener('online', checkNet);
+setInterval(checkNet, 2000);
+checkNet();
 history.replaceState({v:V}, '');
 render();
 renderLock();
@@ -2187,7 +2214,9 @@ async function initCloudSession(){
   try{
     await cloudLoad(); cloudReady = true; S.loggedIn = true; delete S.passHash; delete S.reg;
     LK.f.mail = S.email;
-    if(S.pin){ LK.locked = true; LK.mode = 'unlock'; renderLock(); render(); }
+    let stillUnlocked = false;
+    try{ stillUnlocked = sessionStorage.getItem('hisab_unlocked') === '1'; }catch(e){}
+    if(S.pin && !stillUnlocked){ LK.locked = true; LK.mode = 'unlock'; renderLock(); render(); }
     else lkUnlock();
   }catch(e){
     console.error('Supabase initial load error:',e);
