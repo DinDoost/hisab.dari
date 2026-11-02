@@ -1354,7 +1354,17 @@ function pinSection(){
 
 /* ---------- lock screen (PIN) ---------- */
 let LK = { locked:true, mode:S.email ? 'login' : 'signup', fromSettings:false, f:{mail:S.email||'',pass:'',pass2:''}, vCode:'', purpose:'', pend:null, buf:'', err:'', newPin:'', showPad:false, recCode:'' };
-function lkMax(){ return LK.mode === 'verify' ? 6 : 4; }
+const REC_KEY = 'hisab_rec_pending';
+function recSave(mail){ try{ localStorage.setItem(REC_KEY, JSON.stringify({mail, t:Date.now()})); }catch(e){} }
+function recClear(){ try{ localStorage.removeItem(REC_KEY); }catch(e){} }
+function recPending(){
+  try{
+    const r = JSON.parse(localStorage.getItem(REC_KEY) || 'null');
+    if(!r || !r.mail || Date.now() - r.t > 30*60*1000){ recClear(); return null; }
+    return r;
+  }catch(e){ return null; }
+}
+function lkMax(){ return LK.mode === 'verify' ? (LK.purpose === 'signup' ? 6 : 8) : 4; }
 function renderLock(){
   const el = document.getElementById('lock');
   if(!LK.locked){ el.classList.add('hidden'); el.innerHTML = ''; return; }
@@ -1385,7 +1395,7 @@ function renderLock(){
     setup1: 'یک پین کد ۴ رقمی انتخاب کنید',
     setup2: 'پین کد را دوباره وارد کنید',
     recover: 'کد ارسال‌شده به ایمیل را وارد کنید',
-    verify: 'کُد شش‌رقمی ارسال‌شده به ایمیل را وارد کنید'
+    verify: 'کُد ارسال‌شده به ایمیل را وارد کنید'
   };
   let dots = '';
   for(let i = 0; i < lkMax(); i++) dots += `<span class="dot ${i < LK.buf.length ? 'fill' : ''}"></span>`;
@@ -1440,6 +1450,7 @@ async function lkOk(){
     }
     try{ await cloudLoad(); cloudReady = true; }
     catch(e){ LK.err = 'دریافت اطلاعات حساب انجام نشد. اتصال اینترنت را بررسی کنید.'; renderLock(); return; }
+    LK.recoveryVerified = true; recClear();
     LK.mode = 'newpass'; LK.f.pass = ''; LK.f.pass2 = ''; renderLock(); return;
   }
   if(LK.mode === 'setup1'){
@@ -1546,8 +1557,10 @@ async function authForgot(){
   LK.err = 'در حال فرستادن کُد بازیابی...'; renderLock();
   const { error } = await supabaseClient.auth.resetPasswordForEmail(mail, { redirectTo:AUTH_REDIRECT_URL });
   if(error) return authErr('ارسال لینک بازیابی انجام نشد: ' + (error.message || 'خطای ناشناخته') + (error.status ? ' (کد ' + error.status + ')' : ''));
-  LK.f.mail = mail; LK.err = '';
-  authErr('لینک بازیابی به ایمیل شما فرستاده شد. لینک را باز کنید؛ سپس رمز جدید را همین‌جا ثبت کنید.');
+  LK.f.mail = mail; LK.purpose = 'recovery'; LK.buf = ''; LK.mode = 'verify'; recSave(mail);
+  LK.recoveryVerified = false;
+  LK.err = 'کُد ۸ رقمی به ایمیل شما فرستاده شد. کد را وارد کنید.';
+  renderLock();
 }
 async function passSave(){
   readF();
@@ -1558,7 +1571,7 @@ async function passSave(){
   if(error) return authErr('ذخیره رمز جدید انجام نشد. دوباره تلاش کنید.');
   S.email = cloudUser?.email || LK.f.mail; S.loggedIn = true;
   LK.f.pass = ''; LK.f.pass2 = ''; LK.err = '';
-  LK.recoveryVerified = false;
+  LK.recoveryVerified = false; recClear();
   lkUnlock();
 }
 async function authLogout(){
@@ -1866,7 +1879,7 @@ document.addEventListener('click', async e => {
     case 'authToSignup': LK.mode = 'login'; LK.err = 'ثبت‌نام عمومی بسته است.'; renderLock(); break;
     case 'authToLogin': readF(); LK.mode = 'login'; LK.err = ''; renderLock(); break;
     case 'vResend': { const em = LK.purpose === 'signup' ? LK.pend?.mail : LK.f.mail; LK.err = 'در حال ارسال دوباره...'; renderLock(); const req = LK.purpose === 'signup' ? supabaseClient.auth.resend({type:'signup',email:em}) : supabaseClient.auth.resetPasswordForEmail(em); req.then(({error})=>{ const m = String(error?.message || '').toLowerCase(); LK.err = error ? ((m.includes('rate limit') || m.includes('email rate')) ? 'محدودیت ارسال ایمیل فعال است؛ کمی صبر کنید.' : 'ارسال دوباره کُد ناموفق بود.') : 'درخواست ارسال دوباره انجام شد؛ ایمیل را بررسی کنید.'; renderLock(); }).catch(()=>{ LK.err = 'ارسال دوباره انجام نشد. اتصال اینترنت را بررسی کنید.'; renderLock(); }); break; }
-    case 'vBack': LK.mode = LK.purpose === 'signup' ? 'signup' : 'login'; LK.buf = ''; LK.err = ''; renderLock(); break;
+    case 'vBack': if(LK.purpose !== 'signup') recClear(); LK.mode = LK.purpose === 'signup' ? 'signup' : 'login'; LK.buf = ''; LK.err = ''; renderLock(); break;
     case 'pinActivate': pinActivate(); break;
     case 'pinDisable': pinDisable(); break;
     case 'lkAbort': LK.locked = false; LK.fromSettings = false; LK.buf = ''; LK.newPin = ''; LK.err = ''; renderLock(); render(); break;
@@ -2116,7 +2129,13 @@ async function initCloudSession(){
   if(error){ LK.locked = true; LK.err = 'خواندن نشست کاربری ناموفق بود.'; renderLock(); return; }
   if(!data.session?.user){
     cloudUser = null; cloudReady = false; LK.locked = true;
-    LK.mode = 'login'; LK.f.mail = S.email || '';
+    const pr = recPending();
+    if(pr){
+      LK.mode = 'verify'; LK.purpose = 'recovery'; LK.buf = ''; LK.f.mail = pr.mail;
+      LK.err = 'کُد ۸ رقمی ارسال‌شده به ایمیل را وارد کنید.';
+    } else {
+      LK.mode = 'login'; LK.f.mail = S.email || '';
+    }
     renderLock(); return;
   }
   cloudUser = data.session.user; cloudReady = false;
