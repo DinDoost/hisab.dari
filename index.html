@@ -1545,7 +1545,7 @@ async function authForgot(){
   if(!supabaseClient) return authErr('اتصال به سرویس حساب برقرار نیست.');
   LK.err = 'در حال فرستادن کُد بازیابی...'; renderLock();
   const { error } = await supabaseClient.auth.resetPasswordForEmail(mail, { redirectTo:AUTH_REDIRECT_URL });
-  if(error) return authErr('ارسال لینک بازیابی انجام نشد. ایمیل و آدرس بازگشت در Supabase را بررسی کنید.');
+  if(error) return authErr('ارسال لینک بازیابی انجام نشد: ' + (error.message || 'خطای ناشناخته') + (error.status ? ' (کد ' + error.status + ')' : ''));
   LK.f.mail = mail; LK.err = '';
   authErr('لینک بازیابی به ایمیل شما فرستاده شد. لینک را باز کنید؛ سپس رمز جدید را همین‌جا ثبت کنید.');
 }
