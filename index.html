@@ -123,6 +123,15 @@ input:focus,select:focus{outline:2px solid #d9b99b;border-color:transparent}
 /* add customer page */
 .avatar-big{width:120px;height:120px;border-radius:50%;background:var(--soft);display:grid;place-items:center;margin:12px auto 24px}
 .avatar-big svg{width:56px;height:56px;stroke:var(--pri);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.avatar-btn{position:relative;border:0;padding:0;cursor:pointer;overflow:hidden;display:grid;place-items:center;font-family:inherit;flex:none}
+.avatar-btn img{width:100%;height:100%;object-fit:cover;display:block}
+.avatar-btn .cam-badge{position:absolute;left:0;right:0;bottom:0;height:34px;background:rgba(40,28,18,.45);display:grid;place-items:center}
+.avatar-btn .cam-badge svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.av-img{padding:0;overflow:hidden;background:var(--soft)}
+.av-img img{width:100%;height:100%;object-fit:cover;display:block}
+.crop-wrap{display:flex;justify-content:center;margin-top:6px}
+.crop-wrap canvas{width:260px;max-width:100%;height:auto;aspect-ratio:1/1;background:#f3eee8;border-radius:16px;border:1px solid var(--line);touch-action:none;cursor:grab}
+#crop-zoom{padding:0;height:28px}
 .form-card{background:#fff;border:1px solid var(--line);border-radius:26px;padding:20px 16px;display:flex;flex-direction:column;gap:14px}
 .fld{display:flex;align-items:flex-start;gap:10px;border:1px solid var(--line);border-radius:16px;padding:8px 14px;background:#fdfaf6}
 .fld:focus-within{border-color:var(--pri);box-shadow:0 0 0 3px #efe2d3}
@@ -244,7 +253,7 @@ async function cloudLoad(){
   const u = cloudUser.id;
   const [pr, cr, tr] = await Promise.all([
     supabaseClient.from('p').select('id,n,cur').eq('u',u),
-    supabaseClient.from('c').select('id,p,n,ph,ds').eq('u',u),
+    supabaseClient.from('c').select('id,p,n,ph,ds,pf').eq('u',u),
     supabaseClient.from('t').select('id,c,a,d,y,m,dd,ts').eq('u',u)
   ]);
   if(pr.error) throw pr.error;
@@ -258,7 +267,7 @@ async function cloudLoad(){
   (cr.data || []).forEach(c => {
     const parent = pmap.get(c.p);
     if(!parent) return;
-    const item = { id:c.id, n:c.n || '', ph:c.ph || '', ds:c.ds || '', tx:[] };
+    const item = { id:c.id, n:c.n || '', ph:c.ph || '', ds:c.ds || '', pf:c.pf || '', tx:[] };
     parent.c.push(item); cmap.set(item.id,item);
   });
   (tr.data || []).forEach(t => {
@@ -283,7 +292,7 @@ async function cloudSyncNow(){
       const customers = parties.flatMap(p => (p.c || []).map(c => ({ p, c })));
       const transactions = customers.flatMap(x => (x.c.tx || []).map(t => ({ c:x.c, t })));
       const pRows = parties.map(p => ({ id:String(p.id), u, n:p.n || '', cur:p.cur || 'toman' }));
-      const cRows = customers.map(x => ({ id:String(x.c.id), u, p:String(x.p.id), n:x.c.n || '', ph:x.c.ph || '', ds:x.c.ds || '' }));
+      const cRows = customers.map(x => ({ id:String(x.c.id), u, p:String(x.p.id), n:x.c.n || '', ph:x.c.ph || '', ds:x.c.ds || '', pf:x.c.pf || null }));
       const tRows = transactions.map(x => ({ id:String(x.t.id), u, c:String(x.c.id), a:Math.trunc(Number(x.t.a)||0), d:x.t.d || '', y:Math.trunc(Number(x.t.y)||0), m:Math.trunc(Number(x.t.m)||1), dd:Math.trunc(Number(x.t.dd)||1), ts:Math.trunc(Number(x.t.ts)||0) }));
       for(const [table, rows] of [['p',pRows],['c',cRows],['t',tRows]]){
         if(rows.length){
@@ -655,7 +664,8 @@ function render(){
     const p = findParty(V.openId);
     if(!p){ V.view = 'list'; return render(); }
     m.innerHTML = pageHead('درج مشتری جدید', 'detail') + `
-      <div class="avatar-big">${ICON.user}</div>
+      ${avatarPickHTML(PHOTO ? PHOTO.url : '')}
+      <input type="file" id="photo-input" accept="image/*" style="display:none">
       <div class="form-card">
         <div class="fld">
           <span class="fi">${ICON.user}</span>
@@ -696,6 +706,8 @@ function render(){
     if(!c){ V.view = 'list'; return render(); }
     m.innerHTML = pageHead('ویرایش مشتری', 'custMenu') + `
       <div class="tx-page">
+        ${avatarPickHTML(PHOTO ? PHOTO.url : (c.pf || ''))}
+        <input type="file" id="photo-input" accept="image/*" style="display:none">
         <label for="f-name">نام مشتری</label>
         <input id="f-name" value="${esc(c.n)}" maxlength="60">
         <label for="f-phone">شماره تلفن</label>
@@ -780,7 +792,7 @@ function render(){
           const b = custBal(c), col = colorFor(c.n);
           const card = `
           <button class="card" data-a="cust" data-p="${p.id}" data-c="${c.id}">
-            <span class="av" style="background:${col[0]};color:${col[1]}">${esc(c.n.charAt(0))}</span>
+            ${avHTML(c, col)}
             <span class="nm"><b>${esc(c.n)}</b><small>${c.ph ? fa(c.ph) : c.tx.length + ' تراکنش'}</small></span>
             <span class="bal ${balCls(b)}">${b === 0 ? '-' : money(b)}</span>
           </button>`;
@@ -1277,7 +1289,7 @@ function partySection(p){
         const b = custBal(c), col = colorFor(c.n);
         const card = `
         <button class="card" data-a="cust" data-p="${p.id}" data-c="${c.id}">
-          <span class="av" style="background:${col[0]};color:${col[1]}">${esc(c.n.charAt(0))}</span>
+          ${avHTML(c, col)}
           <span class="nm"><b>${esc(c.n)}</b><small>${c.ph ? fa(c.ph) : c.tx.length + ' تراکنش'}</small></span>
           <span class="bal-col"><span class="bal ${balCls(b)}">${b === 0 ? '-' : money(b)}</span>${b === 0 ? '' : `<small class="bal-note">${b > 0 ? 'بدهکار است' : 'طلب دارد'}</small>`}</span>
         </button>`;
@@ -1853,6 +1865,117 @@ document.addEventListener('mousedown', lpStart);
 ['touchend','touchcancel','touchmove','mouseup'].forEach(ev => document.addEventListener(ev, lpCancel, {passive:true}));
 document.addEventListener('contextmenu', e => { if(e.target.closest('[data-lp]')) e.preventDefault(); });
 
+/* ---------- customer photo ---------- */
+let PHOTO = null;          /* pending photo: {blob, url} */
+let CROP = null;           /* crop state while the crop sheet is open */
+const CROP_S = 260;        /* crop square size in px */
+const AVATAR_MAX = 20 * 1024;
+
+function avatarPickHTML(src){
+  return `<button class="avatar-big avatar-btn" data-a="pickPhoto" aria-label="انتخاب عکس">${src ? `<img src="${esc(src)}" alt="">` : ICON.user}<span class="cam-badge"><svg viewBox="0 0 24 24"><path d="M4 7h3l2-2h6l2 2h3v12H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span></button>`;
+}
+function avHTML(c, col){
+  return c.pf
+    ? `<span class="av av-img"><img src="${esc(c.pf)}" alt="" loading="lazy"></span>`
+    : `<span class="av" style="background:${col[0]};color:${col[1]}">${esc(c.n.charAt(0))}</span>`;
+}
+function onPhotoChosen(input){
+  const file = input.files && input.files[0];
+  input.value = '';
+  if(!file) return;
+  if(!file.type.startsWith('image/')){ alert('فقط فایل عکس انتخاب کنید.'); return; }
+  const img = new Image();
+  img.onload = () => {
+    CROP = { img, zoom:1, x:0, y:0 };
+    openSheet(`
+      <div class="sh-h"><span>برش عکس</span><button class="ic" data-a="close" aria-label="بستن">${ICON.close}</button></div>
+      <div class="crop-wrap"><canvas id="crop-cv" width="${CROP_S}" height="${CROP_S}"></canvas></div>
+      <div class="hint">عکس را با انگشت جابه‌جا کنید و با نوار زیر بزرگ‌نمایی کنید.</div>
+      <input type="range" id="crop-zoom" min="1" max="3" step="0.01" value="1" aria-label="بزرگ‌نمایی">
+      <button class="btn pri-btn" data-a="cropOk">تأیید عکس</button>`);
+    const cv = document.getElementById('crop-cv');
+    const zoom = document.getElementById('crop-zoom');
+    centerCrop(); drawCrop();
+    let drag = null;
+    cv.addEventListener('pointerdown', e => {
+      drag = { px:e.clientX, py:e.clientY, x:CROP.x, y:CROP.y };
+      cv.setPointerCapture(e.pointerId);
+    });
+    cv.addEventListener('pointermove', e => {
+      if(!drag || !CROP) return;
+      const k = CROP_S / cv.getBoundingClientRect().width;
+      CROP.x = drag.x + (e.clientX - drag.px) * k;
+      CROP.y = drag.y + (e.clientY - drag.py) * k;
+      drawCrop();
+    });
+    const endDrag = () => { drag = null; };
+    cv.addEventListener('pointerup', endDrag);
+    cv.addEventListener('pointercancel', endDrag);
+    zoom.addEventListener('input', () => setZoom(parseFloat(zoom.value)));
+  };
+  img.onerror = () => alert('این فایل عکس باز نشد.');
+  img.src = URL.createObjectURL(file);
+}
+function cropScale(){
+  return Math.max(CROP_S / CROP.img.width, CROP_S / CROP.img.height) * CROP.zoom;
+}
+function clampCrop(){
+  const sc = cropScale(), w = CROP.img.width * sc, h = CROP.img.height * sc;
+  CROP.x = Math.min(0, Math.max(CROP_S - w, CROP.x));
+  CROP.y = Math.min(0, Math.max(CROP_S - h, CROP.y));
+}
+function centerCrop(){
+  const sc = cropScale();
+  CROP.x = (CROP_S - CROP.img.width * sc) / 2;
+  CROP.y = (CROP_S - CROP.img.height * sc) / 2;
+  clampCrop();
+}
+function setZoom(z){
+  const oldSc = cropScale();
+  const cx = (CROP_S / 2 - CROP.x) / oldSc, cy = (CROP_S / 2 - CROP.y) / oldSc;
+  CROP.zoom = z;
+  const sc = cropScale();
+  CROP.x = CROP_S / 2 - cx * sc;
+  CROP.y = CROP_S / 2 - cy * sc;
+  clampCrop(); drawCrop();
+}
+function drawCrop(){
+  const cv = document.getElementById('crop-cv');
+  if(!cv || !CROP) return;
+  const ctx = cv.getContext('2d'), sc = cropScale();
+  clampCrop();
+  ctx.clearRect(0, 0, CROP_S, CROP_S);
+  ctx.drawImage(CROP.img, CROP.x, CROP.y, CROP.img.width * sc, CROP.img.height * sc);
+}
+async function encodeAvatar(){
+  const sc = cropScale(), side = CROP_S / sc;
+  const sx = -CROP.x / sc, sy = -CROP.y / sc;
+  let last = null;
+  for(const size of [240, 200, 160, 128]){
+    const out = document.createElement('canvas');
+    out.width = out.height = size;
+    out.getContext('2d').drawImage(CROP.img, sx, sy, side, side, 0, 0, size, size);
+    for(const q of [0.85, 0.75, 0.65, 0.55, 0.45, 0.35]){
+      const blob = await new Promise(r => out.toBlob(r, 'image/jpeg', q));
+      if(blob){
+        last = blob;
+        if(blob.size <= AVATAR_MAX) return blob;
+      }
+    }
+  }
+  return last;
+}
+async function uploadAvatar(blob, cid){
+  const path = `${cloudUser.id}/${String(cid).replace(/[^A-Za-z0-9_-]/g, '_')}.jpg`;
+  const bucket = supabaseClient.storage.from('avatars');
+  const { error } = await bucket.upload(path, blob, { upsert:true, contentType:'image/jpeg', cacheControl:'3600' });
+  if(error) throw error;
+  return bucket.getPublicUrl(path).data.publicUrl + '?v=' + Date.now();
+}
+document.addEventListener('change', e => {
+  if(e.target.id === 'photo-input') onPhotoChosen(e.target);
+});
+
 document.addEventListener('click', async e => {
   if(e.target.id === 'cal'){ closeCal(); return; }
   if(e.target.id === 'ov'){ closeSheet(); return; }
@@ -2010,8 +2133,21 @@ document.addEventListener('click', async e => {
       closeSheet(); render(); break;
     }
 
+    case 'pickPhoto':
+      document.getElementById('photo-input')?.click(); break;
+    case 'cropOk': {
+      if(!CROP) break;
+      const blob = await encodeAvatar();
+      if(PHOTO && PHOTO.url) URL.revokeObjectURL(PHOTO.url);
+      PHOTO = { blob, url: URL.createObjectURL(blob) };
+      CROP = null;
+      closeSheet();
+      const b = document.querySelector('.avatar-btn');
+      if(b) b.outerHTML = avatarPickHTML(PHOTO.url);
+      break;
+    }
     case 'addCust':
-      goTo({view:'addCust', openId:p.id}); break;
+      PHOTO = null; goTo({view:'addCust', openId:p.id}); break;
     case 'saveCust': {
       const n = val('f-name').trim();
       const ph = latin(val('f-phone')).replace(/\D/g, '');
@@ -2020,13 +2156,21 @@ document.addEventListener('click', async e => {
       if(ph.length < 7){ document.getElementById('f-phone').focus(); alert('شماره تلفن معتبر وارد کنید.'); return; }
       const dup = S.parties.some(pp => pp.c.some(cc => cc.ph === ph));
       if(dup){ alert('مشتری با این شماره قبلاً ثبت شده است.'); return; }
-      if(await commitWrite(() => { p.c.push({ id: uid(), n, ph, ds, tx: [] }); }, 'مشتری ثبت شد', el)) goTo({view:'detail', openId:p.id}, true);
+      const id = uid();
+      let pf = '';
+      if(PHOTO){
+        try{ pf = await uploadAvatar(PHOTO.blob, id); }
+        catch(err){ console.error(err); alert('ذخیره عکس انجام نشد. اتصال اینترنت را بررسی کنید.'); return; }
+      }
+      if(await commitWrite(() => { p.c.push({ id, n, ph, ds, pf, tx: [] }); }, 'مشتری ثبت شد', el)){
+        PHOTO = null; goTo({view:'detail', openId:p.id}, true);
+      }
       break;
     }
     case 'custMore':
       goTo({view:'custMenu', openId:p.id, custId:c.id}); break;
     case 'cMenuEdit':
-      goTo({view:'custEditPage', openId:p.id, custId:c.id}); break;
+      PHOTO = null; goTo({view:'custEditPage', openId:p.id, custId:c.id}); break;
     case 'saveCustPage': {
       const n = val('f-name').trim();
       const ph = latin(val('f-phone')).replace(/\D/g, '');
@@ -2035,7 +2179,14 @@ document.addEventListener('click', async e => {
       if(ph.length < 7){ document.getElementById('f-phone').focus(); alert('شماره تلفن معتبر وارد کنید.'); return; }
       const dup = S.parties.some(pp => pp.c.some(cc => cc.id !== c.id && cc.ph === ph));
       if(dup){ alert('مشتری با این شماره قبلاً ثبت شده است.'); return; }
-      if(await commitWrite(() => { c.n = n; c.ph = ph; c.ds = ds; }, 'تغییرات ذخیره شد', el)) goTo({view:'list', openId:p.id}, true);
+      let pf = null;
+      if(PHOTO){
+        try{ pf = await uploadAvatar(PHOTO.blob, c.id); }
+        catch(err){ console.error(err); alert('ذخیره عکس انجام نشد. اتصال اینترنت را بررسی کنید.'); return; }
+      }
+      if(await commitWrite(() => { c.n = n; c.ph = ph; c.ds = ds; if(pf) c.pf = pf; }, 'تغییرات ذخیره شد', el)){
+        PHOTO = null; goTo({view:'list', openId:p.id}, true);
+      }
       break;
     }
     case 'cDelTx':
@@ -2214,7 +2365,9 @@ async function initCloudSession(){
   try{
     await cloudLoad(); cloudReady = true; S.loggedIn = true; delete S.passHash; delete S.reg;
     LK.f.mail = S.email;
-    if(S.pin){ LK.locked = true; LK.mode = 'unlock'; renderLock(); render(); }
+    let stillUnlocked = false;
+    try{ stillUnlocked = sessionStorage.getItem('hisab_unlocked') === '1'; }catch(e){}
+    if(S.pin && !stillUnlocked){ LK.locked = true; LK.mode = 'unlock'; renderLock(); render(); }
     else lkUnlock();
   }catch(e){
     console.error('Supabase initial load error:',e);
