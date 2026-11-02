@@ -96,6 +96,10 @@ input:focus,select:focus{outline:2px solid #a9cde8;border-color:transparent}
 .cal-years{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .cal-years button{height:48px;border:0;border-radius:14px;background:#f1f6fb;color:var(--text);font-size:15px;cursor:pointer}
 .cal-years button.sel{background:var(--ok);color:#fff;font-weight:700}
+.sec-row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.sec-row{margin:22px 4px 0}
+.sec-row .sec-title{margin:0}
+.live-btn{border:0;border-radius:999px;background:var(--pri);color:#fff;font:inherit;font-size:14px;font-weight:700;padding:9px 18px;cursor:pointer;box-shadow:0 6px 16px rgba(58,139,194,.3)}
 .dt-row{display:flex;gap:14px;align-items:stretch}
 .dt-row .dbtn{flex:1;min-width:0}
 #tclk{z-index:31}
@@ -1327,7 +1331,7 @@ function partySection(p){
       </section>
       ${on ? `<div class="lp-acts hero-acts"><button class="lp-btn" data-a="lpEdit" data-k="party" data-p="${p.id}" aria-label="ویرایش">${ICON.edit}</button></div>` : ''}
     </div>
-    <div class="sec-title">مشتریان</div>
+    <div class="sec-row"><div class="sec-title">مشتریان</div><button class="live-btn" data-a="portalOpen">صورت حساب زنده</button></div>
     <div class="cq-wrap"><input id="cq" type="search" placeholder="جستجوی مشتری با نام یا شماره تلفن..." value="${esc(V.q)}"></div>
     <div class="list">
       ${custs.length ? custs.map(c => {
