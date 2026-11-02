@@ -170,6 +170,9 @@ input:focus,select:focus{outline:2px solid #d9b99b;border-color:transparent}
 /* lock screen */
 #lock{position:fixed;inset:0;z-index:50;background:#f3f6fa;color:#1f2937;display:flex;align-items:center;justify-content:center;padding:24px 24px calc(24px + env(safe-area-inset-bottom,0px));overflow:auto}
 #lock.hidden{display:none}
+#lock.lk-busy .pad,#lock.lk-busy .lk-dots{opacity:.35;pointer-events:none}
+#lock.lk-busy::after{content:"";position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border:4px solid rgba(61,43,31,.2);border-top-color:#3b8bba;border-radius:50%;animation:lkspin .7s linear infinite}
+@keyframes lkspin{to{transform:rotate(360deg)}}
 .lk-wrap{width:100%;max-width:340px;display:flex;flex-direction:column;align-items:center;text-align:center}
 .lk-ico{width:56px;height:56px;margin-bottom:22px}
 .lk-ico svg{width:100%;height:100%;stroke:#64748b;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
@@ -200,9 +203,14 @@ input:focus,select:focus{outline:2px solid #d9b99b;border-color:transparent}
 .su-alt{text-align:center;font-size:14px;color:#64748b;margin-top:6px}
 .lk-link{background:none;border:0;color:#3b8bba;cursor:pointer;font-size:14px;font-family:inherit;margin-top:26px}
 .mail-row{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);background:#fff;border-radius:14px;padding:12px 14px;width:100%}
-.mail-txt{display:flex;flex-direction:column;gap:4px;min-width:0}
+.mail-txt{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1}
 .mail-txt b{font-size:15px}
-.mail-txt small{color:var(--muted);font-size:13px;direction:ltr;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.srow{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.srow-b{width:100%;border:1px solid var(--line);background:#fff;color:var(--text);border-radius:12px;padding:8px 14px;font-size:14px;font-weight:600;cursor:pointer;text-align:right}
+.srow-out{margin-top:18px}
+.mail-ok{display:inline-flex;align-items:center;gap:4px;flex:none;color:#1e7a4c;font-size:11px;font-weight:700;white-space:nowrap}
+.mail-ok svg{width:14px;height:14px;stroke:#1e7a4c;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.mail-txt small{color:var(--muted);font-size:13px;direction:ltr;text-align:left;overflow-wrap:anywhere;word-break:break-all;white-space:normal}
 .dots-btn{width:40px;height:40px;border-radius:50%;border:0;background:var(--soft);color:var(--deep);font-size:20px;font-weight:700;cursor:pointer;flex:none;line-height:1}
 </style>
 </head>
@@ -629,11 +637,12 @@ function render(){
 
   if(V.view === 'settings'){
     m.innerHTML = pageHead('تنظیمات', 'menu') + `
-      <div class="opt-list" style="margin-top:0">
-        ${emailSection()}
+      ${emailSection(4)}
+      <div class="srow">
+        <button class="srow-b" data-a="pinToggle">پین کد امنیتی: ${S.pin ? 'فعال' : 'غیرفعال'}</button>
+        ${S.pin ? '<button class="srow-b" data-a="pinChange">تغییر پین</button>' : ''}
+        <button class="srow-b srow-out" data-a="authLogout">خروج از حساب</button>
       </div>
-      ${pinSection()}
-      <div class="opt-list" style="margin-top:22px"><button class="opt" data-a="authLogout"><span>خروج از حساب</span><span class="sub">${ICON.chev}</span></button></div>
 
 `;
     return;
@@ -1336,19 +1345,19 @@ async function emailSend(){
   closeSheet();
 }
 function emailConfirm(){ return; }
-function emailSection(){
+function emailSection(topPx=22){
   const row = S.email
-    ? `<div class="mail-row"><span class="mail-txt"><b>ایمیل حساب</b><small>${esc(S.email)}</small></span><button class="dots-btn" data-a="emailMore" aria-label="گزینه‌ها">⋮</button></div>`
+    ? `<div class="mail-row"><span class="mail-txt"><b>ایمیل حساب</b><small>${esc(S.email)}</small></span><span class="mail-ok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>ایمیل ثبت شده</span></div>`
     : `<button class="opt" data-a="emailEdit"><span>افزودن ایمیل</span><span class="sub">${ICON.chev}</span></button>`;
-  return `<div class="sec-title" style="margin:22px 4px 0">ایمیل</div><div class="opt-list" style="margin-top:8px">${row}</div>`;
+  return `<div class="sec-title" style="margin:${topPx}px 4px 0">ایمیل</div><div class="opt-list" style="margin-top:8px">${row}</div>`;
 }
 
 function pinSection(){
+  const on = !!S.pin;
   return `<div class="sec-title" style="margin:22px 4px 0">رمز ورود</div>
     <div class="opt-list" style="margin-top:8px">
-      ${S.pin
-        ? `<div class="mail-row"><span class="mail-txt"><b>رمز ورود فعال است</b></span><button class="opt" style="width:auto;padding:8px 14px;border-radius:12px" data-a="pinDisable"><span>غیرفعال کردن</span></button></div>`
-        : `<button class="su-btn" style="margin-top:0;height:54px;border-radius:18px" data-a="pinActivate">فعال کردن رمز ورود</button>`}
+      <button class="opt" data-a="pinToggle"><span>پین کد امنیتی</span><span class="sub">${on ? 'فعال' : 'غیرفعال'} ${ICON.chev}</span></button>
+      ${on ? `<button class="opt" data-a="pinChange"><span>تغییر پین</span><span class="sub">${ICON.chev}</span></button>` : ''}
     </div>`;
 }
 
@@ -1392,6 +1401,8 @@ function renderLock(){
   }
   const titles = {
     unlock: 'پین کد را وارد کنید',
+    chg0: 'رمز فعلی را وارد کنید',
+    chgOff: 'رمز فعلی را وارد کنید تا پین غیرفعال شود',
     setup1: 'یک پین کد ۴ رقمی انتخاب کنید',
     setup2: 'پین کد را دوباره وارد کنید',
     recover: 'کد ارسال‌شده به ایمیل را وارد کنید',
@@ -1414,7 +1425,7 @@ function renderLock(){
       <div class="lk-dots ${LK.shake ? 'shake' : ''}">${dots}</div>
       <div class="lk-msg">${esc(LK.err)}</div>
       ${pad}
-      ${LK.mode === 'unlock' ? `<button class="lk-link" data-a="lkForgot">فراموشی رمز</button>` : ''}
+      ${LK.mode === 'unlock' ? `<button class="lk-link" data-a="lkForgot">فراموشی رمز ورود برنامه</button>` : ''}
       ${LK.fromSettings ? `<button class="lk-link" data-a="lkAbort">انصراف</button>` : ''}
       ${LK.mode === 'recover' ? `<button class="lk-link" data-a="lkCancel">بازگشت</button>` : ''}
       ${LK.mode === 'verify' ? `<button class="lk-link" data-a="vResend">ارسال دوباره کد</button><button class="lk-link" style="margin-top:10px" data-a="vBack">بازگشت</button>` : ''}
@@ -1429,7 +1440,12 @@ async function lkOk(){
   const max = lkMax();
   if(LK.buf.length < max){ LK.err = `رمز ${fa(max)} رقمی را کامل کنید.`; renderLock(); return; }
   if(LK.mode === 'unlock'){
-    if(LK.buf === S.pin) return lkUnlock();
+    if(LK.buf === S.pin){
+      if(cloudUser && cloudReady) return lkUnlock();
+      LK.mode = 'login'; LK.f.mail = S.email || ''; LK.f.pass = ''; LK.buf = '';
+      LK.err = 'نشست حساب ابری پایان یافته است. با ایمیل و رمز حساب وارد شوید.';
+      renderLock(); return;
+    }
     LK.err = 'رمز اشتباه است.'; LK.buf = ''; LK.shake = true; renderLock(); return;
   }
   if(LK.mode === 'verify'){
@@ -1452,6 +1468,14 @@ async function lkOk(){
     catch(e){ LK.err = 'دریافت اطلاعات حساب انجام نشد. اتصال اینترنت را بررسی کنید.'; renderLock(); return; }
     LK.recoveryVerified = true; recClear();
     LK.mode = 'newpass'; LK.f.pass = ''; LK.f.pass2 = ''; renderLock(); return;
+  }
+  if(LK.mode === 'chgOff'){
+    if(LK.buf === S.pin){ delete S.pin; save(); LK.newPin = ''; return lkUnlock(); }
+    LK.err = 'رمز فعلی اشتباه است.'; LK.buf = ''; LK.shake = true; renderLock(); return;
+  }
+  if(LK.mode === 'chg0'){
+    if(LK.buf === S.pin){ LK.mode = 'setup1'; LK.buf = ''; LK.err = ''; renderLock(); return; }
+    LK.err = 'رمز فعلی اشتباه است.'; LK.buf = ''; LK.shake = true; renderLock(); return;
   }
   if(LK.mode === 'setup1'){
     LK.newPin = LK.buf; LK.buf = ''; LK.mode = 'setup2'; LK.err = ''; renderLock(); return;
@@ -1507,6 +1531,7 @@ async function authLogin(){
   lkSay('با موفقیت وارد حساب خود شدید', 'ok');
   await new Promise(r => setTimeout(r, 1000));
   LK.err = ''; LK.kind = '';
+  if(LK.pinReset){ LK.pinReset = false; delete S.pin; save(); }
   if(S.pin){ LK.locked = true; LK.mode = 'unlock'; renderLock(); render(); }
   else lkUnlock();
 }
@@ -1588,15 +1613,31 @@ function pinActivate(){
   LK.locked = true; LK.mode = 'setup1'; LK.buf = ''; LK.err = ''; LK.newPin = ''; LK.fromSettings = true;
   renderLock();
 }
+function pinChange(){
+  LK.locked = true; LK.mode = 'chg0'; LK.buf = ''; LK.err = ''; LK.newPin = ''; LK.fromSettings = true;
+  renderLock();
+}
+function pinToggle(){
+  if(S.pin){
+    LK.locked = true; LK.mode = 'chgOff'; LK.buf = ''; LK.err = ''; LK.fromSettings = true;
+    renderLock(); return;
+  }
+  pinActivate();
+}
 function pinDisable(){
   if(!confirm('رمز ورود غیرفعال شود؟')) return;
   delete S.pin; save(); render();
 }
-async function lkForgot(){
+function lkForgot(){
   if(!S.email){
     LK.err = 'هنوز ایمیلی ثبت نشده است. بعد از ورود، در تنظیمات ایمیل را ثبت کنید.';
     renderLock(); return;
   }
+  LK.pinReset = true; LK.mode = 'login'; LK.f.mail = S.email; LK.f.pass = ''; LK.buf = ''; LK.showPad = false;
+  LK.err = 'با ایمیل و رمز حساب خود وارد شوید تا رمز ورود قبلی حذف شود.';
+  renderLock(); return;
+}
+async function lkForgotOld(){
   LK.recCode = String(Math.floor(1000 + Math.random() * 9000));
   LK.mode = 'recover'; LK.buf = ''; LK.showPad = true;
   try{
@@ -1866,7 +1907,7 @@ document.addEventListener('click', async e => {
         case 'lkKey':
       if(LK.buf.length < lkMax() && !LK.busy){ LK.buf += el.dataset.v; LK.err = ''; }
       renderLock();
-      if(LK.buf.length >= lkMax() && !LK.busy){ LK.busy = true; setTimeout(() => { LK.busy = false; lkOk(); }, 180); }
+      if(LK.buf.length >= lkMax() && !LK.busy){ LK.busy = true; const lkEl = document.getElementById('lock'); lkEl.classList.add('lk-busy'); setTimeout(() => { LK.busy = false; lkEl.classList.remove('lk-busy'); lkOk(); }, 450); }
       break;
     case 'lkDel': if(!LK.busy){ LK.buf = LK.buf.slice(0, -1); renderLock(); } break;
     case 'lkOk': lkOk(); break;
@@ -1882,6 +1923,8 @@ document.addEventListener('click', async e => {
     case 'vBack': if(LK.purpose !== 'signup') recClear(); LK.mode = LK.purpose === 'signup' ? 'signup' : 'login'; LK.buf = ''; LK.err = ''; renderLock(); break;
     case 'pinActivate': pinActivate(); break;
     case 'pinDisable': pinDisable(); break;
+    case 'pinChange': pinChange(); break;
+    case 'pinToggle': pinToggle(); break;
     case 'lkAbort': LK.locked = false; LK.fromSettings = false; LK.buf = ''; LK.newPin = ''; LK.err = ''; renderLock(); render(); break;
     case 'lkForgot': lkForgot(); break;
     case 'lkCancel': LK.mode = 'unlock'; LK.buf = ''; LK.err = ''; LK.showPad = false; renderLock(); break;
@@ -2133,6 +2176,8 @@ async function initCloudSession(){
     if(pr){
       LK.mode = 'verify'; LK.purpose = 'recovery'; LK.buf = ''; LK.f.mail = pr.mail;
       LK.err = 'کُد ۸ رقمی ارسال‌شده به ایمیل را وارد کنید.';
+    } else if(S.pin && S.email){
+      LK.mode = 'unlock'; LK.buf = ''; LK.f.mail = S.email;
     } else {
       LK.mode = 'login'; LK.f.mail = S.email || '';
     }
