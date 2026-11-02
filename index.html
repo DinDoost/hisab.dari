@@ -2214,9 +2214,7 @@ async function initCloudSession(){
   try{
     await cloudLoad(); cloudReady = true; S.loggedIn = true; delete S.passHash; delete S.reg;
     LK.f.mail = S.email;
-    let stillUnlocked = false;
-    try{ stillUnlocked = sessionStorage.getItem('hisab_unlocked') === '1'; }catch(e){}
-    if(S.pin && !stillUnlocked){ LK.locked = true; LK.mode = 'unlock'; renderLock(); render(); }
+    if(S.pin){ LK.locked = true; LK.mode = 'unlock'; renderLock(); render(); }
     else lkUnlock();
   }catch(e){
     console.error('Supabase initial load error:',e);
