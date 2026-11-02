@@ -1157,12 +1157,13 @@ function invHTML3(c){
   <div class="foot">تاریخ تولید گزارش<br><b>${latinDate(t.y, t.m, t.d)}</b><br>ساخته شده با حساب دفتری</div>
   </body></html>`;
 }
-function sharePdf3(c){
+function sharePdf3(c, onReady){
   const f = document.createElement('iframe');
   f.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0';
   document.body.appendChild(f);
   const d = f.contentWindow.document;
   d.open(); d.write(invHTML3(c)); d.close();
+  if(onReady) onReady();
   setTimeout(() => {
     try{ f.contentWindow.focus(); f.contentWindow.print(); }
     catch(e){ alert('ذخیره PDF در این مرورگر پشتیبانی نمی‌شود.'); }
@@ -1174,7 +1175,7 @@ function fitText(x, text, cx, y, max, size, font, bold){
   do{ x.font = `${bold ? 'bold ' : ''}${sz}px ${font}`; sz--; }while(x.measureText(text).width > max && sz > 8);
   x.fillText(text, cx, y);
 }
-async function shareImg3(c){
+async function shareImg3(c, onReady){
   const d = invData(c);
   const font = 'Vazirmatn, Tahoma, sans-serif';
   try{ await document.fonts.load('bold 16px Vazirmatn'); await document.fonts.load('bold 14px Vazirmatn'); await document.fonts.load('600 14px Vazirmatn'); }catch(e){}
@@ -1293,6 +1294,7 @@ async function shareImg3(c){
   x.fillText('ساخته شده با حساب دفتری', W - 40, tBottom + 78);
 
   cv.toBlob(async blob => {
+    if(onReady) onReady();
     const file = new File([blob], `${c.n}.png`, { type: 'image/png' });
     if(navigator.canShare && navigator.canShare({ files: [file] })){
       try{ await navigator.share({ files: [file], title: c.n }); return; }catch(e){ return; }
@@ -2274,9 +2276,10 @@ function custSummaryText(c){
     `خلاصه حساب: ${status}`
   ].join('\n');
 }
-async function shareCustText(c){
+async function shareCustText(c, onReady){
   const text = custSummaryText(c);
-  if(navigator.share){ try{ await navigator.share({ title: `صورت حساب ${c.n}`, text }); return; }catch(e){ return; } }
+  if(onReady) onReady();
+  if(navigator.share){ try{ await navigator.share({ text }); return; }catch(e){ return; } }
   try{ await navigator.clipboard.writeText(text); alert('متن خلاصه کپی شد.'); }
   catch(e){ alert(text); }
 }
@@ -2373,12 +2376,14 @@ document.addEventListener('click', async e => {
 
     case 'share': openSheet(SHEETS.share(p, c)); break;
     case 'shareAs': {
-
-      closeSheet();
-
-      if(el.dataset.v === 'img') shareImg3(c);
-      else if(el.dataset.v === 'text') shareCustText(c);
-      else sharePdf3(c);
+      const kind = el.dataset.v;
+      const lbl = el.querySelector('span');
+      if(lbl) lbl.textContent = 'در حال آماده‌سازی...';
+      el.disabled = true;
+      const ready = () => closeSheet();
+      if(kind === 'img') await shareImg3(c, ready);
+      else if(kind === 'text') await shareCustText(c, ready);
+      else await sharePdf3(c, ready);
       break;
     }
     case 'pMore':
