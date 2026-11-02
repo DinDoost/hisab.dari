@@ -96,6 +96,22 @@ input:focus,select:focus{outline:2px solid #a9cde8;border-color:transparent}
 .cal-years{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .cal-years button{height:48px;border:0;border-radius:14px;background:#f1f6fb;color:var(--text);font-size:15px;cursor:pointer}
 .cal-years button.sel{background:var(--ok);color:#fff;font-weight:700}
+.dt-row{display:flex;gap:14px;align-items:stretch}
+.dt-row .dbtn{flex:1;min-width:0}
+#tclk{z-index:31}
+.tc-box{background:#fff;border-radius:24px;padding:18px 16px 16px;width:min(340px,100%);box-shadow:0 20px 50px rgba(0,0,0,.25)}
+.tc-show{display:flex;justify-content:center;align-items:center;gap:8px;direction:ltr;margin-bottom:10px}
+.tc-show button{border:0;background:#eef3f8;color:var(--text);border-radius:14px;padding:4px 14px;font:inherit;font-size:34px;font-weight:700;cursor:pointer}
+.tc-show button.on{background:var(--ok);color:#fff}
+.tc-show span{font-size:34px;font-weight:700}
+.tc-ampm{display:flex;justify-content:center;gap:10px;margin-bottom:8px}
+.tc-ampm button{border:0;background:#eef3f8;color:var(--text);border-radius:12px;padding:8px 12px;font:inherit;font-size:14px;cursor:pointer}
+.tc-ampm button.on{background:var(--pri);color:#fff}
+.tc-face{display:block;width:260px;max-width:100%;height:auto;margin:0 auto;touch-action:none;cursor:pointer}
+.tc-face .face{fill:#f1f6fb}
+.tc-face text{font-size:15px;fill:var(--text);font-family:inherit;user-select:none}
+.tc-face .hand{stroke:var(--ok);stroke-width:3;stroke-linecap:round}
+.tc-face .knob{fill:var(--ok)}
 .cal-foot{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
 .cal-foot button{height:52px;border:0;border-radius:16px;font-weight:700;font-size:15px;cursor:pointer}
 .cal-ok{background:var(--ok);color:#fff}
@@ -275,7 +291,7 @@ async function cloudLoad(){
   const [pr, cr, tr] = await Promise.all([
     supabaseClient.from('p').select('id,n,cur').eq('u',u),
     supabaseClient.from('c').select('id,p,n,ph,ds,pf,ac').eq('u',u),
-    supabaseClient.from('t').select('id,c,a,d,y,m,dd,ts').eq('u',u)
+    supabaseClient.from('t').select('id,c,a,d,y,m,dd,ts,hh,mm').eq('u',u)
   ]);
   if(pr.error) throw pr.error;
   if(cr.error) throw cr.error;
@@ -295,7 +311,7 @@ async function cloudLoad(){
     const customer = cmap.get(t.c);
     if(!customer) return;
     customer.tx.push({ id:t.id, a:Number(t.a)||0, d:t.d||'', y:Number(t.y)||0,
-      m:Number(t.m)||1, dd:Number(t.dd)||1, ts:Number(t.ts)||0 });
+      m:Number(t.m)||1, dd:Number(t.dd)||1, ts:Number(t.ts)||0, hh: t.hh == null ? undefined : Number(t.hh), mm: t.mm == null ? undefined : Number(t.mm) });
   });
   S = { ...S, cur:S.cur || 'toman', parties, email:cloudUser.email || S.email || '', loggedIn:true };
   try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
@@ -314,7 +330,7 @@ async function cloudSyncNow(){
       const transactions = customers.flatMap(x => (x.c.tx || []).map(t => ({ c:x.c, t })));
       const pRows = parties.map(p => ({ id:String(p.id), u, n:p.n || '', cur:p.cur || 'toman' }));
       const cRows = customers.map(x => ({ id:String(x.c.id), u, p:String(x.p.id), n:x.c.n || '', ph:x.c.ph || '', ds:x.c.ds || '', pf:x.c.pf || null, ac:x.c.ac || null }));
-      const tRows = transactions.map(x => ({ id:String(x.t.id), u, c:String(x.c.id), a:Math.trunc(Number(x.t.a)||0), d:x.t.d || '', y:Math.trunc(Number(x.t.y)||0), m:Math.trunc(Number(x.t.m)||1), dd:Math.trunc(Number(x.t.dd)||1), ts:Math.trunc(Number(x.t.ts)||0) }));
+      const tRows = transactions.map(x => ({ id:String(x.t.id), u, c:String(x.c.id), a:Math.trunc(Number(x.t.a)||0), d:x.t.d || '', y:Math.trunc(Number(x.t.y)||0), m:Math.trunc(Number(x.t.m)||1), dd:Math.trunc(Number(x.t.dd)||1), ts:Math.trunc(Number(x.t.ts)||0), hh: x.t.hh == null ? null : Math.trunc(Number(x.t.hh)), mm: x.t.mm == null ? null : Math.trunc(Number(x.t.mm)) }));
       for(const [table, rows] of [['p',pRows],['c',cRows],['t',tRows]]){
         if(rows.length){
           const {error} = await supabaseClient.from(table).upsert(rows, { onConflict:'id' });
@@ -592,6 +608,7 @@ window.addEventListener('popstate', e => {
   if(OV.length){
     const top = OV.pop();
     if(top === 'portal'){ closePortal(); return; }
+    if(top === 'tclk'){ hideTclk(); return; }
     if(top === 'cal'){ CAL.open = false; calRender(); }
     else document.getElementById('ov').classList.add('hidden');
     return;
@@ -787,7 +804,7 @@ function render(){
           const on = LPSEL && LPSEL.key === key;
           return `<div class="lp-wrap">
           <div class="card tx-card" style="cursor:default">
-            <span class="nm tx-nm"><b>${esc(t.d || 'بدون شرح')}</b><small>${jStr(t.y, t.m, t.dd)}</small></span>
+            <span class="nm tx-nm"><b>${esc(t.d || 'بدون شرح')}</b><small>${jStr(t.y, t.m, t.dd)}${t.hh != null ? ' · ' + clockText(t.hh, t.mm || 0) : ''}</small></span>
             <span class="bal ${cls(t.a)}">${money(t.a)}</span>
           </div>
           ${on ? '' : `<button class="pmore" data-a="txMore" data-p="${p.id}" data-c="${c.id}" data-t="${t.id}" aria-label="گزینه‌ها">⋮</button>`}
@@ -1841,6 +1858,8 @@ const SHEETS = {
     const typ = t ? (t.a > 0 ? 1 : -1) : 1;
     const x = t ? { y:t.y, m:t.m, d:t.dd } : today();
     const date = jStr(x.y, x.m, x.d);
+    const hh = t ? (t.hh == null ? '' : t.hh) : new Date().getHours();
+    const mm = t ? (t.mm == null ? '' : t.mm) : new Date().getMinutes();
     return (page ? pageHead(editing ? 'ویرایش تراکنش' : 'ثبت تراکنش', 'cust') : sheetHead(editing ? 'ویرایش تراکنش' : 'ثبت تراکنش')) + `
       <p class="sub">مشتری: <b>${esc(c.n)}</b></p>
       <label>نوع تراکنش</label>
@@ -1853,9 +1872,14 @@ const SHEETS = {
       <input id="f-amount" class="money" inputmode="numeric" placeholder="0" value="${amt ? amt.toLocaleString('en-US') : ''}">
       <label for="f-desc">شرح</label>
       <input id="f-desc" maxlength="120" value="${esc(t ? t.d : '')}">
-      <label>تاریخ (شمسی)</label>
-      <button type="button" class="dbtn" data-a="calOpen"><span id="dtxt">${date}</span><span class="cal-ic">${ICON.cal}</span></button>
+      <label>تاریخ و ساعت</label>
+      <div class="dt-row">
+        <button type="button" class="dbtn" data-a="calOpen"><span id="dtxt">${date}</span><span class="cal-ic">${ICON.cal}</span></button>
+        <button type="button" class="dbtn" data-a="timeOpen"><span id="ttxt">${hh === '' ? 'انتخاب ساعت' : clockText(hh, mm === '' ? 0 : mm)}</span><span class="cal-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span></button>
+      </div>
       <input type="hidden" id="f-date" value="${date}">
+      <input type="hidden" id="f-hh" value="${hh}">
+      <input type="hidden" id="f-mm" value="${mm}">
       <button class="btn pri-btn" data-a="saveTx" data-p="${p.id}" data-c="${c.id}" ${t ? `data-t="${t.id}"` : ''}>${editing ? 'ثبت ویرایش' : 'ثبت تراکنش'}</button>
       ${editing ? `<button class="btn danger" data-a="delTx" data-p="${p.id}" data-c="${c.id}" data-t="${t.id}">حذف این تراکنش</button>` : ''}`;
   }
@@ -2064,7 +2088,7 @@ function renderPortal(){
     const status = bal > 0 ? `بدهی ${nm}` : bal < 0 ? `طلب ${nm}` : 'تسویه';
     const rows = txs.length
       ? txs.map(t => `
-        <div class="card tx-card" style="cursor:default"><span class="nm tx-nm"><b>${esc(t.d || 'بدون شرح')}</b><small>${fa(jStr(t.y, t.m, t.dd))}</small></span><span class="bal ${balCls(Number(t.a) || 0)}">${money(Number(t.a) || 0)}</span></div>`).join('')
+        <div class="card tx-card" style="cursor:default"><span class="nm tx-nm"><b>${esc(t.d || 'بدون شرح')}</b><small>${fa(jStr(t.y, t.m, t.dd))}${t.hh != null ? ' · ' + clockText(Number(t.hh), Number(t.mm) || 0) : ''}</small></span><span class="bal ${balCls(Number(t.a) || 0)}">${money(Number(t.a) || 0)}</span></div>`).join('')
       : `<div class="empty">هنوز تراکنشی ثبت نشده.</div>`;
     el.innerHTML = `
       <div class="pt-wrap">
@@ -2108,12 +2132,117 @@ async function portalLogin(){
   PORTAL.data = data; PORTAL.err = ''; PORTAL.code = '';
   renderPortal();
 }
+/* ---------- clock picker (analog, drag the hand) ---------- */
+let TCK = { h24:12, mi:0, mode:'hour', open:false };
+let TC_DRAG = false, TC_JUST = false;
+function clockText(h, m){
+  const h12 = (h % 12) || 12;
+  const per = h < 12 ? 'قبل از ظهر' : 'بعد از ظهر';
+  return `${fa(h12)}:${fa(p2(m))} ${per}`;
+}
+function clockSVG(){
+  const C = 130, R = 92;
+  const pt = (deg, r) => [C + r * Math.sin(deg * Math.PI / 180), C - r * Math.cos(deg * Math.PI / 180)];
+  let nums = '';
+  if(TCK.mode === 'hour'){
+    for(let i = 1; i <= 12; i++){
+      const [x, y] = pt(i * 30, R);
+      nums += `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central">${fa(i)}</text>`;
+    }
+  } else {
+    for(let i = 0; i < 60; i += 5){
+      const [x, y] = pt(i * 6, R);
+      nums += `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central">${fa(p2(i))}</text>`;
+    }
+  }
+  const ang = TCK.mode === 'hour' ? ((TCK.h24 % 12) * 30) : TCK.mi * 6;
+  const [hx, hy] = pt(ang, TCK.mode === 'hour' ? 66 : 84);
+  return `<svg class="tc-face" id="tc-face" viewBox="0 0 260 260">
+    <circle cx="130" cy="130" r="126" class="face"/>
+    ${nums}
+    <line x1="130" y1="130" x2="${hx}" y2="${hy}" class="hand"/>
+    <circle cx="${hx}" cy="${hy}" r="17" class="knob"/>
+    <circle cx="130" cy="130" r="4" class="knob"/>
+  </svg>`;
+}
+function tclkEl(){
+  let el = document.getElementById('tclk');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'tclk'; el.className = 'overlay cal-ov hidden';
+    document.body.appendChild(el);
+  }
+  return el;
+}
+function tclkRender(){
+  const el = tclkEl();
+  const h12 = (TCK.h24 % 12) || 12, pm = TCK.h24 >= 12;
+  el.innerHTML = `<div class="tc-box">
+    <div class="tc-show">
+      <button type="button" class="${TCK.mode === 'hour' ? 'on' : ''}" data-a="tcHour">${fa(h12)}</button>
+      <span>:</span>
+      <button type="button" class="${TCK.mode === 'minute' ? 'on' : ''}" data-a="tcMin">${fa(p2(TCK.mi))}</button>
+    </div>
+    <div class="tc-ampm">
+      <button type="button" class="${!pm ? 'on' : ''}" data-a="tcAm">قبل از ظهر</button>
+      <button type="button" class="${pm ? 'on' : ''}" data-a="tcPm">بعد از ظهر</button>
+    </div>
+    ${clockSVG()}
+    <div class="cal-foot">
+      <button type="button" class="cal-cancel" data-a="tcCancel">انصراف</button>
+      <button type="button" class="cal-ok" data-a="tcOk">تأیید ساعت</button>
+    </div>
+  </div>`;
+  el.classList.remove('hidden');
+}
+function hideTclk(){
+  TCK.open = false;
+  const el = document.getElementById('tclk');
+  if(el){ el.classList.add('hidden'); el.innerHTML = ''; }
+}
+function closeTclk(){
+  hideTclk();
+  if(OV.includes('tclk')) popOv('tclk');
+}
+function tcSetFromPoint(e, svg){
+  const r = svg.getBoundingClientRect();
+  const px = (e.clientX - r.left) * 260 / r.width, py = (e.clientY - r.top) * 260 / r.height;
+  const deg = (Math.atan2(px - 130, -(py - 130)) * 180 / Math.PI + 360) % 360;
+  if(TCK.mode === 'hour'){
+    const pm = TCK.h24 >= 12;
+    let h12 = Math.round(deg / 30) % 12; if(h12 === 0) h12 = 12;
+    TCK.h24 = (h12 % 12) + (pm ? 12 : 0);
+  } else {
+    TCK.mi = Math.round(deg / 6) % 60;
+  }
+  tclkRender();
+}
+document.addEventListener('pointerdown', e => {
+  const s = e.target.closest && e.target.closest('#tc-face');
+  if(!s) return;
+  TC_DRAG = true;
+  tcSetFromPoint(e, s);
+});
+document.addEventListener('pointermove', e => {
+  if(!TC_DRAG) return;
+  const s = document.getElementById('tc-face');
+  if(s) tcSetFromPoint(e, s);
+});
+function tcEndDrag(){
+  if(!TC_DRAG) return;
+  TC_DRAG = false;
+  TC_JUST = true; setTimeout(() => { TC_JUST = false; }, 300);
+  if(TCK.mode === 'hour'){ TCK.mode = 'minute'; tclkRender(); }
+}
+document.addEventListener('pointerup', tcEndDrag);
+document.addEventListener('pointercancel', tcEndDrag);
 document.addEventListener('change', e => {
   if(e.target.id === 'photo-input') onPhotoChosen(e.target);
 });
 
 document.addEventListener('click', async e => {
   if(e.target.id === 'cal'){ closeCal(); return; }
+  if(e.target.id === 'tclk'){ if(!TC_JUST) closeTclk(); return; }
   if(e.target.id === 'ov'){ closeSheet(); return; }
   if(LPJUST){ LPJUST = false; return; }
   if(LPSEL && !e.target.closest('.lp-acts, .p-acts')){ LPSEL = null; render(); return; }
@@ -2374,6 +2503,26 @@ document.addEventListener('click', async e => {
       break;
     }
 
+    /* clock picker */
+    case 'timeOpen': {
+      const hv = val('f-hh'), mv = val('f-mm');
+      TCK = { h24: hv === '' ? 12 : Number(hv), mi: mv === '' ? 0 : Number(mv), mode:'hour', open:true };
+      if(!OV.includes('tclk')) pushOv('tclk');
+      tclkRender(); break;
+    }
+    case 'tcHour': TCK.mode = 'hour'; tclkRender(); break;
+    case 'tcMin': TCK.mode = 'minute'; tclkRender(); break;
+    case 'tcAm': TCK.h24 = TCK.h24 % 12; tclkRender(); break;
+    case 'tcPm': TCK.h24 = (TCK.h24 % 12) + 12; tclkRender(); break;
+    case 'tcCancel': closeTclk(); break;
+    case 'tcOk': {
+      const fh = document.getElementById('f-hh'), fm = document.getElementById('f-mm'), tt = document.getElementById('ttxt');
+      if(fh) fh.value = TCK.h24;
+      if(fm) fm.value = TCK.mi;
+      if(tt) tt.textContent = clockText(TCK.h24, TCK.mi);
+      closeTclk(); break;
+    }
+
     /* calendar popup */
     case 'calOpen': {
       const dt = parseDate(val('f-date')) || today();
@@ -2412,12 +2561,15 @@ document.addEventListener('click', async e => {
       if(!dt){ alert('تاریخ معتبر نیست. دوباره از تقویم انتخاب کنید.'); return; }
       const amount = amt * parseInt(val('f-type'), 10);
       const d = val('f-desc').trim();
+      const hhv = val('f-hh'), mmv = val('f-mm');
+      const TH = hhv === '' ? undefined : Number(hhv);
+      const TMN = mmv === '' ? undefined : Number(mmv);
       el.classList.add('busy');
       const okTx = await commitWrite(() => {
         if(t){
-          Object.assign(t, { a: amount, d, y: dt.y, m: dt.m, dd: dt.d });
+          Object.assign(t, { a: amount, d, y: dt.y, m: dt.m, dd: dt.d, hh: TH, mm: TMN });
         } else {
-          c.tx.push({ id: uid(), a: amount, d, y: dt.y, m: dt.m, dd: dt.d, ts: Date.now() });
+          c.tx.push({ id: uid(), a: amount, d, y: dt.y, m: dt.m, dd: dt.d, hh: TH, mm: TMN, ts: Date.now() });
         }
       }, t ? 'تراکنش ویرایش و ثبت شد' : 'تراکنش ثبت شد');
       el.classList.remove('busy');
