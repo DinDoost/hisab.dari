@@ -970,7 +970,7 @@ function invRows(c){
   const rows = list.map((t, i) => {
     const g = t.a > 0 ? t.a : 0, pd = t.a < 0 ? -t.a : 0;
     got += g; paid += pd;
-    return { i: i + 1, date: jStr(t.y, t.m, t.dd), desc: t.d || '—', got: g, paid: pd };
+    return { i: i + 1, date: jStr(t.y, t.m, t.dd), time: t.hh != null ? clockText(t.hh, t.mm || 0) : '', desc: t.d || '—', got: g, paid: pd };
   });
   return { rows, got, paid, bal: custBal(c) };
 }
@@ -981,7 +981,7 @@ function balText(bal){
 }
 function invHTML(c){
   const d = invRows(c);
-  const trs = d.rows.map(r => `<tr><td>${fa(r.i)}</td><td>${r.date}</td><td>${esc(r.desc)}</td><td>${r.got ? num(r.got) : ''}</td><td>${r.paid ? num(r.paid) : ''}</td></tr>`).join('');
+  const trs = d.rows.map(r => `<tr><td>${fa(r.i)}</td><td>${r.date}${r.time ? `<br><small style="color:#555;font-size:11px">${r.time}</small>` : ''}</td><td>${esc(r.desc)}</td><td>${r.got ? num(r.got) : ''}</td><td>${r.paid ? num(r.paid) : ''}</td></tr>`).join('');
   return `<!DOCTYPE html><html dir="rtl" lang="fa"><head><meta charset="utf-8"><title>${esc(c.n)}</title>
   <style>
     body{font-family:Vazirmatn,Tahoma,sans-serif;padding:28px;color:#1f2937}
@@ -1062,7 +1062,14 @@ async function shareImg2(c){
     x.fillStyle = '#1f2937';
     x.textAlign = 'right';
     x.fillText(fa(r.i), COL.no, y);
-    x.fillText(r.date, COL.date, y);
+    if(r.time){
+      x.fillText(r.date, COL.date, y - 5);
+      x.font = `12px ${font}`; x.fillStyle = '#555';
+      x.fillText(r.time, COL.date, y + 12);
+      x.font = `15px ${font}`; x.fillStyle = '#1f2937';
+    } else {
+      x.fillText(r.date, COL.date, y);
+    }
     x.fillText(clipText(x, r.desc, 170), COL.desc, y);
     if(r.got) x.fillText(num(r.got), COL.got, y);
     if(r.paid) x.fillText(num(r.paid), COL.paid, y);
@@ -1101,7 +1108,7 @@ function invData(c){
   let got = 0, pay = 0;
   const rows = list.map((t, i) => {
     if(t.a > 0) got += t.a; else pay += -t.a;
-    return { no: i + 1, amt: -t.a, type: t.a > 0 ? 'گرفت' : 'پرداخت', date: latinDate(t.y, t.m, t.dd), desc: t.d || '—' };
+    return { no: i + 1, amt: -t.a, type: t.a > 0 ? 'گرفت' : 'پرداخت', date: latinDate(t.y, t.m, t.dd), time: t.hh != null ? clockText(t.hh, t.mm || 0) : '', desc: t.d || '—' };
   });
   return { rows, got, pay, bal: custBal(c) };
 }
@@ -1114,7 +1121,7 @@ function invHTML3(c){
       <td>${r.no}</td>
       <td class="num">${Math.abs(r.amt).toLocaleString('en-US')} ${curLabel()}</td>
       <td style="color:${r.type === 'گرفت' ? '#c0392b' : '#1e7a4c'}">${r.type}</td>
-      <td>${r.date}</td>
+      <td>${r.date}${r.time ? `<br><small style="color:#555;font-size:11px">${r.time}</small>` : ''}</td>
       <td class="desc">${esc(r.desc)}</td>
     </tr>`).join('');
   return `<!DOCTYPE html><html dir="rtl" lang="fa"><head><meta charset="utf-8"><title>${esc(c.n)}</title>
@@ -1211,34 +1218,34 @@ async function shareImg3(c){
   x.font = `bold 16px ${font}`;
   const lbl = 'نام مشتری: ';
   const lblW = x.measureText(lbl).width;
-  x.textAlign = 'right'; x.fillStyle = '#222';
+  x.textAlign = 'right'; x.fillStyle = '#374151';
   x.fillText(lbl, W - 40, 40);
-  x.font = `bold 18px ${font}`; x.fillStyle = '#000';
+  x.font = `bold 18px ${font}`; x.fillStyle = '#1f2937';
   x.fillText(c.n, W - 40 - lblW, 40);
-  x.fillStyle = '#bbb'; x.fillRect(40, 64, W - 80, 1.5);
+  x.fillStyle = '#dfe3ea'; x.fillRect(40, 64, W - 80, 1.5);
 
   /* summary */
   const SC = { got: W - 120, pay: W - 400, bal: W - 660 };
   x.textAlign = 'center';
-  x.font = `bold 14px ${font}`; x.fillStyle = '#222';
+  x.font = `bold 14px ${font}`; x.fillStyle = '#374151';
   x.fillText('مجموع گرفت', SC.got, 104);
   x.fillText('مجموع پرداخت', SC.pay, 104);
   x.fillText('حساب مشتری', SC.bal, 104);
-  x.font = `bold 17px ${font}`; x.fillStyle = '#000';
+  x.font = `bold 17px ${font}`; x.fillStyle = '#1f2937';
   fitText(x, amt(d.got), SC.got, 132, 240, 17, font, true);
   fitText(x, amt(d.pay), SC.pay, 132, 240, 17, font, true);
-  const bc = d.bal > 0 ? '#c0392b' : d.bal < 0 ? '#1e7a4c' : '#333';
+  const bc = d.bal > 0 ? '#c0392b' : d.bal < 0 ? '#1e7a4c' : '#4b5563';
   const bl = d.bal > 0 ? ' (بدهکار)' : d.bal < 0 ? ' (طلبکار)' : '';
   x.fillStyle = bc;
   fitText(x, amt(d.bal) + bl, SC.bal, 132, 210, 17, font, true);
 
   /* table title */
-  x.textAlign = 'right'; x.fillStyle = '#000'; x.font = `bold 17px ${font}`;
+  x.textAlign = 'right'; x.fillStyle = '#1f2937'; x.font = `bold 17px ${font}`;
   x.fillText('لیست تراکنش‌ها', W - 40, 178);
 
   /* table */
   const B = [W - 40, W - 100, W - 240, W - 320, W - 460, 40];
-  x.fillStyle = '#2c5f8a'; x.fillRect(40, tTop, W - 80, hdrH);
+  x.fillStyle = '#3a8bc2'; x.fillRect(40, tTop, W - 80, hdrH);
   x.fillStyle = '#ffffff'; x.font = `bold 15px ${font}`; x.textAlign = 'center';
   const heads = ['شماره', 'مبلغ', 'نوع', 'تاریخ', 'توضیح'];
   for(let k = 0; k < 5; k++){
@@ -1249,33 +1256,40 @@ async function shareImg3(c){
   d.rows.forEach((r, ri) => {
     const rowH = rowHs[ri];
     const cy = y + rowH / 2;
-    x.fillStyle = '#cfcfcf'; x.fillRect(40, y + rowH - 1, W - 80, 1);
+    x.fillStyle = '#e3e9f0'; x.fillRect(40, y + rowH - 1, W - 80, 1);
     x.textAlign = 'center';
-    x.fillStyle = '#000';
+    x.fillStyle = '#1f2937';
     x.fillText(String(r.no), (B[0] + B[1]) / 2, cy);
     const sign = '';
     fitText(x, sign + Math.abs(r.amt).toLocaleString('en-US') + ' ' + unit, (B[1] + B[2]) / 2, cy, B[1] - B[2] - 8, 15, font, true); x.font = `bold 15px ${font}`;
     x.fillStyle = r.type === 'گرفت' ? '#c0392b' : '#1e7a4c';
     x.fillText(r.type, (B[2] + B[3]) / 2, cy);
-    x.fillStyle = '#000';
-    x.fillText(r.date, (B[3] + B[4]) / 2, cy);
+    x.fillStyle = '#1f2937';
+    if(r.time){
+      x.fillText(r.date, (B[3] + B[4]) / 2, cy - 6);
+      x.font = `12px ${font}`; x.fillStyle = '#555';
+      x.fillText(r.time, (B[3] + B[4]) / 2, cy + 11);
+      x.font = `bold 15px ${font}`; x.fillStyle = '#1f2937';
+    } else {
+      x.fillText(r.date, (B[3] + B[4]) / 2, cy);
+    }
     x.textAlign = 'right';
     const ls = rowLines[ri], top0 = cy - (ls.length - 1) * LH / 2;
     ls.forEach((ln, k) => x.fillText(ln, B[4] - 10, top0 + k * LH));
     x.textAlign = 'center';
     y += rowH;
   });
-  x.fillStyle = '#cfcfcf';
+  x.fillStyle = '#e3e9f0';
   B.forEach(bx => x.fillRect(bx, tTop, 1, tBottom - tTop));
   x.fillRect(40, tTop, 1, tBottom - tTop);
 
   /* footer */
-  x.textAlign = 'right'; x.fillStyle = '#222'; x.font = `bold 14px ${font}`;
+  x.textAlign = 'right'; x.fillStyle = '#374151'; x.font = `bold 14px ${font}`;
   const t = today();
   x.fillText('تاریخ تولید گزارش', W - 40, tBottom + 34);
-  x.fillStyle = '#000'; x.font = `bold 15px ${font}`;
+  x.fillStyle = '#1f2937'; x.font = `bold 15px ${font}`;
   x.fillText(latinDate(t.y, t.m, t.d), W - 40, tBottom + 56);
-  x.fillStyle = '#222'; x.font = `bold 14px ${font}`;
+  x.fillStyle = '#374151'; x.font = `bold 14px ${font}`;
   x.fillText('ساخته شده با حساب دفتری', W - 40, tBottom + 78);
 
   cv.toBlob(async blob => {
@@ -1812,6 +1826,7 @@ const SHEETS = {
       <div class="opt-list">
         <button class="opt" data-a="shareAs" data-v="pdf" data-p="${p.id}" data-c="${c.id}"><span>اشتراک PDF</span><span class="sub">${ICON.chev}</span></button>
         <button class="opt" data-a="shareAs" data-v="img" data-p="${p.id}" data-c="${c.id}"><span>اشتراک به شکل عکس</span><span class="sub">${ICON.chev}</span></button>
+        <button class="opt" data-a="shareAs" data-v="text" data-p="${p.id}" data-c="${c.id}"><span>خلاصه متنی</span><span class="sub">${ICON.chev}</span></button>
 
       </div>`;
   },
@@ -2142,7 +2157,7 @@ let TC_DRAG = false, TC_JUST = false;
 function clockText(h, m){
   const h12 = (h % 12) || 12;
   const per = h < 12 ? 'قبل از ظهر' : 'بعد از ظهر';
-  return `${fa(h12)}:${fa(p2(m))} ${per}`;
+  return `${h12}:${p2(m)} ${per}`;
 }
 function clockSVG(){
   const C = 130, R = 92;
@@ -2151,12 +2166,12 @@ function clockSVG(){
   if(TCK.mode === 'hour'){
     for(let i = 1; i <= 12; i++){
       const [x, y] = pt(i * 30, R);
-      nums += `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central">${fa(i)}</text>`;
+      nums += `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central">${i}</text>`;
     }
   } else {
     for(let i = 0; i < 60; i += 5){
       const [x, y] = pt(i * 6, R);
-      nums += `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central">${fa(p2(i))}</text>`;
+      nums += `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central">${p2(i)}</text>`;
     }
   }
   const ang = TCK.mode === 'hour' ? ((TCK.h24 % 12) * 30) : TCK.mi * 6;
@@ -2183,9 +2198,9 @@ function tclkRender(){
   const h12 = (TCK.h24 % 12) || 12, pm = TCK.h24 >= 12;
   el.innerHTML = `<div class="tc-box">
     <div class="tc-show">
-      <button type="button" class="${TCK.mode === 'hour' ? 'on' : ''}" data-a="tcHour">${fa(h12)}</button>
+      <button type="button" class="${TCK.mode === 'hour' ? 'on' : ''}" data-a="tcHour">${h12}</button>
       <span>:</span>
-      <button type="button" class="${TCK.mode === 'minute' ? 'on' : ''}" data-a="tcMin">${fa(p2(TCK.mi))}</button>
+      <button type="button" class="${TCK.mode === 'minute' ? 'on' : ''}" data-a="tcMin">${p2(TCK.mi)}</button>
     </div>
     <div class="tc-ampm">
       <button type="button" class="${!pm ? 'on' : ''}" data-a="tcAm">قبل از ظهر</button>
@@ -2240,6 +2255,31 @@ function tcEndDrag(){
 }
 document.addEventListener('pointerup', tcEndDrag);
 document.addEventListener('pointercancel', tcEndDrag);
+/* ---------- text summary of a customer's account ---------- */
+function custSummaryText(c){
+  const unit = curLabel();
+  const bal = custBal(c);
+  const got = c.tx.filter(t => t.a > 0).reduce((s, t) => s + t.a, 0);
+  const pay = c.tx.filter(t => t.a < 0).reduce((s, t) => s - t.a, 0);
+  const t = today();
+  const status = bal > 0 ? `شما بدهکار هستید: ${num(bal)} ${unit}`
+    : bal < 0 ? `شما طلب دارید: ${num(bal)} ${unit}`
+    : 'حساب شما تسویه است.';
+  return [
+    `صورت حساب ${c.n}`,
+    `تاریخ: ${latinDate(t.y, t.m, t.d)}`,
+    '',
+    `مجموع گرفت: ${num(got)} ${unit}`,
+    `مجموع پرداخت: ${num(pay)} ${unit}`,
+    `خلاصه حساب: ${status}`
+  ].join('\n');
+}
+async function shareCustText(c){
+  const text = custSummaryText(c);
+  if(navigator.share){ try{ await navigator.share({ title: `صورت حساب ${c.n}`, text }); return; }catch(e){ return; } }
+  try{ await navigator.clipboard.writeText(text); alert('متن خلاصه کپی شد.'); }
+  catch(e){ alert(text); }
+}
 document.addEventListener('change', e => {
   if(e.target.id === 'photo-input') onPhotoChosen(e.target);
 });
@@ -2337,6 +2377,7 @@ document.addEventListener('click', async e => {
       closeSheet();
 
       if(el.dataset.v === 'img') shareImg3(c);
+      else if(el.dataset.v === 'text') shareCustText(c);
       else sharePdf3(c);
       break;
     }
