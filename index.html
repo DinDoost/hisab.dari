@@ -2056,21 +2056,31 @@ function renderPortal(){
       </div>`;
   } else {
     const d = PORTAL.data || {};
+    const nm = esc(d.name || '');
     const txs = (d.transactions || []).slice().sort((a, b) => (Number(b.ts) || 0) - (Number(a.ts) || 0));
-    const total = txs.reduce((s, t) => s + (Number(t.a) || 0), 0);
+    const bal = txs.reduce((s, t) => s + (Number(t.a) || 0), 0);
+    const got = txs.filter(t => Number(t.a) > 0).reduce((s, t) => s + Number(t.a), 0);
+    const paid = txs.filter(t => Number(t.a) < 0).reduce((s, t) => s - Number(t.a), 0);
+    const status = bal > 0 ? `بدهی ${nm}` : bal < 0 ? `طلب ${nm}` : 'تسویه';
     const rows = txs.length
       ? txs.map(t => `
-        <div class="card"><span class="nm"><b>${esc(t.d || '-')}</b><small>${fa(jStr(t.y, t.m, t.dd))}</small></span><span class="bal ${balCls(Number(t.a) || 0)}">${money(Number(t.a) || 0)}</span></div>`).join('')
-      : `<div class="empty">هنوز تراکنشی ثبت نشده است.</div>`;
+        <div class="card tx-card" style="cursor:default"><span class="nm tx-nm"><b>${esc(t.d || 'بدون شرح')}</b><small>${fa(jStr(t.y, t.m, t.dd))}</small></span><span class="bal ${balCls(Number(t.a) || 0)}">${money(Number(t.a) || 0)}</span></div>`).join('')
+      : `<div class="empty">هنوز تراکنشی ثبت نشده.</div>`;
     el.innerHTML = `
       <div class="pt-wrap">
-        <div class="pt-top"><button class="ic" data-a="portalMenu" aria-label="گزینه‌ها"><span class="pt-dots">⋮</span></button><h1>حساب من</h1><button class="ic" data-a="portalClose" aria-label="بستن">${ICON.close}</button></div>
+        <div class="pt-top"><button class="ic" data-a="portalMenu" aria-label="گزینه‌ها"><span class="pt-dots">⋮</span></button><h1>${nm}</h1><button class="ic" data-a="portalClose" aria-label="بستن">${ICON.close}</button></div>
         <div id="pt-menu" class="pt-menu hidden"><button class="pt-menu-b" data-a="portalLogout">خروج از حساب</button></div>
         <div class="pt-head">
           ${d.photo ? `<img class="pt-photo" src="${esc(d.photo)}" alt="">` : `<span class="pt-photo">${esc((d.name || '؟').charAt(0))}</span>`}
-          <b>${esc(d.name || '')}</b>
         </div>
-        <div class="hero"><div class="lbl">مانده حساب</div><div class="net">${money(total)}</div></div>
+        <section class="hero">
+          <div class="lbl">باقی مانده ${nm}</div>
+          <div class="net"><span>${num(bal)}</span><span>${curLabel()}</span><small>${status}</small></div>
+          <div class="mini-row">
+            <div class="mini"><span>گرفت ${nm}</span><b>${money(got)}</b></div>
+            <div class="mini"><span>پرداخت ${nm}</span><b>${money(paid)}</b></div>
+          </div>
+        </section>
         <div class="sec-title">تراکنش‌ها</div>
         <div class="list">${rows}</div>
         <p class="hint" style="margin-top:14px">این صفحه فقط برای مشاهده است.</p>
@@ -2091,7 +2101,7 @@ async function portalLogin(){
     const m = String(error.message || '');
     PORTAL.err = m.includes('locked') ? 'به‌دلیل تلاش‌های زیاد، ۱۵ دقیقه بعد دوباره امتحان کنید.'
       : m.includes('invalid') ? 'کد وارد شده درست نیست.'
-      : 'ورود انجام نشد؛ اتصال اینترنت را بررسی کنید.';
+      : 'ورود انجام نشد: ' + m;
     PORTAL.code = '';
     return renderPortal();
   }
