@@ -787,7 +787,7 @@ function render(){
         <span class="net-dot ${NET_OK ? 'on' : ''}" title="وضعیت اتصال به اینترنت"></span>
       </header>
       <section class="hero">
-        <div class="lbl">مانده حساب ${esc(c.n)}</div>
+        <div class="lbl">صورت حساب: ${esc(c.n)}</div>
         <div class="net"><span>${num(bal)}</span><span>${curLabel()}</span><small>${custStatus(bal)}</small></div>
         <div class="mini-row">
           <div class="mini"><span>گرفت مشتری</span><b>${money(debts)}</b></div>
@@ -1163,8 +1163,8 @@ function sharePdf3(c, onReady){
   document.body.appendChild(f);
   const d = f.contentWindow.document;
   d.open(); d.write(invHTML3(c)); d.close();
-  if(onReady) onReady();
   setTimeout(() => {
+    if(onReady) onReady();
     try{ f.contentWindow.focus(); f.contentWindow.print(); }
     catch(e){ alert('ذخیره PDF در این مرورگر پشتیبانی نمی‌شود.'); }
     setTimeout(() => f.remove(), 1500);
@@ -2109,7 +2109,7 @@ function renderPortal(){
     const status = bal > 0 ? `بدهی ${nm}` : bal < 0 ? `طلب ${nm}` : 'تسویه';
     const rows = txs.length
       ? txs.map(t => `
-        <div class="card tx-card" style="cursor:default"><span class="nm tx-nm"><b>${esc(t.d || 'بدون شرح')}</b><small>${fa(jStr(t.y, t.m, t.dd))}${t.hh != null ? ' · ' + clockText(Number(t.hh), Number(t.mm) || 0) : ''}</small></span><span class="bal ${balCls(Number(t.a) || 0)}">${money(Number(t.a) || 0)}</span></div>`).join('')
+        <div class="card tx-card" style="cursor:default"><span class="nm tx-nm"><b>${esc(t.d || 'بدون شرح')}</b><small>${jStr(t.y, t.m, t.dd)}${t.hh != null ? ' · ' + clockText(Number(t.hh), Number(t.mm) || 0) : ''}</small></span><span class="bal ${balCls(Number(t.a) || 0)}">${money(Number(t.a) || 0)}</span></div>`).join('')
       : `<div class="empty">هنوز تراکنشی ثبت نشده.</div>`;
     el.innerHTML = `
       <div class="pt-wrap">
@@ -2119,7 +2119,7 @@ function renderPortal(){
           ${d.photo ? `<img class="pt-photo" src="${esc(d.photo)}" alt="">` : `<span class="pt-photo">${esc((d.name || '؟').charAt(0))}</span>`}
         </div>
         <section class="hero">
-          <div class="lbl">باقی مانده ${nm}</div>
+          <div class="lbl">صورت حساب: ${nm}</div>
           <div class="net"><span>${num(bal)}</span><span>${curLabel()}</span><small>${status}</small></div>
           <div class="mini-row">
             <div class="mini"><span>گرفت ${nm}</span><b>${money(got)}</b></div>
