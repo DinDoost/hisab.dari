@@ -788,7 +788,8 @@ function render(){
       </header>
       <section class="hero">
         <div class="lbl">صورت حساب: ${esc(c.n)}</div>
-        <div class="net"><span>${num(bal)}</span><span>${curLabel()}</span><small>${custStatus(bal)}</small></div>
+        <div class="net"><span>${num(bal)}</span><span>${curLabel()}</span></div>
+        <div style="margin-top:8px;font-size:15px;font-weight:700;color:${bal > 0 ? '#fca5a5' : bal < 0 ? '#86efac' : '#fff'}">${bal > 0 ? `بدهی ${esc(c.n)}` : bal < 0 ? `طلب ${esc(c.n)}` : 'تسویه'}</div>
         <div class="mini-row">
           <div class="mini"><span>گرفت مشتری</span><b>${money(debts)}</b></div>
           <div class="mini"><span>پرداخت مشتری</span><b>${money(pays)}</b></div>
@@ -2120,7 +2121,7 @@ function renderPortal(){
         </div>
         <section class="hero">
           <div class="lbl">صورت حساب: ${nm}</div>
-          <div class="net"><span>${num(bal)}</span><span>${curLabel()}</span><small>${status}</small></div>
+          <div class="net"><span>${num(bal)}</span><span>${curLabel()}</span><small style="color:${bal > 0 ? '#fca5a5' : bal < 0 ? '#86efac' : '#fff'};font-weight:700">${status}</small></div>
           <div class="mini-row">
             <div class="mini"><span>گرفت ${nm}</span><b>${money(got)}</b></div>
             <div class="mini"><span>پرداخت ${nm}</span><b>${money(paid)}</b></div>
