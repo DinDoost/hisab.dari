@@ -2,14 +2,14 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#3a8bc2">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#7d8896">
 <title>حساب دفتری</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f3f6fa;--card:#fff;--text:#1f2937;--muted:#64748b;--pri:#3a8bc2;--deep:#2b6f9e;--pos:#1e7a4c;--neg:#c0392b;--line:#dfe3ea;--soft:#eaf2f9;--ok:#1e9e62}
+:root{--bg:#f3f4f6;--card:#fff;--text:#1f2937;--muted:#64748b;--pri:#7d8896;--deep:#5d6978;--pos:#1e7a4c;--neg:#c0392b;--line:#dfe3ea;--soft:#eceef1;--ok:#1e9e62}
 *{box-sizing:border-box;margin:0}
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 body{font-family:Vazirmatn,Tahoma,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;min-height:100dvh}
@@ -19,9 +19,9 @@ button,input,select,textarea{font:inherit}
 .top h1{font-size:19px;font-weight:700}
 .top .sp{width:42px;height:42px}
 .ic{background:none;border:0;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;cursor:pointer;color:var(--text)}
-button:focus-visible,input:focus-visible{outline:3px solid #a9cde8;outline-offset:2px}
+button:focus-visible,input:focus-visible{outline:3px solid #c9ced6;outline-offset:2px}
 .ic svg,.ico{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.hero{background:linear-gradient(135deg,#4f9fd6,var(--deep));color:#fff;border-radius:26px;padding:22px 20px;box-shadow:0 10px 30px rgba(43,111,158,.25)}
+.hero{background:linear-gradient(135deg,#a2abb8,var(--deep));color:#fff;border-radius:26px;padding:22px 20px;box-shadow:0 10px 30px rgba(93,105,120,.25)}
 .hero .lbl{opacity:.9;font-size:14px}
 .hero .net{font-size:30px;font-weight:700;margin:10px 0 16px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;direction:rtl}
 .hero .net small{font-size:14px;font-weight:400;opacity:.95}
@@ -32,7 +32,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #a9cde8;outline-offse
 .mini b{display:block;margin-top:6px;font-size:15px;direction:ltr;text-align:right}
 .search{margin-top:14px}
 input,select,textarea{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:14px;background:#fff;color:var(--text)}
-input:focus,select:focus{outline:2px solid #a9cde8;border-color:transparent}
+input:focus,select:focus{outline:2px solid #c9ced6;border-color:transparent}
 .sec-title{margin:22px 4px 0;font-size:15px;font-weight:700}
 .list{display:flex;flex-direction:column;gap:12px;margin-top:12px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:14px 16px;display:flex;align-items:center;gap:12px;width:100%;color:inherit;text-align:right;cursor:pointer;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
@@ -46,11 +46,40 @@ input:focus,select:focus{outline:2px solid #a9cde8;border-color:transparent}
 .pos{color:var(--pos)}.neg{color:var(--neg)}.zero{color:var(--muted)}
 .bpos{color:#0d6b33;font-weight:700}
 .bneg{color:#c0392b;font-weight:700}
-.bal-col{display:flex;flex-direction:column;align-items:flex-start;gap:3px;flex:none}
-.bal-note{font-size:11px;color:var(--muted);white-space:nowrap}
+.bal-col{display:flex;flex-direction:column;align-items:center;gap:1px;flex:none;transform:translateY(-4px)}
+.bal-note{font-size:12px;font-weight:500;color:var(--muted);white-space:nowrap;line-height:1.3;letter-spacing:0}
+.cb-hero{background:linear-gradient(135deg,#a2abb8,#5d6978);color:#fff;border-radius:22px;padding:22px 20px;margin:4px 0 16px;box-shadow:0 10px 24px rgba(93,105,120,.18)}
+.cb-lbl{font-size:14px;opacity:.85;font-weight:500}
+.cb-net{font-size:34px;font-weight:600;margin:6px 0 16px;letter-spacing:0}
+.cb-net.cb-pos,.cb-pos{color:#bff0d3}
+.cb-net.cb-neg,.cb-neg{color:#ffd0cc}
+.cb-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cb-card{background:rgba(255,255,255,.14);border-radius:16px;padding:12px 14px}
+.cb-card span{display:block;font-size:13px;opacity:.85;margin-bottom:4px;font-weight:500}
+.cb-card b{font-size:16px;font-weight:600}
+.cb-title{font-size:15px;font-weight:600;color:var(--muted);margin:18px 4px 8px}
+.cb-row{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 16px;margin-bottom:10px}
+.cb-m{font-size:16px;font-weight:600;margin-bottom:8px}
+.cb-vals{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:14px}
+.cb-in{color:#1e7a4c;font-weight:500}
+.cb-out{color:#c0392b;font-weight:500}
+.cb-vals b{margin-right:auto;font-size:15px;font-weight:600}
+.lg-form{padding:16px}
+.lg-form .tbtns{margin-bottom:12px}
+.lg-save{width:100%;margin-top:6px;border:0;border-radius:14px;padding:14px;background:var(--pri);color:#fff;font-weight:700;font-size:15px;cursor:pointer}
+.lg-row{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin-bottom:8px}
+.lg-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.lg-main b{font-size:15px;font-weight:600}
+.lg-main span{font-size:14px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lg-main small{font-size:12px;color:var(--muted)}
+.lg-del{border:0;background:#fdecea;color:#c0392b;width:34px;height:34px;border-radius:50%;font-size:20px;line-height:1;cursor:pointer;flex:none}
+.lg-more{border:0;background:var(--soft);color:var(--deep);width:36px;height:36px;border-radius:50%;font-size:18px;font-weight:700;line-height:1;cursor:pointer;flex:none}
+.lg-acts{display:flex;gap:8px;margin:-2px 0 10px}
+.lg-acts button{flex:1;border:0;border-radius:12px;padding:10px;font-weight:700;font-size:14px;cursor:pointer;background:var(--soft);color:var(--deep)}
+.lg-acts button.del{background:#fdecea;color:#c0392b}
 .btn:disabled{opacity:.4;cursor:not-allowed}
 .empty{text-align:center;color:var(--muted);padding:44px 12px;line-height:1.9}
-.fab{position:fixed;bottom:22px;left:20px;background:var(--pri);color:#fff;border:0;border-radius:999px;padding:15px 24px;font-weight:600;box-shadow:0 10px 24px rgba(58,139,194,.35);cursor:pointer;display:flex;gap:10px;align-items:center}
+.fab{position:fixed;bottom:22px;left:20px;background:var(--pri);color:#fff;border:0;border-radius:999px;padding:15px 24px;font-weight:600;box-shadow:0 10px 24px rgba(125,136,150,.35);cursor:pointer;display:flex;gap:10px;align-items:center}
 .fab svg{width:20px;height:20px;stroke:#fff;stroke-width:2.4;fill:none;stroke-linecap:round}
 .overlay{position:fixed;inset:0;background:rgba(20,30,45,.45);display:flex;align-items:flex-end;justify-content:center;z-index:9}
 .overlay.hidden{display:none}
@@ -90,36 +119,62 @@ input:focus,select:focus{outline:2px solid #a9cde8;border-color:transparent}
 .cal-title{border:0;background:none;font-size:17px;font-weight:700;color:var(--text);cursor:pointer;padding:8px 12px;border-radius:12px}
 .cal-wk,.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
 .cal-wk span{font-size:13px;color:var(--muted);padding:6px 0}
-.cal-grid button{height:44px;border:0;border-radius:14px;background:#f1f6fb;color:var(--text);font-size:15px;cursor:pointer}
+.cal-grid button{height:44px;border:0;border-radius:14px;background:#f1f2f4;color:var(--text);font-size:15px;cursor:pointer}
 .cal-grid .blank{height:44px}
 .cal-grid button.sel{background:var(--ok);color:#fff;font-weight:700;box-shadow:0 4px 10px rgba(30,158,98,.35)}
 .cal-years{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.cal-years button{height:48px;border:0;border-radius:14px;background:#f1f6fb;color:var(--text);font-size:15px;cursor:pointer}
+.cal-years button{height:48px;border:0;border-radius:14px;background:#f1f2f4;color:var(--text);font-size:15px;cursor:pointer}
 .cal-years button.sel{background:var(--ok);color:#fff;font-weight:700}
 .sec-row{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .sec-row{margin:22px 4px 0}
 .sec-row .sec-title{margin:0}
-.live-btn{border:0;border-radius:999px;background:var(--pri);color:#fff;font:inherit;font-size:14px;font-weight:700;padding:9px 18px;cursor:pointer;box-shadow:0 6px 16px rgba(58,139,194,.3)}
+.lg-filt{display:flex;gap:6px}
+.lg-filt button{border:0;border-radius:999px;background:var(--soft);color:var(--deep);font:inherit;font-size:13px;font-weight:700;padding:8px 12px;cursor:pointer}
+.lg-filt button.on{background:var(--pri);color:#fff}
+.lg-filt button.on.r{background:#c0392b}
+.lg-filt button.on.g{background:#1e7a4c}
+.pt-sky{display:block;width:100%;margin:12px 0;padding:18px 16px;border:0;border-radius:16px;background:#d5d9df;color:#3f4854;font:inherit;font-weight:700;font-size:16px;text-align:right;cursor:pointer}
+.pt-h-s{font-size:16px;font-weight:800;margin:0;color:#1f2937}
+.pt-q{font-size:15px;font-weight:800;text-align:center;color:#1f2937;margin:28px 0 14px}
+.pt-q-s{font-size:14px;font-weight:600;text-align:center;color:#374151;margin:24px 0 0}
+.pt-sky-s{font-size:14px;font-weight:800;padding:14px 16px}
+.pt-bottom{margin-top:auto}
+.pt-link{background:none;border:0;color:#c62828;font:inherit;font-weight:700;font-size:16px;padding:12px;cursor:pointer}
+.info-h{font-size:20px;font-weight:800;color:#1f2937;margin:20px 0 8px}
+.info-h4{font-size:18px;font-weight:800;color:#1f2937;margin:16px 0 6px}
+.info-sub{font-size:16px;font-weight:700;color:#4f5a68;margin:0 0 10px}
+.info-p{font-size:16px;line-height:2;color:#374151;margin:0 0 8px}
+.lg-bar{display:flex;gap:8px;align-items:center;margin:14px 0 0}
+.lg-bar input{flex:1;min-width:0;padding:11px 14px}
+.lg-fbtn{border:0;border-radius:14px;background:var(--soft);color:var(--deep);font:inherit;font-weight:700;font-size:14px;padding:11px 16px;cursor:pointer;flex:none}
+.lg-fbtn.on{background:var(--pri);color:#fff}
+.opt{position:relative}
+.opt.busy{color:transparent!important;pointer-events:none}
+.opt.busy>*{visibility:hidden}
+.opt.busy::after{content:"";position:absolute;left:50%;top:50%;width:26px;height:26px;margin:-13px 0 0 -13px;border:3px solid rgba(31,41,55,.25);border-top-color:#1f2937;border-radius:50%;animation:btnspin .7s linear infinite}
+.top .dots{font-size:24px;font-weight:700;line-height:1}
+.live-btn{border:0;border-radius:999px;background:var(--pri);color:#fff;font:inherit;font-size:14px;font-weight:700;padding:9px 18px;cursor:pointer;box-shadow:0 6px 16px rgba(125,136,150,.3)}
 .dt-row{display:flex;gap:14px;align-items:stretch}
 .dt-row .dbtn{flex:1;min-width:0}
 #tclk{z-index:31}
 .tc-box{background:#fff;border-radius:24px;padding:18px 16px 16px;width:min(340px,100%);box-shadow:0 20px 50px rgba(0,0,0,.25)}
 .tc-show{display:flex;justify-content:center;align-items:center;gap:8px;direction:ltr;margin-bottom:10px}
-.tc-show button{border:0;background:#eef3f8;color:var(--text);border-radius:14px;padding:4px 14px;font:inherit;font-size:34px;font-weight:700;cursor:pointer}
+.tc-show button{border:0;background:#eff1f4;color:var(--text);border-radius:14px;padding:4px 14px;font:inherit;font-size:34px;font-weight:700;cursor:pointer}
 .tc-show button.on{background:var(--ok);color:#fff}
 .tc-show span{font-size:34px;font-weight:700}
 .tc-ampm{display:flex;justify-content:center;gap:10px;margin-bottom:8px}
-.tc-ampm button{border:0;background:#eef3f8;color:var(--text);border-radius:12px;padding:8px 12px;font:inherit;font-size:14px;cursor:pointer}
+.tc-ampm button{border:0;background:#eff1f4;color:var(--text);border-radius:12px;padding:8px 12px;font:inherit;font-size:14px;cursor:pointer}
 .tc-ampm button.on{background:var(--pri);color:#fff}
+html,body{touch-action:pan-x pan-y;-ms-touch-action:pan-x pan-y}
 .tc-face{display:block;width:260px;max-width:100%;height:auto;margin:0 auto;touch-action:none;cursor:pointer}
-.tc-face .face{fill:#f1f6fb}
+.tc-face .face{fill:#f1f2f4}
 .tc-face text{font-size:15px;fill:var(--text);font-family:inherit;user-select:none}
 .tc-face .hand{stroke:var(--ok);stroke-width:3;stroke-linecap:round}
 .tc-face .knob{fill:var(--ok)}
 .cal-foot{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
 .cal-foot button{height:52px;border:0;border-radius:16px;font-weight:700;font-size:15px;cursor:pointer}
 .cal-ok{background:var(--ok);color:#fff}
-.cal-cancel{background:#eef3f8;color:var(--text)}
+.cal-cancel{background:#eff1f4;color:var(--text)}
 
 /* settings / menu rows */
 .opt-list{display:flex;flex-direction:column;gap:8px;margin-top:8px}
@@ -150,7 +205,7 @@ input:focus,select:focus{outline:2px solid #a9cde8;border-color:transparent}
 .av-img{padding:0;overflow:hidden;background:var(--soft)}
 .av-img img{width:100%;height:100%;object-fit:cover;display:block}
 .crop-wrap{display:flex;justify-content:center;margin-top:6px}
-.crop-wrap canvas{width:260px;max-width:100%;height:auto;aspect-ratio:1/1;background:#eef3f8;border-radius:16px;border:1px solid var(--line);touch-action:none;cursor:grab}
+.crop-wrap canvas{width:260px;max-width:100%;height:auto;aspect-ratio:1/1;background:#eff1f4;border-radius:16px;border:1px solid var(--line);touch-action:none;cursor:grab}
 #crop-zoom{padding:0;height:28px}
 .portal{position:fixed;inset:0;z-index:1000;background:var(--bg);overflow:auto;padding-bottom:40px}
 .portal.hidden{display:none!important}
@@ -159,13 +214,13 @@ input:focus,select:focus{outline:2px solid #a9cde8;border-color:transparent}
 .pt-menu.hidden{display:none}
 .pt-menu-b{border:0;background:none;color:var(--neg);font-weight:700;font-size:15px;padding:12px 16px;cursor:pointer;white-space:nowrap}
 .pt-dots{font-size:26px;line-height:1;font-weight:700}
-/* customer portal uses the same blue palette as the app's login screen */
-.portal{--bg:#f3f6fa;--card:#fff;--text:#1f2937;--muted:#64748b;--pri:#3a8bc2;--deep:#2b6f9e;--line:#dfe3ea;--soft:#eaf2f9}
-.portal .hero{background:linear-gradient(135deg,#4f9fd6,#2b6f9e);box-shadow:0 10px 30px rgba(43,111,158,.25)}
-.portal .bottom-btn{background:#3a8bc2;box-shadow:0 10px 24px rgba(58,139,194,.3)}
-.portal .pt-photo{background:#eaf2f9;color:#2b6f9e}
+/* customer portal uses the same silver palette as the app's login screen */
+.portal{--bg:#f3f4f6;--card:#fff;--text:#1f2937;--muted:#64748b;--pri:#7d8896;--deep:#5d6978;--line:#dfe3ea;--soft:#eceef1}
+.portal .hero{background:linear-gradient(135deg,#a2abb8,#5d6978);box-shadow:0 10px 30px rgba(93,105,120,.25)}
+.portal .bottom-btn{background:#7d8896;box-shadow:0 10px 24px rgba(125,136,150,.3)}
+.portal .pt-photo{background:#eceef1;color:#5d6978}
 .portal .fld{background:#fff}
-.portal .fld:focus-within{border-color:#3a8bc2;box-shadow:0 0 0 3px #d6e8f5}
+.portal .fld:focus-within{border-color:#7d8896;box-shadow:0 0 0 3px #e3e6eb}
 .portal .pt-menu-b{color:#c0392b}
 .pt-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .pt-top h1{font-size:19px;font-weight:700}
@@ -174,8 +229,8 @@ input:focus,select:focus{outline:2px solid #a9cde8;border-color:transparent}
 .pt-head b{font-size:18px}
 .pt-photo{width:110px;height:110px;border-radius:50%;object-fit:cover;background:var(--soft);display:grid;place-items:center;font-size:40px;font-weight:700;color:var(--deep)}
 .form-card{background:#fff;border:1px solid var(--line);border-radius:26px;padding:20px 16px;display:flex;flex-direction:column;gap:14px}
-.fld{display:flex;align-items:flex-start;gap:10px;border:1px solid var(--line);border-radius:16px;padding:8px 14px;background:#f7fbfe}
-.fld:focus-within{border-color:var(--pri);box-shadow:0 0 0 3px #d6e8f5}
+.fld{display:flex;align-items:flex-start;gap:10px;border:1px solid var(--line);border-radius:16px;padding:8px 14px;background:#f8f9fa}
+.fld:focus-within{border-color:var(--pri);box-shadow:0 0 0 3px #e3e6eb}
 .fld .fi{width:22px;height:22px;flex:none;margin-top:14px}
 .fld .fi svg{width:22px;height:22px;stroke:var(--muted);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .fld .fw{flex:1;display:flex;flex-direction:column;min-width:0}
@@ -183,7 +238,7 @@ input:focus,select:focus{outline:2px solid #a9cde8;border-color:transparent}
 .fld input,.fld textarea{border:0;background:transparent;padding:4px 0 8px;font-size:15px;width:100%;resize:none}
 .fld input:focus,.fld textarea:focus{outline:none}
 .fld textarea{min-height:48px}
-.bottom-btn{width:100%;margin-top:20px;padding:16px;border:0;border-radius:18px;background:var(--pri);color:#fff;font-weight:700;font-size:16px;display:flex;justify-content:center;align-items:center;gap:8px;cursor:pointer;box-shadow:0 10px 24px rgba(58,139,194,.3)}
+.bottom-btn{width:100%;margin-top:20px;padding:16px;border:0;border-radius:18px;background:var(--pri);color:#fff;font-weight:700;font-size:16px;display:flex;justify-content:center;align-items:center;gap:8px;cursor:pointer;box-shadow:0 10px 24px rgba(125,136,150,.3)}
 .bottom-btn svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .info{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;font-size:14px;line-height:1.9;color:var(--text)}
 .info span{color:var(--muted)}
@@ -218,26 +273,26 @@ input:focus,select:focus{outline:2px solid #a9cde8;border-color:transparent}
 .pbtn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
 /* lock screen */
-#lock{position:fixed;inset:0;z-index:50;background:#f3f6fa;color:#1f2937;display:flex;align-items:center;justify-content:center;padding:24px 24px calc(24px + env(safe-area-inset-bottom,0px));overflow:auto}
+#lock{position:fixed;inset:0;z-index:50;background:#f3f4f6;color:#1f2937;display:flex;align-items:center;justify-content:center;padding:24px 24px calc(24px + env(safe-area-inset-bottom,0px));overflow:auto}
 #lock.hidden{display:none}
 #lock.lk-busy .pad,#lock.lk-busy .lk-dots{opacity:.35;pointer-events:none}
-#lock.lk-busy::after{content:"";position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border:4px solid rgba(31,41,55,.2);border-top-color:#3b8bba;border-radius:50%;animation:lkspin .7s linear infinite}
+#lock.lk-busy::after{content:"";position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border:4px solid rgba(31,41,55,.2);border-top-color:#7d8896;border-radius:50%;animation:lkspin .7s linear infinite}
 @keyframes lkspin{to{transform:rotate(360deg)}}
 .lk-wrap{width:100%;max-width:340px;display:flex;flex-direction:column;align-items:center;text-align:center}
 .lk-ico{width:56px;height:56px;margin-bottom:22px}
 .lk-ico svg{width:100%;height:100%;stroke:#64748b;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .lk-title{font-size:18px;font-weight:700;color:#1f2937;margin-bottom:34px}
 .lk-dots{display:flex;gap:22px;direction:ltr;margin-bottom:14px}
-.dot{width:26px;height:26px;border-radius:50%;border:2px solid #3b8bba;display:inline-block;box-sizing:border-box;transition:background .12s}
-.dot.fill{background:#3b8bba}
+.dot{width:26px;height:26px;border-radius:50%;border:2px solid #7d8896;display:inline-block;box-sizing:border-box;transition:background .12s}
+.dot.fill{background:#7d8896}
 .lk-dots.shake{animation:lkshake .35s}
 @keyframes lkshake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 .lk-msg{min-height:22px;font-size:14px;color:#c0392b;margin-bottom:18px;padding:0 6px}
 .lk-msg.ok{color:#1e9e62;font-weight:700}
-.lk-msg.busy{color:#3b8bba}
+.lk-msg.busy{color:#7d8896}
 .pad{display:grid;grid-template-columns:repeat(3,76px);justify-content:space-between;gap:18px 0;width:100%;max-width:300px;direction:ltr}
-.pk-key{width:76px;height:76px;border-radius:50%;border:1px solid #dfe3ea;background:#eef1f6;color:#1a2233;font-size:30px;font-weight:700;cursor:pointer;font-family:Poppins,Vazirmatn,sans-serif;display:grid;place-items:center;padding:0;-webkit-tap-highlight-color:transparent;transition:background .1s,transform .1s}
-.pk-key:active{background:#dde3ec;transform:scale(.95)}
+.pk-key{width:76px;height:76px;border-radius:50%;border:1px solid #dfe3ea;background:#eff0f3;color:#1a2233;font-size:30px;font-weight:700;cursor:pointer;font-family:Poppins,Vazirmatn,sans-serif;display:grid;place-items:center;padding:0;-webkit-tap-highlight-color:transparent;transition:background .1s,transform .1s}
+.pk-key:active{background:#dfe2e7;transform:scale(.95)}
 .pk-key svg{width:30px;height:30px;stroke:#64748b;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .pad .gap{width:76px;height:76px}
 .su-wrap{width:100%;max-width:360px;display:flex;flex-direction:column;gap:14px;text-align:right}
@@ -246,18 +301,36 @@ input:focus,select:focus{outline:2px solid #a9cde8;border-color:transparent}
 .su-p{font-size:14px;color:#64748b;text-align:center;margin:0 0 10px}
 .su-fld label{display:block;font-size:13px;color:#64748b;margin-bottom:6px}
 .su-fld input{width:100%;height:54px;border:1.5px solid #dfe3ea;border-radius:16px;background:#fff;padding:0 16px;font-size:16px;font-family:inherit;color:#1f2937;outline:none}
-.su-fld input:focus{border-color:#3b8bba}
+.su-fld input:focus{border-color:#7d8896}
 .su-fld input.ltr{direction:ltr;text-align:left}
-.su-btn{position:relative;width:100%;height:60px;border:0;border-radius:22px;background:#3a8bc2;color:#fff;font-size:17px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:10px}
+.su-btn{position:relative;width:100%;height:60px;border:0;border-radius:22px;background:#7d8896;color:#fff;font-size:17px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:10px}
 .su-btn svg{position:absolute;left:22px;top:50%;transform:translateY(-50%);width:24px;height:24px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .su-alt{text-align:center;font-size:14px;color:#64748b;margin-top:6px}
-.lk-link{background:none;border:0;color:#3b8bba;cursor:pointer;font-size:14px;font-family:inherit;margin-top:26px}
+.lk-link{background:none;border:0;color:#7d8896;cursor:pointer;font-size:14px;font-family:inherit;margin-top:26px}
 .mail-row{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);background:#fff;border-radius:14px;padding:12px 14px;width:100%}
 .mail-txt{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1}
 .mail-txt b{font-size:15px}
 .srow{display:flex;flex-direction:column;gap:6px;margin-top:12px}
 .srow-b{width:100%;border:1px solid var(--line);background:#fff;color:var(--text);border-radius:12px;padding:8px 14px;font-size:14px;font-weight:600;cursor:pointer;text-align:right}
 .srow-out{margin-top:18px}
+.st-page .sec-title{font-size:13px;color:var(--muted);margin-bottom:0}
+.st-page .opt{padding:10px 14px}
+.st-page .opt span{font-size:13px}
+.st-page .opt .sub{font-size:12px}
+.st-page .srow{gap:6px;margin-top:8px}
+.st-page .srow-b{font-size:13px;padding:9px 12px}
+.st-page .srow-out{margin-top:14px}
+.st-page .ka-row{font-size:12px;margin-top:10px}
+.st-page .ka-row b{font-size:12px}
+.st-page .mail-row{padding:10px 12px}
+.st-page .mail-txt b{font-size:13px}
+.st-page .mail-txt small{font-size:12px}
+.st-page .mail-ok{font-size:11px}
+.ka-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:14px;padding:6px 6px 0;font-size:13px;color:var(--muted)}
+.ka-row b{font-weight:600;color:var(--text)}
+.ka-row .ka-v{direction:rtl;text-align:left}
+.ka-row .ka-v.ok{color:var(--pos)}
+.ka-row .ka-v.old{color:var(--neg)}
 .mail-ok{display:inline-flex;align-items:center;gap:4px;flex:none;color:#1e7a4c;font-size:11px;font-weight:700;white-space:nowrap}
 .mail-ok svg{width:14px;height:14px;stroke:#1e7a4c;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .mail-txt small{color:var(--muted);font-size:13px;direction:ltr;text-align:left;overflow-wrap:anywhere;word-break:break-all;white-space:normal}
@@ -285,14 +358,16 @@ const supabaseClient = window.supabase?.createClient
   : null;
 let cloudUser = null, cloudReady = false, cloudSyncTimer = null;
 let cloudSyncing = false, cloudSyncAgain = false;
+let ledgerCloudOk = true, ledgerWarned = false, ledgerStrict = false, lastLedgerErr = '';
 
 async function cloudLoad(){
   if(!supabaseClient || !cloudUser) throw new Error('اتصال حساب ابری برقرار نیست.');
   const u = cloudUser.id;
-  const [pr, cr, tr] = await Promise.all([
+  const [pr, cr, tr, lr] = await Promise.all([
     supabaseClient.from('p').select('id,n,cur').eq('u',u),
     supabaseClient.from('c').select('id,p,n,ph,ds,pf,ac').eq('u',u),
-    supabaseClient.from('t').select('id,c,a,d,y,m,dd,ts,hh,mm').eq('u',u)
+    supabaseClient.from('t').select('id,c,a,d,y,m,dd,ts,hh,mm').eq('u',u),
+    supabaseClient.from('l').select('id,ty,a,d,y,m,dd,ts,hh,mm').eq('u',u)
   ]);
   if(pr.error) throw pr.error;
   if(cr.error) throw cr.error;
@@ -314,7 +389,18 @@ async function cloudLoad(){
     customer.tx.push({ id:t.id, a:Number(t.a)||0, d:t.d||'', y:Number(t.y)||0,
       m:Number(t.m)||1, dd:Number(t.dd)||1, ts:Number(t.ts)||0, hh: t.hh == null ? undefined : Number(t.hh), mm: t.mm == null ? undefined : Number(t.mm) });
   });
-  S = { ...S, cur:S.cur || 'toman', parties, email:cloudUser.email || S.email || '', loggedIn:true };
+  /* دفتر دخل و خرج: اگر جدول آنلاین آماده نبود، نسخهٔ داخل گوشی دست نمی‌خورد */
+  let ledger = Array.isArray(S.ledger) ? S.ledger : [];
+  if(lr.error){ ledgerCloudOk = false; console.warn('ledger table unavailable:', lr.error); }
+  else{
+    ledgerCloudOk = true;
+    if((lr.data || []).length){
+      ledger = lr.data.map(r => ({ id:r.id, type:r.ty === 'out' ? 'out' : 'in', a:Number(r.a)||0, d:r.d||'',
+        y:Number(r.y)||0, m:Number(r.m)||1, dd:Number(r.dd)||1, ts:Number(r.ts)||0,
+        hh: r.hh == null ? null : Number(r.hh), mm: r.mm == null ? null : Number(r.mm) }));
+    }
+  }
+  S = { ...S, cur:S.cur || 'toman', parties, ledger, email:cloudUser.email || S.email || '', loggedIn:true };
   try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
 }
 
@@ -347,6 +433,35 @@ async function cloudSyncNow(){
       await deleteMissing('t', tRows);
       await deleteMissing('c', cRows);
       await deleteMissing('p', pRows);
+      /* دفتر دخل و خرج (جدول l) — اگر خطا داد، بقیهٔ اطلاعات همچنان همگام می‌شود */
+      if(!ledgerCloudOk){
+        const pr = await supabaseClient.from('l').select('id,ty,a,d,y,m,dd,ts,hh,mm').eq('u',u);
+        if(pr.error){
+          lastLedgerErr = pr.error.message || String(pr.error.code || 'error');
+          if(ledgerStrict) throw pr.error;
+        }else{
+          const have = new Set((S.ledger || []).map(x => String(x.id)));
+          (pr.data || []).forEach(r => { if(!have.has(String(r.id))) (S.ledger = S.ledger || []).push({ id:r.id, type:r.ty === 'out' ? 'out' : 'in', a:Number(r.a)||0, d:r.d||'', y:Number(r.y)||0, m:Number(r.m)||1, dd:Number(r.dd)||1, ts:Number(r.ts)||0, hh:r.hh == null ? null : Number(r.hh), mm:r.mm == null ? null : Number(r.mm) }); });
+          ledgerCloudOk = true;
+        }
+      }
+      if(ledgerCloudOk){
+        try{
+          const lRows = (S.ledger || []).map(x => ({ id:String(x.id), u, ty:x.type === 'out' ? 'out' : 'in', a:Math.trunc(Number(x.a)||0), d:x.d || '',
+            y:Math.trunc(Number(x.y)||0), m:Math.trunc(Number(x.m)||1), dd:Math.trunc(Number(x.dd)||1), ts:Math.trunc(Number(x.ts)||0),
+            hh: x.hh == null ? null : Math.trunc(Number(x.hh)), mm: x.mm == null ? null : Math.trunc(Number(x.mm)) }));
+          if(lRows.length){
+            const {error} = await supabaseClient.from('l').upsert(lRows, { onConflict:'id' });
+            if(error) throw error;
+          }
+          await deleteMissing('l', lRows);
+        }catch(e){
+          console.error('Ledger sync error:', e);
+          lastLedgerErr = (e && e.message) || String(e);
+          if(ledgerStrict) throw e;
+          if(!ledgerWarned){ ledgerWarned = true; showToast('دخل و خرج آنلاین ذخیره نشد؛ جدول l را در Supabase بسازید.'); }
+        }
+      }
     }while(cloudSyncAgain);
   }catch(e){ console.error('Supabase sync error:', e); return false; }
   finally{ cloudSyncing = false; }
@@ -543,7 +658,8 @@ let V = { view:'list', openId:null, custId:null, search:false, q:'' };
 let SUI = { curOpen:false };
 let CAL = { open:false, mode:'days', sel:{y:0,m:1,d:1}, vy:0, vm:1 };
 let LPSEL = null;     /* long-press selection: {key, view, kind, pid, cid, tid} */
-let LPJUST = false;   /* swallow the click that follows a long press */
+let LPJUST = false;
+let TXEXIT = 0;       /* time of the last tap that closed the ⋮ mode (a second tap right after is ignored) */   /* swallow the click that follows a long press */
 let LPT = null;
 
 /* ---------- back navigation (phone back button) ---------- */
@@ -556,6 +672,20 @@ function popOv(name){
   OV.splice(i, 1);
   IGN++;
   history.back();
+}
+/* leave the ⋮ mode (customer transaction or personal ledger row) and close any sheet opened from it */
+function endSel(swallow){
+  if(V.view === 'ledger' && typeof ledgerCapture === 'function') ledgerCapture();
+  if(LPSEL && LPSEL.kind === 'txmode') LPSEL = null;
+  LG.sel = null;
+  const drop = OV.filter(n => n === 'txmode' || n === 'lgsel' || n === 'sheet');
+  if(drop.length){
+    document.getElementById('ov').classList.add('hidden');
+    OV = OV.filter(n => !drop.includes(n));
+    IGN++; history.go(-drop.length);
+  }
+  if(swallow) TXEXIT = Date.now();
+  render();
 }
 /* go to another page; each page is a history step so the phone back button walks back one page at a time */
 /* soft generated tones: rising for entering a page, falling for going back */
@@ -595,6 +725,11 @@ function playBell(){
 function soundForward(){ softTone(480, 640, 0.22, 'sine'); }
 function soundBack(){ soundForward(); }
 
+function resetToList(){
+  V = { view:'list', openId:null, custId:null, search:false, q:'' };
+  LPSEL = null;
+  try{ history.replaceState({v:V}, ''); }catch(e){}
+}
 function goTo(next, replace){
   const st = Object.assign({view:'list', openId:null, custId:null, search:false, q:''}, next);
   if(replace) history.replaceState({v:st}, ''); else { history.pushState({v:st}, ''); soundForward(); }
@@ -609,7 +744,11 @@ window.addEventListener('popstate', e => {
   if(OV.length){
     const top = OV.pop();
     if(top === 'portal'){ closePortal(); return; }
+    if(top === 'info'){ infoHide(); return; }
+    if(top === 'ptmenu'){ PORTAL.menu = false; PORTAL.setPin = false; PORTAL.askOut = false; PORTAL.verifyOff = false; renderPortal(); return; }
     if(top === 'tclk'){ hideTclk(); return; }
+    if(top === 'txmode'){ LPSEL = null; render(); return; }
+    if(top === 'lgsel'){ if(V.view === 'ledger') ledgerCapture(); LG.sel = null; render(); return; }
     if(top === 'cal'){ CAL.open = false; calRender(); }
     else document.getElementById('ov').classList.add('hidden');
     return;
@@ -622,6 +761,7 @@ window.addEventListener('popstate', e => {
 
 /* after saving or deleting a transaction from the full page, go to the customers page */
 function afterTx(){
+  if(LPSEL && LPSEL.kind === 'txmode'){ endSel(true); return; }
   if(V.view === 'txEdit'){ closeSheet(); goTo({view:'cust', openId:V.openId, custId:V.custId}, true); return; }
   closeSheet(); render();
 }
@@ -687,16 +827,76 @@ function render(){
     return;
   }
 
+  if(V.view === 'ledger'){
+    if(!Array.isArray(S.ledger)) S.ledger = [];
+    const L = S.ledger.slice().sort((x, y) => (y.ts || 0) - (x.ts || 0));
+    const inc = L.filter(x => x.type === 'in').reduce((s, x) => s + x.a, 0);
+    const exp = L.filter(x => x.type === 'out').reduce((s, x) => s + x.a, 0);
+    const rest = inc - exp;
+    const LS = ledgerRows(L);
+    m.innerHTML = `<header class="top">
+        <button class="ic dots" data-a="ledgerMenu" aria-label="گزینه‌ها">⋮</button>
+        <h1>دخل و خرج</h1>
+        <button type="button" class="ic" data-a="ledgerShare" aria-label="اشتراک گذاری">${ICON.share}</button>
+      </header>
+      <section class="cb-hero">
+        <div class="cb-lbl">${rest < 0 ? 'کسر شما' : 'موجودی شما'}</div>
+        <div class="cb-net ${rest > 0 ? 'cb-pos' : rest < 0 ? 'cb-neg' : ''}">${money(Math.abs(rest))}</div>
+        <div class="cb-cards">
+          <div class="cb-card"><span>دخل</span><b>${money(inc)}</b></div>
+          <div class="cb-card"><span>خرج</span><b>${money(exp)}</b></div>
+        </div>
+      </section>
+      <div class="lg-bar">
+        <button type="button" class="lg-fbtn${LGFR || LGTO ? ' on' : ''}" data-a="lgFilterOpen">فیلتر</button>
+        <input id="lgq" type="search" placeholder="جستجو در شرح..." value="${esc(LGQ)}">
+      </div>
+      <div class="sec-row" style="margin:12px 4px 8px">
+        <div class="lg-filt">
+          <button data-a="lgFilter" data-v="all" class="${LGF === 'all' ? 'on' : ''}">همه</button>
+          <button data-a="lgFilter" data-v="out" class="r ${LGF === 'out' ? 'on' : ''}">خرج</button>
+          <button data-a="lgFilter" data-v="in" class="g ${LGF === 'in' ? 'on' : ''}">دخل</button>
+        </div>
+      </div>
+      ${LS.length ? LS.map(x => `
+        <div class="lg-row">
+          <div class="lg-main">
+            <b class="${x.type === 'in' ? 'cb-in' : 'cb-out'}">${x.type === 'in' ? 'دخل' : 'خرج'} ${money(x.a)}</b>
+            <span>${esc(x.d || 'بدون شرح')}</span>
+            <small>${jStr(x.y, x.m, x.dd)}${x.hh != null ? ' · ' + clockText(x.hh, x.mm || 0) : ''}</small>
+          </div>
+          <button class="lg-more" data-a="ledgerMore" data-id="${esc(x.id)}" aria-label="گزینه‌ها">⋮</button>
+        </div>
+        ${LG.sel === x.id ? `<div class="lg-acts">
+          <button data-a="ledgerEdit" data-id="${esc(x.id)}">ویرایش</button>
+          <button class="del" data-a="ledgerDel" data-id="${esc(x.id)}">حذف</button>
+        </div>` : ''}`).join('') : `<p class="hint" style="margin:8px 4px">${L.length ? 'تراکنشی در این بخش نیست.' : 'هنوز چیزی ثبت نشده است.'}</p>`}`;
+    m.insertAdjacentHTML('beforeend', '<button type="button" class="fab" data-a="ledgerNew">+ ثبت دخل و خرج</button>');
+    return;
+  }
+
+  if(V.view === 'ledgerMenu'){
+    m.innerHTML = pageHead('دخل و خرج', 'ledger') + `
+      <div class="tx-page">
+        <button class="pbtn del cm-btn" data-a="ledgerDelAll">${ICON.trash}<span>حذف همه تراکنش‌ها</span></button>
+      </div>`;
+    return;
+  }
+
   if(V.view === 'settings'){
     m.innerHTML = pageHead('تنظیمات', 'menu') + `
+      <div class="st-page">
       ${emailSection(4)}
       <div class="srow">
         <button class="srow-b" data-a="pinToggle">پین کد امنیتی: ${S.pin ? 'فعال' : 'غیرفعال'}</button>
         ${S.pin ? '<button class="srow-b" data-a="pinChange">تغییر پین</button>' : ''}
         <button class="srow-b srow-out" data-a="authLogout">خروج از حساب</button>
+        <div class="ka-row"><b>آخرین بروزرسانی سرور</b><span class="ka-v" id="ka-v">${kaText()}</span></div>
+      </div>
       </div>
 
 `;
+    kaLoad();
     return;
   }
 
@@ -713,7 +913,7 @@ function render(){
         </div>
         <div class="fld">
           <span class="fi">${ICON.phone}</span>
-          <div class="fw"><label for="f-phone">شماره تلفن (اختیاری)</label><input id="f-phone" inputmode="tel" maxlength="20"></div>
+          <div class="fw"><label for="f-phone">شماره موبایل (الزامی)</label><input id="f-phone" type="tel" inputmode="numeric" pattern="[0-9]*" dir="ltr" autocomplete="off" maxlength="11" oninput="this.value=latin(this.value).replace(/[^0-9]/g,'').slice(0,11)"></div>
         </div>
         <div class="fld">
           <span class="fi">${ICON.note}</span>
@@ -721,7 +921,7 @@ function render(){
         </div>
         <div class="fld">
           <span class="fi"><svg viewBox="0 0 24 24" style="stroke:var(--muted);fill:none;stroke-width:1.8;stroke-linecap:round"><rect x="5" y="10.5" width="14" height="10.5" rx="3"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></svg></span>
-          <div class="fw"><label for="f-code">کد ورود مشتری (۶ رقمی)</label><input id="f-code" inputmode="numeric" maxlength="6"></div>
+          <div class="fw"><label for="f-code">کد ورود مشتری (۴ رقمی، الزامی)</label><input id="f-code" type="tel" inputmode="numeric" pattern="[0-9]*" dir="ltr" autocomplete="off" maxlength="4" oninput="this.value=latin(this.value).replace(/[^0-9]/g,'').slice(0,4)"></div>
         </div>
       </div>
       <button class="bottom-btn" data-a="saveCust" data-p="${p.id}">${ICON.check}<span>ثبت</span></button>`;
@@ -754,12 +954,12 @@ function render(){
         <input type="file" id="photo-input" accept="image/*" style="display:none">
         <label for="f-name">نام مشتری</label>
         <input id="f-name" value="${esc(c.n)}" maxlength="60">
-        <label for="f-phone">شماره تلفن (اختیاری)</label>
-        <input id="f-phone" inputmode="tel" maxlength="20" value="${c.ph ? fa(c.ph) : ''}">
+        <label for="f-phone">شماره موبایل (الزامی)</label>
+        <input id="f-phone" type="tel" inputmode="numeric" pattern="[0-9]*" dir="ltr" autocomplete="off" maxlength="11" oninput="this.value=latin(this.value).replace(/[^0-9]/g,'').slice(0,11)" value="${c.ph || ''}">
         <label for="f-ds">توضیحات (اختیاری)</label>
         <textarea id="f-ds" rows="2" maxlength="200">${esc(c.ds || '')}</textarea>
-        <label for="f-code">کد ورود مشتری (۶ رقمی، برای تغییر وارد کنید)</label>
-        <input id="f-code" inputmode="numeric" maxlength="6" value="${esc(c.ac || '')}">
+        <label for="f-code">کد ورود مشتری (۴ رقمی، الزامی)</label>
+        <input id="f-code" type="tel" inputmode="numeric" pattern="[0-9]*" dir="ltr" autocomplete="off" maxlength="4" oninput="this.value=latin(this.value).replace(/[^0-9]/g,'').slice(0,4)" value="${/^[0-9]{4}$/.test(c.ac || '') ? c.ac : ''}">
         <button class="btn pri-btn" data-a="saveCustPage" data-p="${p.id}" data-c="${c.id}">ثبت ویرایش</button>
       </div>`;
     return;
@@ -786,10 +986,10 @@ function render(){
       <section class="hero">
         <div class="lbl">صورت حساب: ${esc(c.n)}</div>
         <div class="net"><span>${num(bal)}</span><span>${curLabel()}</span></div>
-        <div style="margin-top:8px;font-size:15px;font-weight:700;color:${bal > 0 ? '#fca5a5' : bal < 0 ? '#86efac' : '#fff'}">${bal > 0 ? `بدهی ${esc(c.n)}` : bal < 0 ? `طلب ${esc(c.n)}` : 'تسویه'}</div>
+        <div style="margin-top:-13px;margin-right:12%;font-size:15px;font-weight:600;line-height:1.5;text-align:right;color:${bal > 0 ? '#fca5a5' : bal < 0 ? '#86efac' : '#fff'}">« ${bal > 0 ? 'بدهکار است' : bal < 0 ? 'طلب دارد' : 'تسویه'} »</div>
         <div class="mini-row">
-          <div class="mini"><span>گرفت مشتری</span><b>${money(debts)}</b></div>
-          <div class="mini"><span>پرداخت مشتری</span><b>${money(pays)}</b></div>
+          <div class="mini"><span class="mini-name" style="display:block;white-space:nowrap;overflow:hidden">گرفت: ${esc(c.n)}</span><b>${money(debts)}</b></div>
+          <div class="mini"><span class="mini-name" style="display:block;white-space:nowrap;overflow:hidden">پرداخت: ${esc(c.n)}</span><b>${money(pays)}</b></div>
         </div>
       </section>
       <div class="info" style="margin-top:14px;display:flex;align-items:center;gap:8px">
@@ -922,8 +1122,8 @@ async function shareImage(s){
   const x = cv.getContext('2d');
   try{ await document.fonts.load('bold 40px Vazirmatn'); await document.fonts.load('24px Vazirmatn'); }catch(e){}
   const font = 'Vazirmatn, Tahoma, sans-serif';
-  x.fillStyle = '#f3f6fa'; x.fillRect(0, 0, W, H);
-  x.fillStyle = '#3a8bc2'; x.fillRect(0, 0, W, 120);
+  x.fillStyle = '#f3f4f6'; x.fillRect(0, 0, W, H);
+  x.fillStyle = '#7d8896'; x.fillRect(0, 0, W, 120);
   x.textAlign = 'right'; x.textBaseline = 'middle';
   x.fillStyle = '#ffffff'; x.font = `bold 40px ${font}`; x.fillText(s.name, W - 40, 60);
   x.fillStyle = '#1f2937'; x.font = `26px ${font}`;
@@ -985,11 +1185,11 @@ function invHTML(c){
     body{font-family:Vazirmatn,Tahoma,sans-serif;padding:28px;color:#1f2937}
     h1{font-size:26px;margin:0 0 4px}
     .meta{color:#64748b;font-size:13px;margin-bottom:14px}
-    hr{border:0;border-top:2px solid #3a8bc2;margin:10px 0 16px}
+    hr{border:0;border-top:2px solid #7d8896;margin:10px 0 16px}
     table{width:100%;border-collapse:collapse;font-size:14px}
     th,td{border-bottom:1px solid #dfe3ea;padding:8px 6px;text-align:right}
-    th{background:#eaf2f9}
-    tfoot td{font-weight:700;border-top:2px solid #3a8bc2}
+    th{background:#eceef1}
+    tfoot td{font-weight:700;border-top:2px solid #7d8896}
     .end{margin-top:18px;font-size:18px;font-weight:700}
   </style></head><body>
   <h1>${esc(c.n)}</h1>
@@ -1041,11 +1241,11 @@ async function shareImg2(c){
   x.textAlign = 'right';
   x.fillText(`تاریخ: ${todayStr()}`, W - 40, 96);
 
-  x.fillStyle = '#3a8bc2'; x.fillRect(40, 122, W - 80, 3);
+  x.fillStyle = '#7d8896'; x.fillRect(40, 122, W - 80, 3);
 
   const COL = { no: W - 40, date: W - 120, desc: W - 290, got: W - 490, paid: W - 640 };
   let y = 160;
-  x.font = `bold 16px ${font}`; x.fillStyle = '#2b6f9e';
+  x.font = `bold 16px ${font}`; x.fillStyle = '#5d6978';
   x.textAlign = 'right';
   x.fillText('ردیف', COL.no, y);
   x.fillText('تاریخ', COL.date, y);
@@ -1056,7 +1256,7 @@ async function shareImg2(c){
   y = 200;
   x.font = `15px ${font}`;
   d.rows.forEach((r, idx) => {
-    if(idx % 2 === 1){ x.fillStyle = '#f5f9fd'; x.fillRect(40, y - rowH/2, W - 80, rowH); }
+    if(idx % 2 === 1){ x.fillStyle = '#f6f7f9'; x.fillRect(40, y - rowH/2, W - 80, rowH); }
     x.fillStyle = '#1f2937';
     x.textAlign = 'right';
     x.fillText(fa(r.i), COL.no, y);
@@ -1074,7 +1274,7 @@ async function shareImg2(c){
     y += rowH;
   });
 
-  x.fillStyle = '#3a8bc2'; x.fillRect(40, y, W - 80, 2);
+  x.fillStyle = '#7d8896'; x.fillRect(40, y, W - 80, 2);
   y += 28;
   x.font = `bold 16px ${font}`; x.fillStyle = '#1f2937';
   x.textAlign = 'right';
@@ -1133,7 +1333,7 @@ function invHTML3(c){
     .sum small{font-size:12px;font-weight:400}
     h3{font-size:15px;margin:0 0 10px;text-align:right}
     table{width:100%;border-collapse:collapse;font-size:13px}
-    thead th{background:#2c5f8a;color:#fff;padding:9px 6px;font-weight:700}
+    thead th{background:#4f5a68;color:#fff;padding:9px 6px;font-weight:700}
     td{border:1px solid #e1e1e1;padding:9px 6px;text-align:center}
     td.desc{text-align:right;width:40%;white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere;line-height:1.7}
     tr{page-break-inside:avoid}
@@ -1205,7 +1405,7 @@ async function shareImg3(c, onReady){
   const tBottom = tTop + hdrH + rowHs.reduce((a, b) => a + b, 0);
   const H = tBottom + 130;
   const cv = document.createElement('canvas');
-  const Q = 3; cv.width = W * Q; cv.height = H * Q;
+  const Q = 4; cv.width = W * Q; cv.height = H * Q;
   const x = cv.getContext('2d');
   x.scale(Q, Q); x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high';
   const unit = curLabel();
@@ -1244,7 +1444,7 @@ async function shareImg3(c, onReady){
 
   /* table */
   const B = [W - 40, W - 100, W - 240, W - 320, W - 460, 40];
-  x.fillStyle = '#3a8bc2'; x.fillRect(40, tTop, W - 80, hdrH);
+  x.fillStyle = '#7d8896'; x.fillRect(40, tTop, W - 80, hdrH);
   x.fillStyle = '#ffffff'; x.font = `bold 15px ${font}`; x.textAlign = 'center';
   const heads = ['شماره', 'مبلغ', 'نوع', 'تاریخ', 'توضیح'];
   for(let k = 0; k < 5; k++){
@@ -1255,7 +1455,7 @@ async function shareImg3(c, onReady){
   d.rows.forEach((r, ri) => {
     const rowH = rowHs[ri];
     const cy = y + rowH / 2;
-    x.fillStyle = '#e3e9f0'; x.fillRect(40, y + rowH - 1, W - 80, 1);
+    x.fillStyle = '#e4e7eb'; x.fillRect(40, y + rowH - 1, W - 80, 1);
     x.textAlign = 'center';
     x.fillStyle = '#1f2937';
     x.fillText(String(r.no), (B[0] + B[1]) / 2, cy);
@@ -1278,7 +1478,7 @@ async function shareImg3(c, onReady){
     x.textAlign = 'center';
     y += rowH;
   });
-  x.fillStyle = '#e3e9f0';
+  x.fillStyle = '#e4e7eb';
   B.forEach(bx => x.fillRect(bx, tTop, 1, tBottom - tTop));
   x.fillRect(40, tTop, 1, tBottom - tTop);
 
@@ -1345,6 +1545,7 @@ function partySection(p){
       </section>
       ${on ? `<div class="lp-acts hero-acts"><button class="lp-btn" data-a="lpEdit" data-k="party" data-p="${p.id}" aria-label="ویرایش">${ICON.edit}</button></div>` : ''}
     </div>
+    <div class="opt-list" style="margin:18px 0 14px"><button class="opt" data-a="ledgerOpen"><span>دخل و خرج شخصی</span><span class="sub">${ICON.chev}</span></button></div>
     <div class="sec-row"><div class="sec-title">مشتریان</div><button class="live-btn" data-a="portalOpen">صورت حساب زنده</button></div>
     <div class="cq-wrap"><input id="cq" type="search" placeholder="جستجوی مشتری با نام یا شماره تلفن..." value="${esc(V.q)}"></div>
     <div class="list">
@@ -1454,6 +1655,71 @@ function recPending(){
   }catch(e){ return null; }
 }
 function lkMax(){ return LK.mode === 'verify' ? (LK.purpose === 'signup' ? 6 : 8) : 4; }
+/* ---------- app info panel (menu on the login screen) ---------- */
+const INFO_MAIL = 'janmohammaddindoost11@gamil.com';
+const INFO_WA = '989398869208';   /* کد ایران ۹۸ + شماره بدون صفر اول */
+function infoOpen(html){
+  let o = document.getElementById('infoOv');
+  if(!o){
+    o = document.createElement('div');
+    o.id = 'infoOv';
+    o.style.cssText = 'position:fixed;inset:0;z-index:80;background:rgba(15,23,42,.45);display:flex;align-items:flex-end;justify-content:center';
+    o.addEventListener('click', e => { if(e.target === o) infoClose(); });
+    document.body.appendChild(o);
+  }
+  o.innerHTML = `<div style="background:#fff;width:100%;max-width:520px;max-height:88vh;overflow:auto;border-radius:22px 22px 0 0;padding:18px 20px calc(20px + env(safe-area-inset-bottom,0px));box-sizing:border-box">${html}</div>`;
+  o.style.display = 'flex';
+  if(!OV.includes('info')) pushOv('info');
+}
+function infoHide(){ const o = document.getElementById('infoOv'); if(o) o.style.display = 'none'; }
+function infoClose(){ infoHide(); if(OV.includes('info')) popOv('info'); }
+function infoHead(title){
+  return `<div class="sh-h"><span>${title}</span><button class="ic" data-a="infoClose" aria-label="بستن">${ICON.close}</button></div>`;
+}
+function infoMenu(){
+  infoOpen(infoHead('گزینه‌ها') + `
+    <div class="opt-list">
+      <button class="opt" data-a="infoAbout"><span>درباره نویسنده</span></button>
+      <a class="opt" href="mailto:${INFO_MAIL}"><span>ایمیل پشتیبان</span></a>
+      <a class="opt" href="https://wa.me/${INFO_WA}"><span>واتساپ پشتیبان</span></a>
+      <button class="opt" data-a="infoApp"><span>درباره برنامه</span></button>
+    </div>`);
+}
+function infoAbout(){
+  infoOpen(infoHead('درباره نویسنده') + `
+    <div class="info-body">
+      <h3 class="info-h">جان محمد دین دوست</h3>
+      <p class="info-p">جان محمد دین دوست، نویسنده و طراح این برنامه، با علاقه به تکنولوژی، نوآوری و ساده‌سازی امور روزمره، اقدام به طراحی و توسعه این سیستم حسابداری آنلاین نموده است.</p>
+      <p class="info-p">دیدگاه او این است که تکنولوژی باید زندگی و کار مردم را آسان‌تر کند و امکاناتی را در اختیار آنان قرار دهد که باعث صرفه‌جویی در وقت، نظم بیشتر و دسترسی آسان‌تر به اطلاعات شود.</p>
+      <p class="info-p">این برنامه حاصل تلاش، خلاقیت و علاقه به ساخت ابزاری کاربردی برای مدیریت بهتر امور مالی است.</p>
+    </div>`);
+}
+function infoApp(){
+  const feats = [
+    ['۱. مدیریت طرف‌حساب‌ها و مشتریان', 'امکان ثبت، ویرایش، جستجو و مدیریت طرف‌حساب‌ها و مشتریان در یک محیط منظم و ساده.'],
+    ['۲. ثبت تصاویر مشتریان', 'برای هر مشتری می‌توان عکس جداگانه اضافه کرد تا شناسایی و مدیریت مشتریان آسان‌تر شود.'],
+    ['۳. پشتیبانی از دو واحد پولی', 'امکان ثبت و مدیریت حساب‌ها با دو واحد پولی تومان و افغانی، متناسب با نیاز کاربر.'],
+    ['۴. مشاهده آنلاین صورت‌حساب توسط مشتری', 'مشتری برای اطلاع از وضعیت حساب خود نیازی به تماس یا مراجعه به حسابدار ندارد. با شماره موبایل و کد چهار رقمی اختصاصی خود، صورت‌حساب و تراکنش‌های خودش را از گوشی ببیند.'],
+    ['۵. تعیین رمز چهار رقمی برای مشتریان', 'حسابدار می‌تواند برای هر مشتری رمز چهار رقمی جداگانه تعیین کند تا دسترسی به صورت‌حساب آنلاین با اطلاعات ورود اختصاصی انجام شود.'],
+    ['۶. صفحه اختصاصی دخل‌وخرج', 'امکان ثبت و بررسی درآمدها و هزینه‌ها در یک بخش جداگانه برای مدیریت بهتر امور مالی.'],
+    ['۷. جستجوی پیشرفته تراکنش‌ها', 'امکان جستجوی تراکنش‌ها براساس شرح و توضیحات ثبت‌شده، برای پیدا کردن سریع اطلاعات موردنظر.'],
+    ['۸. فیلتر و دسته‌بندی تراکنش‌ها', 'با استفاده از فیلترهای مختلف می‌توان تراکنش‌ها را منظم کرد و موارد موردنظر را سریع‌تر پیدا و بررسی کرد.'],
+    ['۹. ذخیره‌سازی آنلاین اطلاعات', 'اطلاعات حسابداری به‌صورت آنلاین ذخیره می‌شوند تا کاربر بتواند از طریق اتصال به اینترنت به اطلاعات خود دسترسی داشته باشد.'],
+    ['۱۰. امکانات کاربردی دیگر', 'برنامه امکانات متنوع دیگری برای مدیریت بهتر حساب‌ها، ثبت معاملات، پیگیری بدهی‌ها و طلب‌ها و دسترسی آسان به اطلاعات مالی فراهم کرده است.']
+  ].map(([t, d]) => `<h4 class="info-h4">${t}</h4><p class="info-p">${d}</p>`).join('');
+  infoOpen(infoHead('درباره برنامه') + `
+    <div class="info-body">
+      <h3 class="info-h">معرفی برنامه حسابداری آنلاین</h3>
+      <p class="info-sub">حسابداری هوشمند، دقیق و همیشه در دسترس</p>
+      <p class="info-p">این برنامه یک سیستم حسابداری آنلاین و پیشرفته است که با هدف ساده‌سازی امور مالی، مدیریت حساب مشتریان و ثبت دقیق دخل‌وخرج طراحی شده است.</p>
+      <p class="info-p">در دنیای امروز که سرعت و دسترسی آسان به اطلاعات اهمیت زیادی دارد، این برنامه تلاش می‌کند تا مدیریت حساب‌ها را آسان‌تر، منظم‌تر و شفاف‌تر سازد؛ به‌گونه‌ای که حسابدار و مشتری بتوانند در هر زمان و از هر مکان به اطلاعات موردنیاز خود دسترسی داشته باشند.</p>
+      <h3 class="info-h">امکانات و قابلیت‌های برنامه</h3>
+      ${feats}
+      <h3 class="info-h">هدف و دیدگاه سازنده برنامه</h3>
+      <p class="info-p">هدف از طراحی این برنامه، ایجاد یک محیط حسابداری ساده، دقیق و قابل‌اعتماد است تا کاربران بتوانند بدون پیچیدگی‌های سیستم‌های حسابداری سنتی، امور مالی خود را مدیریت کنند.</p>
+      <p class="info-p">یکی از اهداف مهم این برنامه، ایجاد ارتباط آسان‌تر و شفاف‌تر میان حسابدار و مشتری است؛ به‌طوری‌که مشتری بتواند بدون نیاز به پرس‌وجو از حسابدار، در هر زمان از وضعیت حساب خود آگاه شود.</p>
+    </div>`);
+}
 function renderLock(){
   const el = document.getElementById('lock');
   if(!LK.locked){ el.classList.add('hidden'); el.innerHTML = ''; return; }
@@ -1464,12 +1730,13 @@ function renderLock(){
     const ARROW = '<svg viewBox="0 0 24 24"><path d="M20 12H4M10 6l-6 6 6 6"/></svg>';
     el.innerHTML = `
     <div class="su-wrap">
+      <div style="align-self:stretch;display:flex;justify-content:flex-start;margin:-8px 0 0"><button class="ic dots" data-a="infoMenu" aria-label="گزینه‌ها" style="font-size:26px">⋮</button></div>
       <div class="lk-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/></svg></div>
       <h1 class="su-h">${heads[0]}</h1>
       <p class="su-p">${heads[1]}</p>
       ${M !== 'newpass' ? `<div class="su-fld"><label for="au-mail">ایمیل</label><input id="au-mail" class="ltr" type="email" inputmode="email" autocomplete="email" value="${esc(F.mail)}"></div>` : ''}
-      <div class="su-fld"><label for="au-pass">رمز عبور</label><input id="au-pass" class="ltr" type="password" autocomplete="${M === 'login' ? 'current-password' : 'new-password'}" value="${esc(F.pass)}"></div>
-      ${M !== 'login' ? `<div class="su-fld"><label for="au-pass2">تکرار رمز عبور</label><input id="au-pass2" class="ltr" type="password" autocomplete="new-password" value="${esc(F.pass2)}"></div>` : ''}
+      <div class="su-fld"><label for="au-pass">رمز عبور</label><div style="position:relative"><input id="au-pass" class="ltr" type="password" style="padding-right:44px" autocomplete="${M === 'login' ? 'current-password' : 'new-password'}" value="${esc(F.pass)}"><button type="button" aria-label="نمایش رمز" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:0;padding:6px;margin:0;width:auto;height:auto;min-height:0;cursor:pointer;color:#64748b;line-height:0" onclick="pwToggle(this)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+      ${M !== 'login' ? `<div class="su-fld"><label for="au-pass2">تکرار رمز عبور</label><div style="position:relative"><input id="au-pass2" class="ltr" type="password" style="padding-right:44px" autocomplete="new-password" value="${esc(F.pass2)}"><button type="button" aria-label="نمایش رمز" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:0;padding:6px;margin:0;width:auto;height:auto;min-height:0;cursor:pointer;color:#64748b;line-height:0" onclick="pwToggle(this)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>` : ''}
       <div class="lk-msg ${LK.kind || ''}" style="margin:0;min-height:20px">${esc(LK.err)}</div>
       <button class="su-btn" data-a="${M === 'newpass' ? 'passSave' : 'authLogin'}">${M === 'newpass' ? 'ذخیره رمز عبور' : 'ورود'}${ARROW}</button>
       
@@ -1523,7 +1790,8 @@ async function lkOk(){
   if(LK.buf.length < max){ LK.err = `رمز ${fa(max)} رقمی را کامل کنید.`; renderLock(); return; }
   if(LK.mode === 'unlock'){
     if(LK.buf === S.pin){
-      if(cloudUser && cloudReady) return lkUnlock();
+      if(cloudUser){ lkUnlock(); refreshCloudQuiet(); return; }
+      if(S.loggedIn && (!supabaseClient || !navigator.onLine)){ lkUnlock(); return; }
       LK.mode = 'login'; LK.f.mail = S.email || ''; LK.f.pass = ''; LK.buf = '';
       LK.err = 'نشست حساب ابری پایان یافته است. با ایمیل و رمز حساب وارد شوید.';
       renderLock(); return;
@@ -1544,6 +1812,7 @@ async function lkOk(){
       const synced = await cloudSyncNow();
       if(!synced){ LK.err = 'حساب تأیید شد، اما ذخیره اولیه اطلاعات انجام نشد. تنظیمات دیتابیس را بررسی کنید.'; renderLock(); return; }
       LK.f = { mail:S.email, pass:'', pass2:'' };
+      resetToList();
       return lkUnlock();
     }
     try{ await cloudLoad(); cloudReady = true; }
@@ -1587,6 +1856,16 @@ function readF(){
   LK.f = { mail: val('au-mail').trim() || LK.f.mail, pass: val('au-pass'), pass2: val('au-pass2') };
   if(!document.getElementById('au-mail')) LK.f.mail = LK.f.mail;
 }
+function pwToggle(btn){
+  const inp = btn.parentElement.querySelector('input');
+  if(!inp) return;
+  const show = inp.type === 'password';
+  inp.type = show ? 'text' : 'password';
+  btn.setAttribute('aria-label', show ? 'پنهان کردن رمز' : 'نمایش رمز');
+  btn.innerHTML = show
+    ? '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/><path d="M3 3l18 18"/></svg>'
+    : '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+}
 function authErr(msg){ lkSay(msg, ''); }
 async function authLogin(){
   readF();
@@ -1614,6 +1893,7 @@ async function authLogin(){
   await new Promise(r => setTimeout(r, 1000));
   LK.err = ''; LK.kind = '';
   if(LK.pinReset){ LK.pinReset = false; delete S.pin; save(); }
+  resetToList();
   if(S.pin){ LK.locked = true; LK.mode = 'unlock'; renderLock(); render(); }
   else lkUnlock();
 }
@@ -1650,6 +1930,7 @@ async function authSignup(){ return authErr('ثبت‌نام عمومی بسته
     const synced = await cloudSyncNow();
     if(!synced) return authErr('حساب ساخته شد، اما ذخیره اطلاعات انجام نشد. سیاست‌های دیتابیس را بررسی کنید.');
     LK.f = { mail:S.email, pass:'', pass2:'' };
+    resetToList();
     return lkUnlock();
   }
   LK.pend = { mail, localCopy }; LK.purpose = 'signup'; LK.mode = 'verify'; LK.buf = '';
@@ -1679,6 +1960,7 @@ async function passSave(){
   S.email = cloudUser?.email || LK.f.mail; S.loggedIn = true;
   LK.f.pass = ''; LK.f.pass2 = ''; LK.err = '';
   LK.recoveryVerified = false; recClear();
+  resetToList();
   lkUnlock();
 }
 async function authLogout(){
@@ -1830,9 +2112,9 @@ const SHEETS = {
 
       </div>`;
   },
-  confirmDel(act, name, p, c){
+  confirmDel(act, name, p, c, t){
     const isParty = act === 'party' || act === 'editParty';
-    const label = act === 'txs' ? 'حذف همه تراکنش‌ها' : act === 'party' ? 'حذف طرف حساب' : act === 'editParty' ? 'ادامه ویرایش' : 'حذف مشتری';
+    const label = act === 'tx' ? 'حذف تراکنش' : act === 'ledger' ? 'حذف' : act === 'ledgerAll' ? 'حذف همه تراکنش‌ها' : act === 'txs' ? 'حذف همه تراکنش‌ها' : act === 'party' ? 'حذف طرف حساب' : act === 'editParty' ? 'ادامه ویرایش' : 'حذف مشتری';
     const want = act === 'editParty' ? name : 'حذف';
     const hint = act === 'editParty'
       ? `برای ادامه، ${isParty ? 'اسم طرف حساب' : 'اسم مشتری'} را دقیقاً بنویسید:<br><b>${esc(name)}</b>`
@@ -1840,7 +2122,7 @@ const SHEETS = {
     return sheetHead(act === 'editParty' ? 'تأیید ویرایش' : 'تأیید حذف') + `
       <p class="hint">${hint}</p>
       <input id="del-name" data-exp="${esc(want)}" autocomplete="off">
-      <button class="btn danger" id="del-ok" disabled data-a="doDel" data-act="${act}" data-p="${p.id}" data-c="${c ? c.id : ''}">${label}</button>`;
+      <button class="btn danger" id="del-ok" disabled data-a="doDel" data-act="${act}" data-p="${p ? p.id : ''}" data-c="${c ? c.id : ''}" data-t="${t ? esc(t.id) : ''}">${label}</button>`;
   },
   partyAdd(){
     return sheetHead('افزودن طرف حساب') + `
@@ -1900,7 +2182,7 @@ const SHEETS = {
       <input type="hidden" id="f-hh" value="${hh}">
       <input type="hidden" id="f-mm" value="${mm}">
       <button class="btn pri-btn" data-a="saveTx" data-p="${p.id}" data-c="${c.id}" ${t ? `data-t="${t.id}"` : ''}>${editing ? 'ثبت ویرایش' : 'ثبت تراکنش'}</button>
-      ${editing ? `<button class="btn danger" data-a="delTx" data-p="${p.id}" data-c="${c.id}" data-t="${t.id}">حذف این تراکنش</button>` : ''}`;
+      ${editing ? `<button class="btn danger" data-a="askDel" data-act="tx" data-p="${p.id}" data-c="${c.id}" data-t="${t.id}">حذف این تراکنش</button>` : ''}`;
   }
 };
 
@@ -2052,7 +2334,401 @@ async function phoneTakenElsewhere(ph){
   }catch(e){ console.error(e); return false; }
 }
 /* ---------- customer portal (read-only, code only) ---------- */
-let PORTAL = { code:'', err:'', busy:false, data:null };
+let PORTAL = { code:'', phone:'', err:'', busy:false, data:null };
+let LGBUSY = false;
+let LGF = 'all';   /* ledger filter: all | out | in */
+let LGQ = '';      /* ledger search text */
+let LGFR = null, LGTO = null;   /* ledger date range {y,m,d} */
+function lgKey(o){ return o ? o.y * 10000 + o.m * 100 + o.d : null; }
+function ledgerRows(L){
+  const q = LGQ.trim().toLowerCase();
+  const fr = lgKey(LGFR), to = lgKey(LGTO);
+  return L.filter(x => {
+    if(LGF !== 'all' && x.type !== LGF) return false;
+    if(q && !String(x.d || '').toLowerCase().includes(q)) return false;
+    const k = x.y * 10000 + x.m * 100 + x.dd;
+    if(fr !== null && k < fr) return false;
+    if(to !== null && k > to) return false;
+    return true;
+  });
+}
+function lgFilterHTML(){
+  const lbl = o => o ? jStr(o.y, o.m, o.d) : 'انتخاب کنید';
+  return sheetHead('فیلتر دخل و خرج') + `
+      <label>از تاریخ</label>
+      <button type="button" class="dbtn" data-a="lgDate" data-v="from"><span id="lgf-from-t">${lbl(LGFR)}</span><span class="cal-ic">${ICON.cal}</span></button>
+      <label>تا تاریخ</label>
+      <button type="button" class="dbtn" data-a="lgDate" data-v="to"><span id="lgf-to-t">${lbl(LGTO)}</span><span class="cal-ic">${ICON.cal}</span></button>
+      <button type="button" class="btn pri-btn" data-a="lgFilterApply">تایید</button>
+      <button type="button" class="btn" style="background:var(--soft);color:var(--deep)" data-a="lgFilterClear">پاک کردن فیلتر</button>`;
+}
+function lgShareHTML(){
+  return sheetHead('اشتراک گذاری') + `
+      <div class="opt-list">
+        <button class="opt" data-a="lgShareAs" data-v="pdf"><span>اشتراک PDF</span></button>
+        <button class="opt" data-a="lgShareAs" data-v="img"><span>اشتراک به شکل عکس</span></button>
+        <button class="opt" data-a="lgShareAs" data-v="text"><span>خلاصه متنی</span></button>
+      </div>`;
+}
+function lgRowsForShare(){
+  const L = (S.ledger || []).slice().sort((x, y) => (y.ts || 0) - (x.ts || 0));
+  return ledgerRows(L);
+}
+function lgSums(rows){
+  const inc = rows.filter(x => x.type === 'in').reduce((s, x) => s + x.a, 0);
+  const exp = rows.filter(x => x.type === 'out').reduce((s, x) => s + x.a, 0);
+  return { inc, exp, rest: inc - exp };
+}
+function lgWhen(x){ return jStr(x.y, x.m, x.dd) + (x.hh != null ? ' ' + clockText(x.hh, x.mm || 0) : ''); }
+function lgSummaryText(rows){
+  const s = lgSums(rows);
+  const t = today();
+  return `دخل: ${money(s.inc)}\nخرج: ${money(s.exp)}\n${s.rest < 0 ? 'کسر' : 'موجودی'}: ${money(Math.abs(s.rest))}\nتاریخ: ${latinDate(t.y, t.m, t.d)}`;
+}
+async function lgText(rows, onReady){
+  const text = lgSummaryText(rows);
+  if(onReady) onReady();
+  if(navigator.share){ try{ await navigator.share({ text }); return; }catch(e){ return; } }
+  try{ await navigator.clipboard.writeText(text); alert('متن خلاصه کپی شد.'); }
+  catch(e){ alert(text); }
+}
+function lgInvHTML(rows){
+  const s = lgSums(rows);
+  const t = today();
+  const rc = s.rest < 0 ? '#c0392b' : s.rest > 0 ? '#1e7a4c' : '#333';
+  const rl = s.rest < 0 ? 'کسر' : s.rest > 0 ? 'موجودی' : '';
+  const trs = rows.map((x, i) => `<tr>
+      <td>${i + 1}</td>
+      <td class="num">${Math.abs(x.a).toLocaleString('en-US')} ${curLabel()}</td>
+      <td style="color:${x.type === 'in' ? '#1e7a4c' : '#c0392b'}">${x.type === 'in' ? 'دخل' : 'خرج'}</td>
+      <td>${esc(lgWhen(x))}</td>
+      <td class="desc">${esc(x.d || 'بدون شرح')}</td>
+    </tr>`).join('');
+  return `<!DOCTYPE html><html dir="rtl" lang="fa"><head><meta charset="utf-8"><title>صورت دخل و خرج</title>
+  <style>
+    body{font-family:Vazirmatn,Tahoma,sans-serif;margin:0;padding:28px;color:#333;font-size:13px}
+    .name{text-align:right;font-size:14px;color:#555;padding-bottom:12px;border-bottom:1px solid #ddd}
+    .name b{color:#222;font-size:15px}
+    .sum{display:flex;justify-content:space-between;text-align:center;margin:18px 0 22px}
+    .sum span{display:block;color:#555;font-size:13px}
+    .sum b{display:block;margin-top:6px;font-size:15px;direction:ltr}
+    .sum small{font-size:12px;font-weight:400}
+    h3{font-size:15px;margin:0 0 10px;text-align:right}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    thead th{background:#4f5a68;color:#fff;padding:9px 6px;font-weight:700}
+    td{border:1px solid #e1e1e1;padding:9px 6px;text-align:center}
+    td.desc{text-align:right;width:40%;white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere;line-height:1.7}
+    tr{page-break-inside:avoid}
+    td.num{direction:ltr;white-space:nowrap}
+    .foot{margin-top:28px;border-top:1px solid #ddd;padding-top:10px;text-align:right;color:#555;font-size:12px;line-height:1.9}
+    .foot b{color:#222;font-size:13px;direction:ltr;display:inline-block}
+  </style></head><body>
+  <div class="name">عنوان: <b>صورت دخل و خرج</b></div>
+  <div class="sum">
+    <div><span>مجموع دخل</span><b style="color:#1e7a4c">${money(s.inc)}</b></div>
+    <div><span>مجموع خرج</span><b style="color:#c0392b">${money(s.exp)}</b></div>
+    <div><span>مانده</span><b style="color:${rc}">${money(Math.abs(s.rest))} <small>${rl ? '(' + rl + ')' : ''}</small></b></div>
+  </div>
+  <h3>لیست تراکنش‌ها</h3>
+  <table>
+    <thead><tr><th>شماره</th><th>مبلغ</th><th>نوع</th><th>تاریخ</th><th>توضیح</th></tr></thead>
+    <tbody>${trs || '<tr><td colspan="5">تراکنشی ثبت نشده</td></tr>'}</tbody>
+  </table>
+  <div class="foot">تاریخ تولید گزارش<br><b>${latinDate(t.y, t.m, t.d)}</b><br>ساخته شده با حساب دفتری</div>
+  </body></html>`;
+}
+function lgPdf(rows, onReady){
+  const f = document.createElement('iframe');
+  f.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0';
+  document.body.appendChild(f);
+  const d = f.contentWindow.document;
+  d.open(); d.write(lgInvHTML(rows)); d.close();
+  setTimeout(() => {
+    if(onReady) onReady();
+    try{ f.contentWindow.focus(); f.contentWindow.print(); }
+    catch(e){ alert('ذخیره PDF در این مرورگر پشتیبانی نمی‌شود.'); }
+    setTimeout(() => f.remove(), 1500);
+  }, 300);
+}
+async function lgImg(rows, onReady){
+  const s = lgSums(rows);
+  const font = 'Vazirmatn, Tahoma, sans-serif';
+  try{ await document.fonts.load('bold 22px Vazirmatn'); await document.fonts.load('14px Vazirmatn'); }catch(e){}
+  const W = 800, RH = 42, HH = 40, yH = 160;
+  const H = yH + HH + Math.max(1, rows.length) * RH + 80;
+  const Q = 4;
+  const cv = document.createElement('canvas');
+  cv.width = W * Q; cv.height = H * Q;
+  const x = cv.getContext('2d');
+  x.scale(Q, Q);
+  x.fillStyle = '#ffffff'; x.fillRect(0, 0, W, H);
+  x.textBaseline = 'middle';
+
+  x.textAlign = 'right'; x.fillStyle = '#1f2937';
+  x.font = `bold 22px ${font}`; x.fillText('صورت دخل و خرج', W - 40, 40);
+  x.fillStyle = '#dfe3ea'; x.fillRect(40, 64, W - 80, 1.5);
+
+  const SC = { inc: W - 130, exp: W - 400, rest: W - 660 };
+  x.textAlign = 'center';
+  x.font = `bold 14px ${font}`; x.fillStyle = '#374151';
+  x.fillText('مجموع دخل', SC.inc, 100);
+  x.fillText('مجموع خرج', SC.exp, 100);
+  x.fillText(s.rest < 0 ? 'کسر' : 'موجودی', SC.rest, 100);
+  x.font = `bold 17px ${font}`;
+  x.fillStyle = '#1e7a4c'; x.fillText(money(s.inc), SC.inc, 130);
+  x.fillStyle = '#c0392b'; x.fillText(money(s.exp), SC.exp, 130);
+  x.fillStyle = s.rest < 0 ? '#c0392b' : '#1e7a4c'; x.fillText(money(Math.abs(s.rest)), SC.rest, 130);
+
+  const widths = [260, 170, 70, 160, 60];
+  const heads = ['توضیح', 'تاریخ', 'نوع', 'مبلغ', 'شماره'];
+  const fit = (text, maxW, size) => {
+    x.font = `${size}px ${font}`;
+    let t = String(text);
+    while(t.length > 1 && x.measureText(t).width > maxW - 10) t = t.slice(0, -1);
+    return t.length < String(text).length ? t.slice(0, -1) + '…' : t;
+  };
+  x.fillStyle = '#4f5a68'; x.fillRect(40, yH, W - 80, HH);
+  x.fillStyle = '#ffffff'; x.font = `bold 15px ${font}`; x.textAlign = 'center';
+  let cx = W - 40;
+  const cells = widths.map((w, i) => { const c = { cx: cx - w / 2, w }; cx -= w; return c; });
+  heads.forEach((h, i) => x.fillText(h, cells[i].cx, yH + HH / 2));
+
+  x.strokeStyle = '#e1e1e1'; x.lineWidth = 1;
+  if(!rows.length){
+    x.fillStyle = '#555'; x.font = `14px ${font}`; x.textAlign = 'center';
+    x.fillText('تراکنشی ثبت نشده', W / 2, yH + HH + RH / 2);
+  }
+  rows.forEach((r, i) => {
+    const y = yH + HH + i * RH;
+    x.fillStyle = '#1f2937';
+    x.strokeRect(40, y, W - 80, RH);
+    x.textAlign = 'center';
+    x.font = `14px ${font}`;
+    x.fillText(String(i + 1), cells[4].cx, y + RH / 2);
+    x.fillText(fit(`${Math.abs(r.a).toLocaleString('en-US')} ${curLabel()}`, cells[3].w, 14), cells[3].cx, y + RH / 2);
+    x.fillStyle = r.type === 'in' ? '#1e7a4c' : '#c0392b';
+    x.fillText(r.type === 'in' ? 'دخل' : 'خرج', cells[2].cx, y + RH / 2);
+    x.fillStyle = '#1f2937';
+    x.font = `13px ${font}`;
+    x.fillText(fit(lgWhen(r), cells[1].w, 13), cells[1].cx, y + RH / 2);
+    x.fillText(fit(r.d || 'بدون شرح', cells[0].w, 14), cells[0].cx, y + RH / 2);
+  });
+
+  const t = today();
+  const fy = yH + HH + Math.max(1, rows.length) * RH + 36;
+  x.textAlign = 'right'; x.fillStyle = '#555'; x.font = `12px ${font}`;
+  x.fillText(`تاریخ تولید گزارش: ${latinDate(t.y, t.m, t.d)}`, W - 40, fy);
+  x.fillText('ساخته شده با حساب دفتری', W - 40, fy + 20);
+
+  const blob = await new Promise(res => cv.toBlob(res, 'image/png'));
+  if(!blob) return;
+  const file = new File([blob], 'dakhl-kharj.png', { type: 'image/png' });
+  if(onReady) onReady();
+  if(navigator.canShare && navigator.canShare({ files: [file] })){
+    try{ await navigator.share({ files: [file], title: 'صورت دخل و خرج' }); return; }catch(e){ return; }
+  }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'dakhl-kharj.png'; a.click();
+}
+
+let LG = { type:'in', amt:'', desc:'', date:'', hh:'', mm:'', err:'', editId:null, sel:null };
+function ledgerCapture(){
+  const g = id => document.getElementById(id);
+  if(g('f-amount')) LG.amt = latin(g('f-amount').value).replace(/\D/g, '');
+  if(g('f-desc')) LG.desc = g('f-desc').value;
+  if(g('f-date')) LG.date = g('f-date').value;
+  if(g('f-hh')) LG.hh = g('f-hh').value;
+  if(g('f-mm')) LG.mm = g('f-mm').value;
+}
+function ledgerFormHTML(){
+  const ampm = LG.hh === '' || LG.hh == null ? '' : LG.hh;
+  const amtShow = LG.amt ? Number(LG.amt).toLocaleString('en-US') : '';
+  return sheetHead(LG.editId ? 'ویرایش دخل و خرج' : 'ثبت دخل و خرج') + `
+      <label>نوع</label>
+      <div class="tbtns">
+        <button type="button" class="tbtn g ${LG.type === 'in' ? 'on' : ''}" data-a="ledgerType" data-v="in">دخل</button>
+        <button type="button" class="tbtn r ${LG.type === 'out' ? 'on' : ''}" data-a="ledgerType" data-v="out">خرج</button>
+      </div>
+      <label for="f-amount">مبلغ (${curLabel()})</label>
+      <input id="f-amount" class="money" inputmode="numeric" placeholder="0" value="${amtShow}">
+      <label for="f-desc">شرح</label>
+      <input id="f-desc" maxlength="120" value="${esc(LG.desc)}">
+      <label>تاریخ و ساعت</label>
+      <div class="dt-row">
+        <button type="button" class="dbtn" data-a="calOpen"><span id="dtxt">${esc(LG.date)}</span><span class="cal-ic">${ICON.cal}</span></button>
+        <button type="button" class="dbtn" data-a="timeOpen"><span id="ttxt">${ampm === '' ? 'انتخاب ساعت' : clockText(ampm, LG.mm === '' || LG.mm == null ? 0 : LG.mm)}</span><span class="cal-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span></button>
+      </div>
+      <input type="hidden" id="f-date" value="${esc(LG.date)}">
+      <input type="hidden" id="f-hh" value="${ampm}">
+      <input type="hidden" id="f-mm" value="${LG.mm == null ? '' : LG.mm}">
+      <p class="hint" id="lg-err" style="color:var(--neg);margin:4px 2px"></p>
+      <button class="btn pri-btn" data-a="ledgerSave">${LG.editId ? 'ثبت ویرایش' : 'ثبت'}</button>`;
+}
+function ledgerFresh(){ return { type:'in', amt:'', desc:'', date:todayStr(), hh:new Date().getHours(), mm:new Date().getMinutes(), err:'', editId:null, sel:null }; }
+/* ---------- آخرین بروزرسانی سرور (نگه‌دارندهٔ Supabase) ---------- */
+let KA = { t:null, state:'idle' };   /* idle | loading | ok | none | err */
+function kaFmt(iso){
+  try{
+    const d = new Date(iso);
+    const dt = new Intl.DateTimeFormat('fa-IR-u-ca-persian', { year:'numeric', month:'long', day:'numeric' }).format(d);
+    const tm = new Intl.DateTimeFormat('fa-IR', { hour:'2-digit', minute:'2-digit', hour12:false }).format(d);
+    return dt + '، ساعت ' + tm;
+  }catch(e){ return String(iso); }
+}
+function kaText(){
+  if(KA.state === 'loading' || KA.state === 'idle') return 'در حال خواندن...';
+  if(KA.state === 'err') return 'خوانده نشد';
+  if(KA.state === 'none' || !KA.t) return 'هنوز بروز نشده';
+  return kaFmt(KA.t);
+}
+function kaPaint(){
+  const el = document.getElementById('ka-v'); if(!el) return;
+  el.textContent = kaText();
+  el.classList.remove('ok','old');
+  if(KA.state === 'ok' && KA.t){
+    const age = Date.now() - new Date(KA.t).getTime();
+    el.classList.add(age > 3 * 86400000 ? 'old' : 'ok');
+  }
+}
+async function kaLoad(){
+  if(!supabaseClient || !cloudUser){ KA.state = 'err'; kaPaint(); return; }
+  KA.state = 'loading'; kaPaint();
+  try{
+    const { data, error } = await supabaseClient.from('keepalive').select('last_ping').eq('id', 1).maybeSingle();
+    if(error) throw error;
+    if(data && data.last_ping){ KA.t = data.last_ping; KA.state = 'ok'; }
+    else{ KA.t = null; KA.state = 'none'; }
+  }catch(e){ console.warn('keepalive read:', e); KA.state = 'none'; }
+  if(V.view === 'settings') kaPaint();
+}
+const CB_MONTHS = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
+const PORTAL_PHONE_KEY = 'hisab_portal_phone';
+function fitMiniNames(){
+  document.querySelectorAll('.mini-name').forEach(el => {
+    el.style.fontSize = '';
+    let fs = parseFloat(getComputedStyle(el).fontSize) || 14;
+    while(el.scrollWidth > el.clientWidth + 1 && fs > 8){ fs -= 0.5; el.style.fontSize = fs + 'px'; }
+  });
+}
+new MutationObserver(() => fitMiniNames()).observe(document, { childList: true, subtree: true });
+function portalOwnerView(){ return !!(S.loggedIn && cloudUser); }
+function savedPortalPhone(){ try{ return localStorage.getItem(PORTAL_PHONE_KEY) || ''; }catch(e){ return ''; } }
+function savePortalPhone(p){ try{ localStorage.setItem(PORTAL_PHONE_KEY, p); }catch(e){} }
+function clearPortalPhone(){ try{ localStorage.removeItem(PORTAL_PHONE_KEY); }catch(e){} }
+/* ---------- remembered customer session (this device only) ---------- */
+const PORTAL_REM_KEY = 'hisab_portal_rem';
+let PORTAL_SESS = null;   /* {phone, code} while this customer is unlocked in this run */
+function loadRem(){ try{ return JSON.parse(localStorage.getItem(PORTAL_REM_KEY) || 'null'); }catch(e){ return null; } }
+function saveRem(r){ try{ localStorage.setItem(PORTAL_REM_KEY, JSON.stringify(r)); }catch(e){} }
+function clearRem(){ try{ localStorage.removeItem(PORTAL_REM_KEY); }catch(e){} }
+function pinHash(salt, code){
+  const str = salt + '|' + code;
+  let h = 2166136261;
+  for(let i = 0; i < str.length; i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+  return h.toString(16);
+}
+function pinStream(salt, pin, n){ const k = pinHash(salt, pin); let o = ''; while(o.length < n) o += k; return o.slice(0, n); }
+function pinEncode(code, salt, pin){
+  const k = pinStream(salt, pin, code.length); let o = '';
+  for(let i = 0; i < code.length; i++) o += (code.charCodeAt(i) ^ k.charCodeAt(i)).toString(16).padStart(4, '0');
+  return o;
+}
+function pinDecode(enc, salt, pin){
+  const n = Math.floor((enc || '').length / 4); const k = pinStream(salt, pin, n); let o = '';
+  for(let i = 0; i < n; i++) o += String.fromCharCode(parseInt(enc.substr(i * 4, 4), 16) ^ k.charCodeAt(i));
+  return o;
+}
+function portalPinOn(){ const r = loadRem(); return !!(r && r.mode === 'pin'); }
+function rememberPortal(phone, code, data){
+  PORTAL_SESS = { phone, code };
+  saveRem({ phone, mode:'auto', code, data: data || null });
+}
+function updRemData(data){ const r = loadRem(); if(r){ r.data = data; saveRem(r); } }
+async function portalFetch(phone, code){
+  if(!supabaseClient) return { err: 'اتصال برقرار نیست.' };
+  const { data, error } = await supabaseClient.rpc('customer_portal', { p_code: code, p_phone: phone });
+  if(error){
+    const m = String(error.message || '');
+    return { invalid: m.includes('invalid'), err: m.includes('locked') ? 'به‌دلیل تلاش‌های زیاد، ۱۵ دقیقه بعد دوباره امتحان کنید.'
+      : m.includes('invalid') ? 'شماره موبایل یا کد وارد شده درست نیست.' : 'ورود انجام نشد: ' + m };
+  }
+  return { data };
+}
+async function refreshRemembered(r){
+  const res = await portalFetch(r.phone, r.code);
+  if(res.data){ PORTAL.data = res.data; updRemData(res.data); renderPortal(); return; }
+  if(res.invalid){
+    clearRem(); PORTAL_SESS = null;
+    PORTAL = { code:'', phone: r.phone, err: res.err, busy:false, data:null, lock:null };
+    renderPortal();
+  }
+}
+function portalLogoutNow(){
+  const r = loadRem();
+  clearRem(); clearPortalPhone(); PORTAL_SESS = null;
+  PORTAL = { code:'', phone:'', err:'', busy:false, data:null, lock:null };
+  renderPortal();
+}
+function portalPinToggle(){
+  const r = loadRem(); if(!r) return;
+  if(r.mode === 'pin'){
+    if(!PORTAL_SESS){ portalLogoutNow(); return; }
+    saveRem({ phone: r.phone, mode:'auto', code: PORTAL_SESS.code, data: r.data || null });
+  } else {
+    const salt = Math.random().toString(36).slice(2, 10);
+    saveRem({ phone: r.phone, mode:'pin', salt, ph: pinHash(salt, r.code), data: r.data || null });
+  }
+  renderPortal();
+}
+function portalForgetPin(){
+  const r = loadRem();
+  PORTAL.lock = null; PORTAL.menu = false; PORTAL.setPin = false; PORTAL.data = null; PORTAL.err = '';
+  clearPortalPhone(); PORTAL.phone = ''; PORTAL.code = '';
+  renderPortal();
+}
+function ptForget(){
+  PORTAL.menu = false;
+  if(OV.includes('ptmenu')) popOv('ptmenu');
+  portalForgetPin();
+}
+function ptExit(){
+  PORTAL.menu = false; PORTAL.setPin = false;
+  if(OV.includes('ptmenu')) popOv('ptmenu');
+  portalLogoutNow();
+}
+function ptOffOk(){
+  const r = loadRem(); if(!r || r.mode !== 'pin') return;
+  const pin = latin(val('pt-offpin')).replace(/\D/g, '');
+  if(!/^[0-9]{4}$/.test(pin)){ PORTAL.err = 'پین کد باید چهار رقمی باشد.'; return renderPortal(); }
+  if(pinHash(r.salt, pin) !== r.ph){ PORTAL.err = 'پین کد وارد شده درست نیست.'; return renderPortal(); }
+  const code = pinDecode(r.enc, r.salt, pin);
+  PORTAL.verifyOff = false; PORTAL.menu = false; PORTAL.err = '';
+  if(OV.includes('ptmenu')) popOv('ptmenu');
+  if(!/^[0-9]{4}$/.test(code)){ portalForgetPin(); return; }
+  saveRem({ phone: r.phone, mode:'auto', code, data: r.data || null });
+  PORTAL.note = 'پین کد غیرفعال شد';
+  renderPortal();
+  refreshRemembered({ phone: r.phone, code });
+}
+function ptPinSave(){
+  const r = loadRem(); if(!r) return;
+  const code = latin(val('pt-newpin')).replace(/\D/g, '');
+  if(!/^[0-9]{4}$/.test(code)){ PORTAL.err = 'پین کود باید چهار رقمی باشد.'; return renderPortal(); }
+  const salt = Math.random().toString(36).slice(2, 10);
+  saveRem({ phone: r.phone, mode:'pin', salt, ph: pinHash(salt, code), enc: r.code ? pinEncode(r.code, salt, code) : '', data: r.data || null });
+  PORTAL.setPin = false; PORTAL.menu = false; PORTAL.err = ''; PORTAL.note = 'پین کود فعال شد';
+  if(OV.includes('ptmenu')) popOv('ptmenu');
+  renderPortal();
+}
+function portalPinOk(){
+  const r = loadRem(); if(!r || r.mode !== 'pin') return;
+  const code = latin(val('pt-pin')).replace(/\D/g, '');
+  if(!/^[0-9]{4}$/.test(code)){ PORTAL.err = 'کد ۴ رقمی را وارد کنید.'; return renderPortal(); }
+  if(pinHash(r.salt, code) !== r.ph){ PORTAL.err = 'کد وارد شده درست نیست.'; return renderPortal(); }
+  PORTAL = { code:'', phone: r.phone, err:'', busy:false, data: r.data || null, lock:null };
+  renderPortal();
+}
+
 function portalEl(){
   let el = document.getElementById('portal');
   if(!el){
@@ -2063,13 +2739,25 @@ function portalEl(){
   return el;
 }
 function closePortal(){
-  PORTAL = { code:'', err:'', busy:false, data:null };
+  PORTAL = { code:'', phone:'', err:'', busy:false, data:null };
   const el = document.getElementById('portal');
   if(el){ el.classList.add('hidden'); el.innerHTML = ''; }
 }
 function openPortal(){
-  PORTAL = { code:'', err:'', busy:false, data:null };
-  renderPortal();
+  PORTAL = { code:'', phone:'', err:'', busy:false, data:null, lock:null };
+  const r = loadRem();
+  if(r && r.mode === 'auto' && r.code){
+    PORTAL_SESS = { phone: r.phone, code: r.code };
+    PORTAL.phone = r.phone;
+    PORTAL.data = r.data || null;
+    renderPortal();
+    refreshRemembered(r);
+  } else if(r && r.mode === 'pin'){
+    PORTAL.lock = { phone: r.phone };
+    renderPortal();
+  } else {
+    renderPortal();
+  }
   if(!OV.includes('portal')) pushOv('portal');
 }
 function closePortalByUser(){
@@ -2086,13 +2774,73 @@ async function codeTakenElsewhere(ac){
 function renderPortal(){
   const el = portalEl();
   const LOCKSVG = '<svg viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10.5" rx="3"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></svg>';
+  if(PORTAL.setPin){
+    el.innerHTML = `
+      <div class="pt-wrap">
+        <div class="pt-top"><span class="sp"></span><h1>پین کد جدید</h1><button class="ic" data-a="ptSetBack" aria-label="برگشت">${ICON.back}</button></div>
+        <div class="fld"><span class="fi">${LOCKSVG}</span><div class="fw"><label for="pt-newpin">پین کد چهار رقمی</label><input id="pt-newpin" type="tel" dir="ltr" inputmode="numeric" pattern="[0-9]*" autocomplete="off" maxlength="4" oninput="this.value=latin(this.value).replace(/[^0-9]/g,'').slice(0,4)"></div></div>
+        <div class="hint" style="min-height:22px;color:var(--neg)">${esc(PORTAL.err)}</div>
+        <button class="bottom-btn" data-a="ptPinSave">${ICON.check}<span>ذخیره</span></button>
+      </div>`;
+    el.classList.remove('hidden');
+    return;
+  }
+  if(PORTAL.verifyOff){
+    el.innerHTML = `
+      <div class="pt-wrap">
+        <div class="pt-top"><span class="sp"></span><h2 class="pt-h-s">غیرفعال کردن پین کد</h2><button class="ic" data-a="ptVerBack" aria-label="برگشت">${ICON.back}</button></div>
+        <div class="fld"><span class="fi">${LOCKSVG}</span><div class="fw"><label for="pt-offpin">پین کد فعلی</label><input id="pt-offpin" type="tel" dir="ltr" inputmode="numeric" pattern="[0-9]*" autocomplete="off" maxlength="4" oninput="this.value=latin(this.value).replace(/[^0-9]/g,'').slice(0,4)"></div></div>
+        <div class="hint" style="min-height:22px;color:var(--neg)">${esc(PORTAL.err)}</div>
+        <button class="bottom-btn" data-a="ptOffOk">${ICON.check}<span>تایید</span></button>
+      </div>`;
+    el.classList.remove('hidden');
+    return;
+  }
+  if(PORTAL.askOut){
+    el.innerHTML = `
+      <div class="pt-wrap">
+        <div class="pt-top"><span class="sp"></span><h2 class="pt-h-s">خروج از حساب</h2><span class="sp"></span></div>
+        <p class="pt-q-s">آیا می‌خواهید از حساب خارج شوید؟</p>
+        <div style="display:flex;justify-content:center;margin-top:12px">
+          <button class="pt-sky pt-sky-s" style="width:auto;min-width:0;margin:0;padding:8px 22px;border-radius:12px;text-align:center" data-a="ptExit">تایید</button>
+        </div>
+      </div>`;
+    el.classList.remove('hidden');
+    return;
+  }
+  if(PORTAL.menu){
+    const on = portalPinOn();
+    el.innerHTML = `
+      <div class="pt-wrap">
+        <div class="pt-top"><span class="sp"></span><h1>گزینه‌ها</h1><button class="ic" data-a="ptMenuBack" aria-label="برگشت">${ICON.back}</button></div>
+        ${on
+          ? '<button class="pt-sky" data-a="ptVerifyOff">غیرفعال کردن پین کد</button><button class="pt-sky" data-a="ptForget">پین را فراموش کردم</button>'
+          : '<button class="pt-sky" data-a="ptPinOn">فعال کردن پین کد</button>'}
+        <button class="pt-sky" data-a="ptAskOut">خروج از حساب</button>
+      </div>`;
+    el.classList.remove('hidden');
+    return;
+  }
+  if(PORTAL.lock){
+    el.innerHTML = `
+      <div class="pt-wrap">
+        <div class="pt-top"><span class="sp"></span><h1>حساب مشتری</h1><span class="sp"></span></div>
+        <div class="fld"><span class="fi">${LOCKSVG}</span><div class="fw"><label for="pt-pin">کد ۴ رقمی</label><input id="pt-pin" type="tel" dir="ltr" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" maxlength="4" oninput="this.value=latin(this.value).replace(/[^0-9]/g,'').slice(0,4)"></div></div>
+        <div class="hint" style="min-height:22px;color:var(--neg)">${esc(PORTAL.err)}</div>
+        <button class="bottom-btn" data-a="portalPinOk">${ICON.check}<span>باز کردن</span></button>
+        <p style="text-align:center;margin-top:14px"><button class="pt-link" data-a="portalForgetPin">فراموشی پین</button></p>
+      </div>`;
+    el.classList.remove('hidden');
+    return;
+  }
   if(!PORTAL.data){
     el.innerHTML = `
       <div class="pt-wrap">
         <div class="pt-top"><span class="sp"></span><h1>حساب مشتری</h1><button class="ic" data-a="portalClose" aria-label="بستن">${ICON.close}</button></div>
-        <p class="hint">کد ۶ رقمی حساب خود را وارد کنید.</p>
+        <p class="hint">شماره موبایل و کد ۴ رقمی حساب خود را وارد کنید.</p>
         <div class="form-card" style="margin-top:12px">
-          <div class="fld"><span class="fi">${LOCKSVG}</span><div class="fw"><label for="pt-code">کد ۶ رقمی</label><input id="pt-code" inputmode="numeric" maxlength="6" value="${esc(PORTAL.code)}"></div></div>
+          <div class="fld"><span class="fi">${LOCKSVG}</span><div class="fw"><label for="pt-phone">شماره موبایل</label><input id="pt-phone" type="tel" dir="ltr" inputmode="numeric" pattern="[0-9]*" autocomplete="tel" maxlength="11" oninput="this.value=latin(this.value).replace(/[^0-9]/g,'').slice(0,11)" value="${esc(PORTAL.phone || savedPortalPhone() || '')}"></div></div>
+          <div class="fld"><span class="fi">${LOCKSVG}</span><div class="fw"><label for="pt-code">کد ۴ رقمی</label><input id="pt-code" type="tel" dir="ltr" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" maxlength="4" oninput="this.value=latin(this.value).replace(/[^0-9]/g,'').slice(0,4)" value="${esc(PORTAL.code)}"></div></div>
         </div>
         <div class="hint" style="min-height:22px;color:var(--neg)">${esc(PORTAL.err)}</div>
         <button class="bottom-btn" data-a="portalLogin">${ICON.check}<span>تأیید</span></button>
@@ -2104,24 +2852,25 @@ function renderPortal(){
     const bal = txs.reduce((s, t) => s + (Number(t.a) || 0), 0);
     const got = txs.filter(t => Number(t.a) > 0).reduce((s, t) => s + Number(t.a), 0);
     const paid = txs.filter(t => Number(t.a) < 0).reduce((s, t) => s - Number(t.a), 0);
-    const status = bal > 0 ? `بدهی ${nm}` : bal < 0 ? `طلب ${nm}` : 'تسویه';
+    const status = bal > 0 ? 'بدهکار است' : bal < 0 ? 'طلب دارد' : 'تسویه';
     const rows = txs.length
       ? txs.map(t => `
         <div class="card tx-card" style="cursor:default"><span class="nm tx-nm"><b>${esc(t.d || 'بدون شرح')}</b><small>${jStr(t.y, t.m, t.dd)}${t.hh != null ? ' · ' + clockText(Number(t.hh), Number(t.mm) || 0) : ''}</small></span><span class="bal ${balCls(Number(t.a) || 0)}">${money(Number(t.a) || 0)}</span></div>`).join('')
       : `<div class="empty">هنوز تراکنشی ثبت نشده.</div>`;
     el.innerHTML = `
       <div class="pt-wrap">
-        <div class="pt-top"><button class="ic" data-a="portalMenu" aria-label="گزینه‌ها"><span class="pt-dots">⋮</span></button><h1>${nm}</h1><button class="ic" data-a="portalClose" aria-label="بستن">${ICON.close}</button></div>
-        <div id="pt-menu" class="pt-menu hidden"><button class="pt-menu-b" data-a="portalLogout">خروج از حساب</button></div>
+        <div class="pt-top"><button class="ic" data-a="portalMenu" aria-label="گزینه‌ها"><span class="pt-dots">⋮</span></button><h1>${nm}</h1><button class="ic" data-a="portalClose" aria-label="برگشت">${ICON.back}</button></div>
+        
         <div class="pt-head">
           ${d.photo ? `<img class="pt-photo" src="${esc(d.photo)}" alt="">` : `<span class="pt-photo">${esc((d.name || '؟').charAt(0))}</span>`}
         </div>
+        ${PORTAL.note ? `<div class="hint" style="color:#0b4d2b;font-weight:700">${esc(PORTAL.note)}</div>` : ''}
         <section class="hero">
           <div class="lbl">صورت حساب: ${nm}</div>
-          <div class="net"><span>${num(bal)}</span><span>${curLabel()}</span><small style="color:${bal > 0 ? '#fca5a5' : bal < 0 ? '#86efac' : '#fff'};font-weight:700">${status}</small></div>
+          <div class="net" style="flex-wrap:wrap"><span>${num(bal)}</span><span>${curLabel()}</span><small style="display:block;flex-basis:100%;width:100%;text-align:right;background:none;border:0;padding:0;box-shadow:none;border-radius:0;color:${bal > 0 ? '#fca5a5' : bal < 0 ? '#86efac' : '#fff'};font-weight:700;font-size:16px;margin-top:6px">«${status}»</small></div>
           <div class="mini-row">
-            <div class="mini"><span>گرفت ${nm}</span><b>${money(got)}</b></div>
-            <div class="mini"><span>پرداخت ${nm}</span><b>${money(paid)}</b></div>
+            <div class="mini"><span class="mini-name" style="display:block;white-space:nowrap;overflow:hidden">گرفت: ${nm}</span><b>${money(got)}</b></div>
+            <div class="mini"><span class="mini-name" style="display:block;white-space:nowrap;overflow:hidden">پرداخت: ${nm}</span><b>${money(paid)}</b></div>
           </div>
         </section>
         <div class="sec-title">تراکنش‌ها</div>
@@ -2133,24 +2882,40 @@ function renderPortal(){
 }
 async function portalLogin(){
   if(PORTAL.busy) return;
+  const phone = latin(val('pt-phone')).replace(/\D/g, '');
   const code = latin(val('pt-code')).replace(/\D/g, '');
-  PORTAL.code = code;
-  if(code.length !== 6){ PORTAL.err = 'کد ۶ رقمی را وارد کنید.'; return renderPortal(); }
+  PORTAL.phone = phone; PORTAL.code = code;
+  if(phone.length < 10){ PORTAL.err = 'شماره موبایل را کامل وارد کنید.'; return renderPortal(); }
+  if(!/^[0-9]{4}$/.test(code)){ PORTAL.err = 'کد ۴ رقمی را وارد کنید.'; return renderPortal(); }
+  if(portalOwnerView()){
+    const hit = S.parties.flatMap(p => p.c.map(c => ({ c }))).find(x => x.c.ac === code && (x.c.ph || '').replace(/\D/g, '') === phone);
+    if(!hit){ PORTAL.err = 'شماره موبایل یا کد وارد شده درست نیست.'; PORTAL.code = ''; return renderPortal(); }
+    const c = hit.c;
+    PORTAL.data = { name: c.n || '', photo: c.pf || '', transactions: (c.tx || []).map(t => ({
+      d: t.d || '', a: Math.trunc(Number(t.a) || 0), y: Math.trunc(Number(t.y) || 0),
+      m: Math.trunc(Number(t.m) || 1), dd: Math.trunc(Number(t.dd) || 1),
+      ts: Math.trunc(Number(t.ts) || 0), hh: t.hh ?? null, mm: t.mm ?? null })) };
+    PORTAL.err = ''; PORTAL.code = '';
+    return renderPortal();
+  }
   if(!supabaseClient){ PORTAL.err = 'اتصال برقرار نیست. صفحه را تازه کنید.'; return renderPortal(); }
   PORTAL.busy = true; PORTAL.err = 'در حال بررسی...'; renderPortal();
-  const { data, error } = await supabaseClient.rpc('customer_portal', { p_code: code });
+  const { data, error } = await supabaseClient.rpc('customer_portal', { p_code: code, p_phone: phone });
   PORTAL.busy = false;
   if(error){
     const m = String(error.message || '');
     PORTAL.err = m.includes('locked') ? 'به‌دلیل تلاش‌های زیاد، ۱۵ دقیقه بعد دوباره امتحان کنید.'
-      : m.includes('invalid') ? 'کد وارد شده درست نیست.'
+      : m.includes('invalid') ? 'شماره موبایل یا کد وارد شده درست نیست.'
       : 'ورود انجام نشد: ' + m;
     PORTAL.code = '';
     return renderPortal();
   }
+  savePortalPhone(phone);
+  rememberPortal(phone, code, data);
   PORTAL.data = data; PORTAL.err = ''; PORTAL.code = '';
   renderPortal();
 }
+
 /* ---------- clock picker (analog, drag the hand) ---------- */
 let TCK = { h24:12, mi:0, mode:'hour', open:false };
 let TC_DRAG = false, TC_JUST = false;
@@ -2290,7 +3055,12 @@ document.addEventListener('click', async e => {
   if(e.target.id === 'tclk'){ if(!TC_JUST) closeTclk(); return; }
   if(e.target.id === 'ov'){ closeSheet(); return; }
   if(LPJUST){ LPJUST = false; return; }
-  if(LPSEL && !e.target.closest('.lp-acts, .p-acts')){ LPSEL = null; render(); return; }
+  if(Date.now() - TXEXIT < 350) return;
+  if(!e.target.closest('#ov, #cal, #tclk')){
+    if(LPSEL && LPSEL.kind === 'txmode' && !e.target.closest('.p-acts')){ endSel(true); return; }
+    if(LG.sel && V.view === 'ledger' && !e.target.closest('.lg-acts, .lg-more')) endSel();
+  }
+  if(LPSEL && LPSEL.kind !== 'txmode' && !e.target.closest('.lp-acts, .p-acts')){ LPSEL = null; render(); return; }
   const el = e.target.closest('[data-a]');
   if(!el) return;
   const a = el.dataset.a;
@@ -2301,6 +3071,95 @@ document.addEventListener('click', async e => {
   switch(a){
     case 'menu': goTo({view:'menu'}); break;
     case 'openSettings': SUI.curOpen = false; goTo({view:'settings'}); break;
+    case 'ledgerOpen': LG = { type:'in', amt:'', desc:'', date:todayStr(), hh:new Date().getHours(), mm:new Date().getMinutes(), err:'', editId:null, sel:null }; goTo({view:'ledger'}); break;
+    case 'ledgerMenu': goTo({view:'ledgerMenu'}); break;
+    case 'lgFilter': LGF = el.dataset.v; render(); break;
+    case 'ledgerDelAll': openSheet(SHEETS.confirmDel('ledgerAll', '', null, null, null)); break;
+    case 'lgFilterOpen': openSheet(lgFilterHTML()); break;
+    case 'lgDate': {
+      const o = el.dataset.v === 'from' ? LGFR : LGTO;
+      const dt = o || today();
+      if(!OV.includes('cal')) pushOv('cal');
+      CAL = { open:true, mode:'days', sel:{ y:dt.y, m:dt.m, d:dt.d }, vy:dt.y, vm:dt.m, tgt: el.dataset.v };
+      calRender(); break;
+    }
+    case 'lgFilterApply': closeSheet(); render(); break;
+    case 'lgFilterClear': LGFR = null; LGTO = null; closeSheet(); render(); break;
+    case 'ledgerShare': openSheet(lgShareHTML()); break;
+    case 'lgShareAs': {
+      const v = el.dataset.v, rows = lgRowsForShare();
+      el.classList.add('busy');
+      const ready = () => closeSheet();
+      try{
+        if(v === 'pdf') lgPdf(rows, ready);
+        else if(v === 'img') await lgImg(rows, ready);
+        else await lgText(rows, ready);
+      }catch(e){ alert('ساخت فایل ناموفق بود.'); }
+      finally{ if(v !== 'pdf' && el.isConnected) el.classList.remove('busy'); }
+      break;
+    }
+    case 'ledgerNew': LG = ledgerFresh(); openSheet(ledgerFormHTML()); break;
+    case 'ledgerType':
+      ledgerCapture(); LG.type = el.dataset.v; LG.err = '';
+      document.querySelectorAll('#sheet .tbtn').forEach(b => b.classList.toggle('on', b === el));
+      break;
+    case 'ledgerSave': {
+      ledgerCapture();
+      const amt = Math.trunc(Number(LG.amt) || 0);
+      if(!amt){ const le = document.getElementById('lg-err'); if(le) le.textContent = 'مبلغ را وارد کنید.'; const fa = document.getElementById('f-amount'); if(fa) fa.focus(); break; }
+      const dt = parseDate(LG.date) || today();
+      if(!Array.isArray(S.ledger)) S.ledger = [];
+      const lgFields = { type: LG.type, a: amt, d: LG.desc.trim(),
+        y: dt.y, m: dt.m, dd: dt.d,
+        hh: LG.hh === '' || LG.hh == null ? null : Number(LG.hh),
+        mm: LG.mm === '' || LG.mm == null ? null : Number(LG.mm) };
+      if(LGBUSY) break;
+      LGBUSY = true;
+      el.classList.add('busy');
+      const lgEditId = LG.editId, lgNewId = uid(), lgNow = Date.now();
+      const lgWasEdit = !!(lgEditId && S.ledger.find(x => x.id === lgEditId));
+      lastLedgerErr = ''; ledgerStrict = true;
+      let lgOk = false;
+      try{
+        lgOk = await commitWrite(() => {
+          if(!Array.isArray(S.ledger)) S.ledger = [];
+          const o = lgEditId ? S.ledger.find(x => x.id === lgEditId) : null;
+          if(o) Object.assign(o, lgFields);
+          else S.ledger.push(Object.assign({ id: lgNewId, ts: lgNow }, lgFields));
+        }, null, null);
+      } finally { ledgerStrict = false; }
+      LGBUSY = false; el.classList.remove('busy');
+      if(!lgOk){
+        if(lastLedgerErr) showToast('ذخیره آنلاین دخل و خرج ناموفق: ' + lastLedgerErr);
+        break;
+      }
+      showToast(lgWasEdit ? 'ویرایش با موفقیت ثبت شد' : 'تراکنش با موفقیت ثبت شد', true);
+      playBell();
+      LG = ledgerFresh();
+      closeSheet(); render(); break;
+    }
+    case 'ledgerMore': {
+      if(LG.sel === el.dataset.id){ endSel(); break; }
+      const had = !!LG.sel;
+      ledgerCapture(); LG.sel = el.dataset.id;
+      if(!had) pushOv('lgsel');
+      render(); break;
+    }
+    case 'ledgerEdit': {
+      const x = (S.ledger || []).find(r => r.id === el.dataset.id);
+      if(!x) break;
+      LG = { type:x.type, amt:String(x.a), desc:x.d || '', date:jStr(x.y, x.m, x.dd),
+        hh:x.hh == null ? '' : x.hh, mm:x.mm == null ? '' : x.mm, err:'', editId:x.id, sel:null };
+      popOv('lgsel');
+      render();
+      setTimeout(() => openSheet(ledgerFormHTML()), 150); break;
+    }
+    case 'ledgerCancel':
+      LG = { type:'in', amt:'', desc:'', date:todayStr(), hh:new Date().getHours(), mm:new Date().getMinutes(), err:'', editId:null, sel:null };
+      render(); break;
+    case 'ledgerDel':
+      openSheet(SHEETS.confirmDel('ledger', '', null, null, { id: el.dataset.id }));
+      break;
     case 'close': closeSheet(); break;
     case 'search': V.search = !V.search; if(!V.search) V.q = ''; render(); break;
     case 'selParty':
@@ -2321,6 +3180,7 @@ document.addEventListener('click', async e => {
       SUI.curOpen = false; render(); break;
 
     case 'reset':
+      if(!navigator.onLine){ showToast('برای این کار اول به اینترنت وصل شوید.'); break; }
       if(confirm('همه طرف حساب‌ها و مشتری‌ها پاک شوند؟ این کار قابل بازگشت نیست.')){
         S = { cur: S.cur, parties: [] }; save();
         V = { view:'list', openId:null, custId:null, search:false, q:'' };
@@ -2331,17 +3191,16 @@ document.addEventListener('click', async e => {
     /* long-press actions */
     case 'lpEdit': {
       const k = el.dataset.k;
-      LPSEL = null;
+      if(!(k === 'tx' && LPSEL && LPSEL.kind === 'txmode')) LPSEL = null;
       if(k === 'party'){ const pp = findParty(el.dataset.p); render(); openSheet(SHEETS.partyEdit(pp)); }
       else if(k === 'cust'){ render(); openSheet(SHEETS.custEdit(p, c)); }
-      else if(k === 'tx'){ render(); openSheet(SHEETS.txForm(p, c, t)); }
+      else if(k === 'tx'){ openSheet(SHEETS.txForm(p, c, t)); }
       break;
     }
     case 'lpDel':
-      if(t && confirm('این تراکنش حذف شود؟')){
-        await commitWrite(() => { c.tx = c.tx.filter(x => x.id !== t.id); }, 'تراکنش حذف شد', el);
-      }
-      LPSEL = null; render(); break;
+      if(t) openSheet(SHEETS.confirmDel('tx', c.n, p, c, { id: t.id }));
+      else { LPSEL = null; render(); }
+      break;
 
         case 'lkKey':
       if(LK.buf.length < lkMax() && !LK.busy){ LK.buf += el.dataset.v; LK.err = ''; }
@@ -2424,14 +3283,39 @@ document.addEventListener('click', async e => {
       const name = act === 'party' ? (p && p.n) : (c && c.n);
       /* deleting a party from its edit sheet */
       if(!name) return;
-      openSheet(SHEETS.confirmDel(act, name, p, c));
+      openSheet(SHEETS.confirmDel(act, name, p, c, t ? { id: t.id } : null));
       break;
     }
     case 'doDel': {
       const act = el.dataset.act;
-      const target = (act === 'party' || act === 'editParty') ? p : c;
+      const target = (act === 'ledger' || act === 'ledgerAll') ? {} : (act === 'party' || act === 'editParty') ? p : c;
       const want = act === 'editParty' ? target.n : 'حذف';
       if(!target || val('del-name').trim() !== want) return;
+      if(act === 'ledgerAll'){
+        lastLedgerErr = ''; ledgerStrict = true;
+        let aOk = false;
+        try{ aOk = await commitWrite(() => { S.ledger = []; }, 'همه تراکنش‌های دخل و خرج حذف شد', null); }
+        finally{ ledgerStrict = false; }
+        if(!aOk){ if(lastLedgerErr) showToast('حذف آنلاین ناموفق: ' + lastLedgerErr); return; }
+        LG = ledgerFresh(); LGF = 'all';
+        V = { view:'ledger' }; history.replaceState({v:V}, '');
+        closeSheet(); render(); return;
+      }
+      if(act === 'ledger'){
+        const lgDelId = el.dataset.t;
+        lastLedgerErr = ''; ledgerStrict = true;
+        let dOk = false;
+        try{ dOk = await commitWrite(() => { S.ledger = (S.ledger || []).filter(x => x.id !== lgDelId); }, 'حذف شد', null); }
+        finally{ ledgerStrict = false; }
+        if(!dOk){ if(lastLedgerErr) showToast('حذف آنلاین ناموفق: ' + lastLedgerErr); return; }
+        if(LG.editId === lgDelId) LG.editId = null;
+        endSel(); return;
+      }
+      if(act === 'tx'){
+        const tid = el.dataset.t;
+        if(!await commitWrite(() => { c.tx = c.tx.filter(x => x.id !== tid); }, 'تراکنش حذف شد', el)) return;
+        afterTx(); return;
+      }
       if(act === 'editParty'){ openSheet(SHEETS.partyEdit(p)); return; }
       if(act === 'party'){
         if(!await commitWrite(() => { S.parties = S.parties.filter(x => x.id !== p.id); }, 'طرف حساب حذف شد', el)) return;
@@ -2452,10 +3336,29 @@ document.addEventListener('click', async e => {
       closePortalByUser(); break;
     case 'portalLogin':
       portalLogin(); break;
-    case 'portalMenu':
-      document.getElementById('pt-menu')?.classList.toggle('hidden'); break;
+    case 'portalMenu': PORTAL.menu = true; PORTAL.note = ''; pushOv('ptmenu'); renderPortal(); break;
+    case 'ptMenuBack': PORTAL.menu = false; renderPortal(); if(OV.includes('ptmenu')) popOv('ptmenu'); break;
+    case 'ptSetBack': PORTAL.setPin = false; PORTAL.menu = true; PORTAL.err = ''; renderPortal(); break;
+    case 'ptPinOn': PORTAL.menu = false; PORTAL.setPin = true; PORTAL.err = ''; renderPortal(); break;
+    case 'ptPinSave': ptPinSave(); break;
+    case 'ptExit': PORTAL.askOut = false; ptExit(); break;
+    case 'ptAskOut': PORTAL.askOut = true; renderPortal(); break;
+    case 'ptVerifyOff': PORTAL.menu = false; PORTAL.verifyOff = true; PORTAL.err = ''; renderPortal(); break;
+    case 'ptOffOk': ptOffOk(); break;
+    case 'ptVerBack': PORTAL.verifyOff = false; PORTAL.menu = true; PORTAL.err = ''; renderPortal(); break;
+    case 'ptCancelOut': PORTAL.askOut = false; renderPortal(); break;
+    case 'ptForget': ptForget(); break;
+    case 'infoMenu': infoMenu(); break;
+    case 'infoAbout': infoAbout(); break;
+    case 'infoApp': infoApp(); break;
+    case 'infoClose': infoClose(); break;
+    case 'portalForgetPin': portalForgetPin(); break;
+    case 'portalForgetPhone':
+      clearPortalPhone(); PORTAL.err = ''; renderPortal(); break;
     case 'portalLogout':
-      PORTAL = { code:'', err:'', busy:false, data:null }; renderPortal(); break;
+      portalLogoutNow(); break;
+    case 'portalPinOk': portalPinOk(); break;
+    case 'portalPinToggle': portalPinToggle(); break;
     case 'pickPhoto':
       document.getElementById('photo-input')?.click(); break;
     case 'cropOk': {
@@ -2476,12 +3379,11 @@ document.addEventListener('click', async e => {
       const ph = latin(val('f-phone')).replace(/\D/g, '');
       const ds = val('f-ds').trim();
       if(!n){ document.getElementById('f-name').focus(); alert('نام مشتری را وارد کنید.'); return; }
-      if(ph && ph.length < 7){ document.getElementById('f-phone').focus(); alert('شماره تلفن معتبر وارد کنید یا آن را خالی بگذارید.'); return; }
-      const dup = !!ph && S.parties.some(pp => pp.c.some(cc => cc.ph === ph));
-      if(dup){ alert('مشتری با این شماره قبلاً ثبت شده است.'); return; }
-      if(ph && await phoneTakenElsewhere(ph)){ document.getElementById('f-phone').focus(); alert('این شماره تلفن در حساب دیگری ثبت شده است.'); return; }
+      if(ph.length < 10){ document.getElementById('f-phone').focus(); alert('شماره موبایل را کامل وارد کنید.'); return; }
+      if(S.parties.some(pp => pp.c.some(cc => cc.ph === ph))){ alert('مشتری با این شماره قبلاً ثبت شده است.'); return; }
+      if(await phoneTakenElsewhere(ph)){ document.getElementById('f-phone').focus(); alert('این شماره تلفن در حساب دیگری ثبت شده است.'); return; }
       const ac = latin(val('f-code')).replace(/\D/g, '');
-      if(ac.length !== 6){ document.getElementById('f-code').focus(); alert('کد ۶ رقمی مشتری را وارد کنید.'); return; }
+      if(!/^[0-9]{4}$/.test(ac)){ document.getElementById('f-code').focus(); alert('کد ۴ رقمی مشتری را وارد کنید.'); return; }
       if(S.parties.some(pp => pp.c.some(cc => cc.ac === ac))){ document.getElementById('f-code').focus(); alert('این کد قبلاً برای مشتری دیگری در همین حساب استفاده شده است.'); return; }
       if(await codeTakenElsewhere(ac)){ document.getElementById('f-code').focus(); alert('این کد قبلاً در حساب دیگری استفاده شده است. کد دیگری انتخاب کنید.'); return; }
       const id = uid();
@@ -2504,13 +3406,12 @@ document.addEventListener('click', async e => {
       const ph = latin(val('f-phone')).replace(/\D/g, '');
       const ds = val('f-ds').trim();
       if(!n){ document.getElementById('f-name').focus(); alert('نام مشتری را وارد کنید.'); return; }
-      if(ph && ph.length < 7){ document.getElementById('f-phone').focus(); alert('شماره تلفن معتبر وارد کنید یا آن را خالی بگذارید.'); return; }
-      const dup = !!ph && S.parties.some(pp => pp.c.some(cc => cc.id !== c.id && cc.ph === ph));
-      if(dup){ alert('مشتری با این شماره قبلاً ثبت شده است.'); return; }
-      if(ph && await phoneTakenElsewhere(ph)){ document.getElementById('f-phone').focus(); alert('این شماره تلفن در حساب دیگری ثبت شده است.'); return; }
+      if(ph.length < 10){ document.getElementById('f-phone').focus(); alert('شماره موبایل را کامل وارد کنید.'); return; }
+      if(S.parties.some(pp => pp.c.some(cc => cc.id !== c.id && cc.ph === ph))){ alert('مشتری با این شماره قبلاً ثبت شده است.'); return; }
+      if(await phoneTakenElsewhere(ph)){ document.getElementById('f-phone').focus(); alert('این شماره تلفن در حساب دیگری ثبت شده است.'); return; }
       const ac = latin(val('f-code')).replace(/\D/g, '');
-      if(ac && ac.length !== 6){ document.getElementById('f-code').focus(); alert('کد باید ۶ رقمی باشد.'); return; }
-      if(ac && ac !== c.ac){
+      if(!/^[0-9]{4}$/.test(ac)){ document.getElementById('f-code').focus(); alert('کد ۴ رقمی مشتری را وارد کنید.'); return; }
+      if(ac !== c.ac){
         if(S.parties.some(pp => pp.c.some(cc => cc.id !== c.id && cc.ac === ac))){ document.getElementById('f-code').focus(); alert('این کد قبلاً برای مشتری دیگری در همین حساب استفاده شده است.'); return; }
         if(await codeTakenElsewhere(ac)){ document.getElementById('f-code').focus(); alert('این کد قبلاً در حساب دیگری استفاده شده است. کد دیگری انتخاب کنید.'); return; }
       }
@@ -2539,9 +3440,8 @@ document.addEventListener('click', async e => {
 
     case 'addTx': openSheet(SHEETS.txForm(p, c)); break;
     case 'txMore':
-      goTo({view:'txEdit', openId:p.id, custId:c.id, txId:t.id}); break;
-    case 'txMoreOld':
       LPSEL = { key: `txmode:${p.id}:${c.id}:${t.id}`, view: V.view, kind: 'txmode', pid: p.id, cid: c.id, tid: t.id };
+      if(!OV.includes('txmode')) pushOv('txmode');
       render(); break;
 
     case 'setType': {
@@ -2596,9 +3496,19 @@ document.addEventListener('click', async e => {
     case 'calCancel':
       closeCal(); break;
     case 'calOk': {
+      /* use the year and month currently shown, keeping the chosen day (clamped to the month's length) */
+      const okD = Math.min(CAL.sel.d, daysIn(CAL.vy, CAL.vm));
+      CAL.sel = { y: CAL.vy, m: CAL.vm, d: okD };
       const s = jStr(CAL.sel.y, CAL.sel.m, CAL.sel.d);
-      const f = document.getElementById('f-date'); if(f) f.value = s;
-      const dt = document.getElementById('dtxt'); if(dt) dt.textContent = s;
+      if(CAL.tgt){
+        const o = { y: CAL.sel.y, m: CAL.sel.m, d: CAL.sel.d };
+        if(CAL.tgt === 'from') LGFR = o; else LGTO = o;
+        const lt = document.getElementById(CAL.tgt === 'from' ? 'lgf-from-t' : 'lgf-to-t'); if(lt) lt.textContent = s;
+        CAL.tgt = null;
+      } else {
+        const f = document.getElementById('f-date'); if(f) f.value = s;
+        const dt = document.getElementById('dtxt'); if(dt) dt.textContent = s;
+      }
       closeCal(); break;
     }
 
@@ -2625,10 +3535,7 @@ document.addEventListener('click', async e => {
       break;
     }
     case 'delTx':
-      if(confirm('این تراکنش حذف شود؟')){
-        const okDel = await commitWrite(() => { c.tx = c.tx.filter(x => x.id !== t.id); }, 'تراکنش حذف شد', el);
-        if(okDel) afterTx();
-      }
+      if(t) openSheet(SHEETS.confirmDel('tx', c.n, p, c, { id: t.id }));
       break;
   }
 });
@@ -2646,6 +3553,12 @@ document.addEventListener('keydown', e => {
 
 document.addEventListener('input', e => {
   if(e.target.id === 'q'){ V.q = e.target.value; render(); return; }
+  if(e.target.id === 'lgq'){
+    LGQ = e.target.value; render();
+    const i = document.getElementById('lgq');
+    if(i){ i.focus(); i.setSelectionRange(i.value.length, i.value.length); }
+    return;
+  }
   if(e.target.id === 'cq'){
     V.q = e.target.value; render();
     const i = document.getElementById('cq');
@@ -2681,11 +3594,46 @@ if(supabaseClient){
   });
 }
 
+function storedSessionUser(){
+  try{
+    for(let i = 0; i < localStorage.length; i++){
+      const k = localStorage.key(i);
+      if(!k) continue;
+      if(!(/^sb-.*-auth-token$/.test(k) || k === 'supabase.auth.token')) continue;
+      const v = JSON.parse(localStorage.getItem(k) || 'null');
+      const u = v?.user || v?.currentSession?.user;
+      if(u && u.id) return u;
+    }
+  }catch(e){}
+  return null;
+}
+async function refreshCloudQuiet(){
+  if(!cloudUser || cloudReady) return;
+  try{
+    await cloudLoad();
+    cloudReady = true; S.loggedIn = true;
+    render();
+  }catch(e){
+    console.warn('cloud refresh skipped (offline?):', e);
+  }
+}
 async function initCloudSession(){
-  if(!supabaseClient){ LK.locked = true; LK.err = 'اتصال Supabase بارگذاری نشد. اینترنت و آدرس پروژه را بررسی کنید.'; renderLock(); return; }
+  if(!supabaseClient){
+    /* کتابخانه ابری در دسترس نیست (مثلاً آفلاین): اگر قبلاً وارد شده‌اید، با PIN و اطلاعات ذخیره‌شده باز شود */
+    if(S.loggedIn && S.email){
+      let su = false; try{ su = sessionStorage.getItem('hisab_unlocked') === '1'; }catch(e){}
+      if(S.pin && !su){ LK.locked = true; LK.mode = 'unlock'; LK.buf = ''; LK.err = ''; LK.f.mail = S.email; renderLock(); render(); }
+      else lkUnlock();
+      return;
+    }
+    LK.locked = true; LK.err = 'اتصال Supabase بارگذاری نشد. اینترنت و آدرس پروژه را بررسی کنید.'; renderLock(); return;
+  }
   const { data, error } = await supabaseClient.auth.getSession();
-  if(error){ LK.locked = true; LK.err = 'خواندن نشست کاربری ناموفق بود.'; renderLock(); return; }
-  if(!data.session?.user){
+  let sessUser = data?.session?.user || null;
+  /* اگر قبلاً وارد شده‌اید و PIN دارید، نشست ذخیره‌شده روی گوشی کافی است (حتی بدون اینترنت) */
+  if(!sessUser && S.loggedIn && S.pin && S.email) sessUser = storedSessionUser();
+  if(error && !sessUser){ LK.locked = true; LK.err = 'خواندن نشست کاربری ناموفق بود.'; renderLock(); return; }
+  if(!sessUser){
     cloudUser = null; cloudReady = false; LK.locked = true;
     const pr = recPending();
     if(pr){
@@ -2698,21 +3646,17 @@ async function initCloudSession(){
     }
     renderLock(); return;
   }
-  cloudUser = data.session.user; cloudReady = false;
-  try{
-    await cloudLoad(); cloudReady = true; S.loggedIn = true; delete S.passHash; delete S.reg;
-    LK.f.mail = S.email;
-    let stillUnlocked = false;
-    try{ stillUnlocked = sessionStorage.getItem('hisab_unlocked') === '1'; }catch(e){}
-    if(S.pin && !stillUnlocked){ LK.locked = true; LK.mode = 'unlock'; renderLock(); render(); }
-    else lkUnlock();
-  }catch(e){
-    console.error('Supabase initial load error:',e);
-    LK.locked = true; LK.mode = 'login'; LK.f.mail = cloudUser.email || '';
-    LK.err = 'بارگذاری اطلاعات ابری ناموفق بود. جدول‌ها و سیاست‌های امنیتی را بررسی کنید.';
-    renderLock();
-  }
+  cloudUser = sessUser; cloudReady = false;
+  S.loggedIn = true; delete S.passHash; delete S.reg;
+  LK.f.mail = S.email || cloudUser.email || '';
+  let stillUnlocked = false;
+  try{ stillUnlocked = sessionStorage.getItem('hisab_unlocked') === '1'; }catch(e){}
+  if(S.pin && !stillUnlocked){ LK.locked = true; LK.mode = 'unlock'; LK.buf = ''; LK.err = ''; renderLock(); render(); }
+  else lkUnlock();
+  /* اطلاعات ابری در پس‌زمینه خوانده می‌شود؛ اگر اینترنت نباشد، همان اطلاعات ذخیره‌شده نمایش داده می‌شود */
+  refreshCloudQuiet();
 }
+
 initCloudSession();
 </script>
 </body>
